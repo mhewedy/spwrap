@@ -43,7 +43,7 @@ public class TestExecutor {
 	@Before
 	public void setup() {
 		HikariDataSource ds = new HikariDataSource();
-		ds.setJdbcUrl("jdbc:sqlserver://192.168.43.12:1433;DatabaseName=TEST");
+		ds.setJdbcUrl("jdbc:sqlserver://localhost:1433;DatabaseName=TEST");
 		ds.setUsername("test");
 		ds.setPassword("test");
 
