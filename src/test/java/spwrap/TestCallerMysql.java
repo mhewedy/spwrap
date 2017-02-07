@@ -61,11 +61,11 @@ public class TestCallerMysql {
 						return new SPInfo(rs.getString(1), rs.getTimestamp(2));
 					}
 				});
-//
-//		Assert.assertEquals("HELLO", result.object().s1);
-//		Assert.assertEquals("WORLD", result.object().s2);
-//		Assert.assertEquals(99, result.object().l1);
-//
+
+		Assert.assertEquals("HELLO", result.object().s1);
+		Assert.assertEquals("WORLD", result.object().s2);
+		Assert.assertEquals(99, result.object().l1);
+
 //		Assert.assertTrue(result.list().size() >= 40);
 		/*
 		result = jdbcCaller.call("OUTPUT_WITH_RS", null, paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
