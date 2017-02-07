@@ -21,7 +21,7 @@ import spwrap.Caller.ResultSetMapper;
 
 //RUN src/test/resources/script.sql first
 
-public class TestCaller {
+public class TestCallerDs {
 
 	private Caller caller;
 
@@ -40,7 +40,7 @@ public class TestCaller {
 	@Before
 	public void setup() {
 		HikariDataSource ds = new HikariDataSource();
-		ds.setJdbcUrl("jdbc:sqlserver://192.168.43.12:1433;DatabaseName=TEST");
+		ds.setJdbcUrl("jdbc:sqlserver://localhost:1433;DatabaseName=TEST");
 		ds.setUsername("test");
 		ds.setPassword("test");
 

@@ -2,6 +2,7 @@ package spwrap;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -37,8 +38,30 @@ public class Caller {
 
 	private final DataSource dataSource;
 
+	private final String jdbcUrl;
+	private final String username;
+	private final String password;
+
 	public Caller(DataSource dataSource) {
+		this.jdbcUrl = null;
+		this.username = null;
+		this.password = null;
 		this.dataSource = dataSource;
+	}
+
+	/**
+	 * Use {@link #Caller(DataSource)} when possible
+	 * 
+	 * @param jdbcUrl
+	 * @param username
+	 * @param password
+	 */
+	public Caller(String jdbcUrl, String username, String password) {
+		super();
+		this.dataSource = null;
+		this.jdbcUrl = jdbcUrl;
+		this.username = username;
+		this.password = password;
 	}
 
 	/**
@@ -141,7 +164,13 @@ public class Caller {
 
 		ListObject<T, U> result = null;
 		try {
-			con = dataSource.getConnection();
+
+			if (dataSource != null) {
+				con = dataSource.getConnection();
+			} else {
+				con = DriverManager.getConnection(jdbcUrl, username, password);
+			}
+
 			call = con.prepareCall(callableStmt);
 
 			int startOfOutParamCnt = 1;
