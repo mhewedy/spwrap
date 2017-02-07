@@ -55,7 +55,7 @@ Caller caller = new Caller(datasource);
 caller.call("STORED_RROC_WITH_NO_INPUT_OR_OUTPUT_PARAMETERS")
 
 // call sp with input-only parameters
-caller.call("STORED_RROC_WITH_INPUT_PARAMETERS", params(of("input", Types.VARCHAR)));
+caller.call("STORED_RROC_WITH_INPUT_PARAMETERS", params(of("input", VARCHAR)));
 
 
 // return output parameters
