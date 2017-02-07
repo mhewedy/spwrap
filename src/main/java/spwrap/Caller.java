@@ -26,6 +26,16 @@ import org.slf4j.LoggerFactory;
  * This class is Thread-safe, It is good practice to reuse a single instance of
  * it.
  * 
+ * <br />
+ * <br />
+ * 
+ * This class consider the return value of parameter result code (first of the
+ * two mandatory output parameters mentioned about), it consider it success if
+ * it is value is returned as zero, false otherwise. <br />
+ * <br />
+ * You can override the success value by setting the system property <br />
+ * {@code spwarp.success_code} to any short value.
+ * 
  * @author mhewedy
  *
  */
@@ -35,6 +45,11 @@ public class Caller {
 
 	private static final int JDBC_PARAM_OFFSIT = 1;
 	private static final int COUNT_OF_RESULT_PARAMS = 2;
+
+	private static final String SUCCESS_CODE_PROP = "spwarp.success_code";
+
+	private static final short SUCCESS = System.getProperty(SUCCESS_CODE_PROP) != null
+			? Short.parseShort(System.getProperty(SUCCESS_CODE_PROP)) : 0;
 
 	private final DataSource dataSource;
 
@@ -86,7 +101,7 @@ public class Caller {
 	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
 	 */
 	public final void call(String procName, List<Param> inParams) {
-		cal(procName, inParams, null, null);
+		call(procName, inParams, null, null);
 	}
 
 	/**
@@ -97,7 +112,7 @@ public class Caller {
 	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
 	 */
 	public final void call(String procName) {
-		cal(procName, null, null, null);
+		call(procName, null, null, null);
 	}
 
 	/**
@@ -111,7 +126,7 @@ public class Caller {
 	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
 	 */
 	public final <T> T call(String procName, List<ParamType> outParamsTypes, OutputParamMapper<T> paramMapper) {
-		return cal(procName, null, outParamsTypes, paramMapper);
+		return call(procName, null, outParamsTypes, paramMapper);
 	}
 
 	/**
@@ -126,7 +141,7 @@ public class Caller {
 	 * @return
 	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
 	 */
-	public final <T> T cal(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
+	public final <T> T call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<T> paramMapper) {
 		return call(procName, inParams, outParamsTypes, paramMapper, null).getObject();
 	}
@@ -215,7 +230,7 @@ public class Caller {
 				}
 			}
 
-			if (!call.getBoolean(resultCodeIndex)) {
+			if (call.getShort(resultCodeIndex) != SUCCESS) {
 				throw new CallException(call.getString(resultCodeIndex + 1));
 			}
 

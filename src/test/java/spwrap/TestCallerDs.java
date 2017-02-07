@@ -98,6 +98,12 @@ public class TestCallerDs {
 
 		Assert.assertTrue(result.getList().size() >= 4);
 	}
+	
+	
+	@Test(expected = CallException.class)
+	public void test6() {
+		caller.call("SP_WITH_INT_OUTPUT");
+	}
 
 	// -----------------------------
 
