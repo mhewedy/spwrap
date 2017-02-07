@@ -28,7 +28,7 @@ and in the dependecies section add:
 </dependency>
 ```
 
-for gradle and others see: https://jitpack.io/#mhewedy/spwrap/0.0.3
+for gradle and others see: https://jitpack.io/#mhewedy/spwrap/0.0.5
 
 Note: All stored procedures should return 2 output parameters at least, result code and result message, that looks like:
 ```
