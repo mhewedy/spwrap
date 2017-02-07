@@ -241,10 +241,13 @@ public class Caller {
 				}
 			}
 
-			if (call.getShort(resultCodeIndex) != SUCCESS) {
-				throw new CallException(call.getString(resultCodeIndex + 1));
+			short resultCode = call.getShort(resultCodeIndex);
+			if (resultCode != SUCCESS) {
+				String resultMsg = call.getString(resultCodeIndex + 1);
+				throw new CallException(
+						"error code: " + resultCode + (resultMsg != null ? (", error msg: " + resultMsg) : ""));
 			}
-
+			
 			result = new Result<T, U>(list, object);
 
 		} catch (Exception ex) {

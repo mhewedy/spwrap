@@ -38,7 +38,7 @@ public class TestCallerMysql {
 
 	@Before
 	public void setup() {
-//		System.setProperty("spwarp.success_code", "0");
+		System.setProperty("spwarp.success_code", "0");
 		
 		HikariDataSource ds = new HikariDataSource();
 		ds.setJdbcUrl("jdbc:mysql://localhost:3306/testdb");
@@ -74,7 +74,7 @@ public class TestCallerMysql {
 
 		Assert.assertTrue(result.list().size() >= 40);
 		
-		/*
+		
 		result = jdbcCaller.call("OUTPUT_WITH_RS", null,
 				paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), DATA_HOLDER_MAPPER,
 				new ResultSetMapper<SPInfo>() {
@@ -90,12 +90,11 @@ public class TestCallerMysql {
 					}
 				});
 
-		Assert.assertEquals("HELLO", result.getObject().s1);
-		Assert.assertEquals("WORLD", result.getObject().s2);
-		Assert.assertEquals(99, result.getObject().l1);
+		Assert.assertEquals("HELLO", result.object().s1);
+		Assert.assertEquals("WORLD", result.object().s2);
+		Assert.assertEquals(99, result.object().l1);
 
-		Assert.assertTrue(result.getList().size() >= 4);
-		*/
+		Assert.assertTrue(result.list().size() >= 4);
 	}
 
 	// -----------------------------
