@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +39,7 @@
 			<artifactId>mssql-jdbc</artifactId>
 			<version>6.1.0.jre7</version>
 			<scope>test</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
