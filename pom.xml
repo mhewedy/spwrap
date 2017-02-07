@@ -35,9 +35,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.microsoft</groupId>
-			<artifactId>sqljdbc4</artifactId>
-			<version>3.0</version>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>6.1.0.jre7</version>
 			<scope>test</scope>
 		</dependency>
 
