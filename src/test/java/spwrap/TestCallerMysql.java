@@ -66,7 +66,7 @@ public class TestCallerMysql {
 		Assert.assertEquals("WORLD", result.object().s2);
 		Assert.assertEquals(99, result.object().l1);
 
-//		Assert.assertTrue(result.list().size() >= 40);
+		Assert.assertTrue(result.list().size() >= 40);
 		/*
 		result = jdbcCaller.call("OUTPUT_WITH_RS", null, paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
 				DATA_HOLDER_MAPPER, new ResultSetMapper<SPInfo>() {
