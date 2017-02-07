@@ -2,7 +2,7 @@ package spwrap;
 
 import java.util.List;
 
-import spwrap.Executor.Param;
+import spwrap.Caller.Param;
 
 public interface Persistable {
 
