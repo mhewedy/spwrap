@@ -33,13 +33,13 @@ for gradle and others see: https://jitpack.io/#mhewedy/spwrap/0.0.3
 Note: All stored procedures should return 2 output parameters at least, result code and result message, that looks like:
 ```
 CREATE PROCEDURE [dbo].[SOME_SP]
-  @SUCCESS bit OUTPUT, 
+  @SUCCESS SMALLINT OUTPUT, 
   @MESSAGE varchar(50) OUTPUT
 AS
 -- .....
 --- .....
 
-SET @SUCCESS = 'true' -- or 'false' in case of business-logic error (this will be reported as CallException)
+SET @SUCCESS = 0 -- 0 means success, otherwise is false, if you want to override the success value, set the property spwarp.success_code to any short value
 SET @MESSAGE = 'some output message'
 
 GO
