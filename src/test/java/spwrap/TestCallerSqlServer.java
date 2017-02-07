@@ -1,11 +1,9 @@
 package spwrap;
 
-import static spwrap.Caller.paramTypes;
-import static spwrap.Caller.params;
-import static spwrap.Caller.Param.of;
+import static spwrap.Caller.*;
+import static spwrap.Caller.Param.*;
 
 import java.sql.CallableStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -46,7 +44,7 @@ public class TestCallerSqlServer {
 		ds.setPassword("test");
 
 		dsCaller = new Caller(ds);
-		
+
 		jdbcCaller = new Caller("jdbc:sqlserver://localhost:1433;DatabaseName=TEST", "test", "test");
 	}
 
@@ -77,9 +75,8 @@ public class TestCallerSqlServer {
 		Assert.assertEquals("HELLO", result.s1);
 		Assert.assertEquals("WORLD", result.s2);
 		Assert.assertEquals(99, result.l1);
-		
-		result = jdbcCaller.call("OUTPUT", paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
-				DATA_HOLDER_MAPPER);
+
+		result = jdbcCaller.call("OUTPUT", paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), DATA_HOLDER_MAPPER);
 
 		Assert.assertEquals("HELLO", result.s1);
 		Assert.assertEquals("WORLD", result.s2);
@@ -95,12 +92,7 @@ public class TestCallerSqlServer {
 
 					@Override
 					public SPInfo map(ResultSet rs) {
-						try {
-							return new SPInfo(rs.getString(1), rs.getTimestamp(2));
-						} catch (SQLException e) {
-							e.printStackTrace();
-							return null;
-						}
+						return new SPInfo(rs.getString(1), rs.getTimestamp(2));
 					}
 				});
 
@@ -109,20 +101,13 @@ public class TestCallerSqlServer {
 		Assert.assertEquals(99, result.object().l1);
 
 		Assert.assertTrue(result.list().size() >= 4);
-		
-		
-		result = jdbcCaller.call("OUTPUT_WITH_RS", null,
-				paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), DATA_HOLDER_MAPPER,
-				new ResultSetMapper<SPInfo>() {
+
+		result = jdbcCaller.call("OUTPUT_WITH_RS", null, paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
+				DATA_HOLDER_MAPPER, new ResultSetMapper<SPInfo>() {
 
 					@Override
 					public SPInfo map(ResultSet rs) {
-						try {
-							return new SPInfo(rs.getString(1), rs.getTimestamp(2));
-						} catch (SQLException e) {
-							e.printStackTrace();
-							return null;
-						}
+						return new SPInfo(rs.getString(1), rs.getTimestamp(2));
 					}
 				});
 
@@ -132,8 +117,7 @@ public class TestCallerSqlServer {
 
 		Assert.assertTrue(result.list().size() >= 4);
 	}
-	
-	
+
 	@Test(expected = CallException.class)
 	public void test6() {
 		dsCaller.call("SP_WITH_INT_OUTPUT");

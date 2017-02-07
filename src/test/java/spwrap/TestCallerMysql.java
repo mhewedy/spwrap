@@ -3,7 +3,6 @@ package spwrap;
 import static spwrap.Caller.*;
 
 import java.sql.CallableStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -39,14 +38,14 @@ public class TestCallerMysql {
 	@Before
 	public void setup() {
 		System.setProperty("spwarp.success_code", "0");
-		
+
 		HikariDataSource ds = new HikariDataSource();
 		ds.setJdbcUrl("jdbc:mysql://localhost:3306/testdb");
 		ds.setUsername("root");
 		ds.setPassword("");
 
 		dsCaller = new Caller(ds);
-		
+
 		jdbcCaller = new Caller("jdbc:mysql://localhost:3306/testdb", "root", "");
 	}
 
@@ -59,12 +58,7 @@ public class TestCallerMysql {
 
 					@Override
 					public SPInfo map(ResultSet rs) {
-						try {
-							return new SPInfo(rs.getString(1), rs.getTimestamp(2));
-						} catch (SQLException e) {
-							e.printStackTrace();
-							return null;
-						}
+						return new SPInfo(rs.getString(1), rs.getTimestamp(2));
 					}
 				});
 
@@ -73,20 +67,13 @@ public class TestCallerMysql {
 		Assert.assertEquals(99, result.object().l1);
 
 		Assert.assertTrue(result.list().size() >= 40);
-		
-		
-		result = jdbcCaller.call("OUTPUT_WITH_RS", null,
-				paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), DATA_HOLDER_MAPPER,
-				new ResultSetMapper<SPInfo>() {
+
+		result = jdbcCaller.call("OUTPUT_WITH_RS", null, paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
+				DATA_HOLDER_MAPPER, new ResultSetMapper<SPInfo>() {
 
 					@Override
 					public SPInfo map(ResultSet rs) {
-						try {
-							return new SPInfo(rs.getString(1), rs.getTimestamp(2));
-						} catch (SQLException e) {
-							e.printStackTrace();
-							return null;
-						}
+						return new SPInfo(rs);
 					}
 				});
 
@@ -102,6 +89,7 @@ public class TestCallerMysql {
 	static class DateHolder {
 		String s1, s2;
 		long l1;
+
 		@Override
 		public String toString() {
 			return "DateHolder [s1=" + s1 + ", s2=" + s2 + ", l1=" + l1 + "]";
@@ -116,6 +104,10 @@ public class TestCallerMysql {
 			super();
 			this.spName = spName;
 			this.created = created;
+		}
+
+		public SPInfo(ResultSet rs) {
+			// TODO Auto-generated constructor stub
 		}
 
 		@Override

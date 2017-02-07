@@ -229,7 +229,7 @@ public class Caller {
 				log.debug("reading result set");
 				rs = call.getResultSet();
 				while (rs.next()) {
-					list.add(rsMapper.map(rs));
+					list.add(rsMapper.map(new spwrap.ResultSet(rs)));
 				}
 			}
 
@@ -270,7 +270,7 @@ public class Caller {
 	}
 
 	public static interface ResultSetMapper<T> {
-		T map(ResultSet rs);
+		T map(spwrap.ResultSet rs);
 	}
 
 	// -------------
