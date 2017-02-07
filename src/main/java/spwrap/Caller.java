@@ -181,6 +181,8 @@ public class Caller {
 	 */
 	public final <T, U> Result<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper) {
+		
+		final long startTime = System.currentTimeMillis();
 
 		Connection con = null;
 		CallableStatement call = null;
@@ -256,9 +258,10 @@ public class Caller {
 		} finally {
 			Util.closeDBObjects(con, call, rs);
 
-			log.info(">call sp: [{}] \nInParams: {}, \nOutParams Types: {}\nResult: {}", callableStmt,
+			log.info(">call sp: [{}] \nInParams: {}, \nOutParams Types: {}\nResult: {}; \ntook: {}", callableStmt,
 					inParams != null ? Arrays.toString(inParams.toArray()) : "null",
-					outParamsTypes != null ? Arrays.toString(outParamsTypes.toArray()) : "null", result);
+					outParamsTypes != null ? Arrays.toString(outParamsTypes.toArray()) : "null", result,
+					(System.currentTimeMillis() - startTime) + " ms");
 		}
 		return result;
 	}
