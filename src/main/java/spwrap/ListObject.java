@@ -24,4 +24,9 @@ public class ListObject<T, U> implements Serializable {
 	public U getObject() {
 		return object;
 	}
+
+	@Override
+	public String toString() {
+		return "ListObject [list=" + list + ", object=" + object + "]";
+	}
 }
