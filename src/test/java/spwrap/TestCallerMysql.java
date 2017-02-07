@@ -5,7 +5,7 @@ import static spwrap.Caller.*;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
+import static java.sql.Types.*;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -53,7 +53,7 @@ public class TestCallerMysql {
 	public void test5() {
 
 		Result<SPInfo, DateHolder> result = dsCaller.call("OUTPUT_WITH_RS", null,
-				paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), DATA_HOLDER_MAPPER,
+				paramTypes(VARCHAR, VARCHAR, BIGINT), DATA_HOLDER_MAPPER,
 				new ResultSetMapper<SPInfo>() {
 
 					@Override
