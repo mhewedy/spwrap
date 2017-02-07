@@ -30,9 +30,8 @@ and in the dependecies section add:
 
 for gradle and others see: https://jitpack.io/#mhewedy/spwrap/0.0.3
 
-NOTE: All stored procedures should return 2 output parameters at least, result code and result message, that looks like:
+Note: All stored procedures should return 2 output parameters at least, result code and result message, that looks like:
 ```
-
 CREATE PROCEDURE [dbo].[SOME_SP]
   @SUCCESS bit OUTPUT, 
   @MESSAGE varchar(50) OUTPUT
