@@ -89,7 +89,18 @@ public class Caller {
 	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
 	 */
 	public final <T> List<T> call(String procName, List<Param> inParams, ResultSetMapper<T> rsMapper) {
-		return call(procName, inParams, null, null, rsMapper).getList();
+		return call(procName, inParams, null, null, rsMapper).list();
+	}
+
+	/**
+	 * execute SP without input parameters and with result list
+	 * 
+	 * @param procName
+	 * @param rsMapper
+	 * @return
+	 */
+	public final <T> List<T> call(String procName, ResultSetMapper<T> rsMapper) {
+		return call(procName, null, rsMapper);
 	}
 
 	/**
@@ -143,7 +154,7 @@ public class Caller {
 	 */
 	public final <T> T call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<T> paramMapper) {
-		return call(procName, inParams, outParamsTypes, paramMapper, null).getObject();
+		return call(procName, inParams, outParamsTypes, paramMapper, null).object();
 	}
 
 	/**
@@ -168,7 +179,7 @@ public class Caller {
 	 * @param rsMapper
 	 * @return
 	 */
-	public final <T, U> ListObject<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
+	public final <T, U> Result<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper) {
 
 		Connection con = null;
@@ -177,7 +188,7 @@ public class Caller {
 		final String callableStmt = Util.createCallableString(procName, COUNT_OF_RESULT_PARAMS
 				+ (inParams != null ? inParams.size() : 0) + (outParamsTypes != null ? outParamsTypes.size() : 0));
 
-		ListObject<T, U> result = null;
+		Result<T, U> result = null;
 		try {
 
 			if (dataSource != null) {
@@ -234,7 +245,7 @@ public class Caller {
 				throw new CallException(call.getString(resultCodeIndex + 1));
 			}
 
-			result = new ListObject<T, U>(list, object);
+			result = new Result<T, U>(list, object);
 
 		} catch (Exception ex) {
 			log.error("[" + callableStmt + "]", ex.getMessage());
@@ -242,7 +253,7 @@ public class Caller {
 		} finally {
 			Util.closeDBObjects(con, call, rs);
 
-			log.info(">call sp: [{}] \nInParams: {}, \nOutParams: {}\nResult: {}", callableStmt,
+			log.info(">call sp: [{}] \nInParams: {}, \nOutParams Types: {}\nResult: {}", callableStmt,
 					inParams != null ? Arrays.toString(inParams.toArray()) : "null",
 					outParamsTypes != null ? Arrays.toString(outParamsTypes.toArray()) : "null", result);
 		}
@@ -266,7 +277,7 @@ public class Caller {
 
 		@Override
 		public String toString() {
-			return "[sqlType=" + sqlType + "]";
+			return sqlType + "";
 		}
 	}
 

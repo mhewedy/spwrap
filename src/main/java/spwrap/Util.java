@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,19 @@ import org.slf4j.LoggerFactory;
 public class Util {
 
 	private static Logger log = LoggerFactory.getLogger(Util.class);
+	
+	
+	static String listToString(List<?> list) {
+		StringBuilder ret = new StringBuilder();
+		
+		if (list != null) {
+			for (Object o : list) {
+				ret.append(o + "\n");
+			}
+		}
+		
+		return ret.toString();
+	}
 
 	static String createCallableString(String procName, int paramsCount) {
 		StringBuffer call = new StringBuffer();

@@ -3,7 +3,7 @@ package spwrap;
 import java.io.Serializable;
 import java.util.List;
 
-public class ListObject<T, U> implements Serializable {
+public class Result<T, U> implements Serializable {
 	/**
 	 * 
 	 */
@@ -12,21 +12,21 @@ public class ListObject<T, U> implements Serializable {
 	private List<T> list;
 	private U object;
 
-	public ListObject(List<T> list, U object) {
+	Result(List<T> list, U object) {
 		this.list = list;
 		this.object = object;
 	}
 
-	public List<T> getList() {
+	public List<T> list() {
 		return list;
 	}
 
-	public U getObject() {
+	public U object() {
 		return object;
 	}
 
 	@Override
 	public String toString() {
-		return "ListObject [list=" + list + ", object=" + object + "]";
+		return "Result [list=" + Util.listToString(list) + ", object=" + object + "]";
 	}
 }
