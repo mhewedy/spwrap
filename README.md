@@ -60,9 +60,9 @@ caller.call("STORED_RROC_WITH_INPUT_PARAMETERS", params(of("input", Types.VARCHA
 
 // return output parameters
 // this is Java 8 syntax, you can use anonymous inner class as well.
-DateHolder result = caller.call("STORED_RROC_WITH_OUTPUT_PARAMETERS",
-	paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), (call, index) -> {
-		DateHolder holder = new DateHolder();
+MyDataObject result = caller.call("STORED_RROC_WITH_OUTPUT_PARAMETERS",
+	paramTypes(VARCHAR, VARCHAR, BIGINT), (call, index) -> {
+		MyDataObject holder = new MyDataObject();
 		holder.s1 = call.getString(index);
 		holder.s2 = call.getString(index + 1);
 		holder.l1 = call.getLong(index + 2);
@@ -71,7 +71,7 @@ DateHolder result = caller.call("STORED_RROC_WITH_OUTPUT_PARAMETERS",
 
 
 // can return output parameters and result set as well (and can also take input parameters)
-ListObject<SPInfo, DateHolder> result = caller.call("OUTPUT_WITH_RS", null,
+Result<SPInfo, DateHolder> result = caller.call("OUTPUT_WITH_RS", null,
 		paramTypes(VARCHAR, VARCHAR, BIGINT), (call, index) -> {
 			DateHolder holder = new DateHolder();
 			holder.s1 = call.getString(index);
@@ -80,7 +80,9 @@ ListObject<SPInfo, DateHolder> result = caller.call("OUTPUT_WITH_RS", null,
 			return holder;
 		}, SPInfo::new);
 
-
-See test cases for more usage scenarios.
+System.out.println(result.object()); // print the object that wraps output parameters
+System.out.println(result.list());   // print the list of objects that wrap the result set 
 
 ```
+
+See test cases for more usage scenarios.
