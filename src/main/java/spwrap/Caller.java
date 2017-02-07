@@ -211,7 +211,7 @@ public class Caller {
 		T map(CallableStatement call, int index) throws SQLException;
 	}
 
-	static interface ResultSetMapper<T> {
+	public static interface ResultSetMapper<T> {
 		T map(ResultSet rs);
 	}
 
