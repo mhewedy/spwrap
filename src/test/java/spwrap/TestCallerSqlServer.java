@@ -19,11 +19,12 @@ import com.zaxxer.hikari.HikariDataSource;
 import spwrap.Caller.OutputParamMapper;
 import spwrap.Caller.ResultSetMapper;
 
-//RUN src/test/resources/script.sql first
+//RUN src/test/resources/sqlserver_script.sql first
 
-public class TestCallerDs {
+public class TestCallerSqlServer {
 
-	private Caller caller;
+	private Caller dsCaller;
+	private Caller jdbcCaller;
 
 	private final OutputParamMapper<DateHolder> DATA_HOLDER_MAPPER = new OutputParamMapper<DateHolder>() {
 
@@ -44,29 +45,40 @@ public class TestCallerDs {
 		ds.setUsername("test");
 		ds.setPassword("test");
 
-		caller = new Caller(ds);
+		dsCaller = new Caller(ds);
+		
+		jdbcCaller = new Caller("jdbc:sqlserver://localhost:1433;DatabaseName=TEST", "test", "test");
 	}
 
 	@Test
 	public void test1() {
-		caller.call("EXE_NO_IN_NO_OUT");
+		dsCaller.call("EXE_NO_IN_NO_OUT");
+		jdbcCaller.call("EXE_NO_IN_NO_OUT");
 	}
 
 	@Test(expected = CallException.class)
 	public void test2() {
-		caller.call("NOT_FOUND");
+		dsCaller.call("NOT_FOUND");
+		jdbcCaller.call("NOT_FOUND");
 	}
 
 	@Test
 	public void test3() {
-		String echoMessage = "HELLO";
-		caller.call("ECHO", params(of(echoMessage, Types.VARCHAR)));
+		dsCaller.call("ECHO", params(of("hello", Types.VARCHAR)));
+		jdbcCaller.call("ECHO", params(of("hello", Types.VARCHAR)));
 	}
 
 	@Test
 	public void test4() {
 
-		DateHolder result = caller.call("OUTPUT", paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
+		DateHolder result = dsCaller.call("OUTPUT", paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
+				DATA_HOLDER_MAPPER);
+
+		Assert.assertEquals("HELLO", result.s1);
+		Assert.assertEquals("WORLD", result.s2);
+		Assert.assertEquals(99, result.l1);
+		
+		result = jdbcCaller.call("OUTPUT", paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
 				DATA_HOLDER_MAPPER);
 
 		Assert.assertEquals("HELLO", result.s1);
@@ -77,7 +89,29 @@ public class TestCallerDs {
 	@Test
 	public void test5() {
 
-		ListObject<SPInfo, DateHolder> result = caller.call("OUTPUT_WITH_RS", null,
+		ListObject<SPInfo, DateHolder> result = dsCaller.call("OUTPUT_WITH_RS", null,
+				paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), DATA_HOLDER_MAPPER,
+				new ResultSetMapper<SPInfo>() {
+
+					@Override
+					public SPInfo map(ResultSet rs) {
+						try {
+							return new SPInfo(rs.getString(1), rs.getTimestamp(2));
+						} catch (SQLException e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+				});
+
+		Assert.assertEquals("HELLO", result.getObject().s1);
+		Assert.assertEquals("WORLD", result.getObject().s2);
+		Assert.assertEquals(99, result.getObject().l1);
+
+		Assert.assertTrue(result.getList().size() >= 4);
+		
+		
+		result = jdbcCaller.call("OUTPUT_WITH_RS", null,
 				paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), DATA_HOLDER_MAPPER,
 				new ResultSetMapper<SPInfo>() {
 
@@ -102,7 +136,8 @@ public class TestCallerDs {
 	
 	@Test(expected = CallException.class)
 	public void test6() {
-		caller.call("SP_WITH_INT_OUTPUT");
+		dsCaller.call("SP_WITH_INT_OUTPUT");
+		jdbcCaller.call("SP_WITH_INT_OUTPUT");
 	}
 
 	// -----------------------------
