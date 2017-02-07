@@ -52,7 +52,7 @@ DataSource datasource = // .....
 Caller caller = new Caller(datasource);
 
 // call sp without input or output parameters
-caller.call("STORED_RROC_WITH_NO_INPUT_OR_OUTPUT_PARAMETERS")
+caller.call("STORED_RROC_WITH_NO_INPUT_OR_OUTPUT_PARAMETERS") // again, the result code and result message is not counted here, they should be added to any Stored Procedure
 
 // call sp with input-only parameters
 caller.call("STORED_RROC_WITH_INPUT_PARAMETERS", params(of("input", VARCHAR)));
