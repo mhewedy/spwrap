@@ -10,7 +10,7 @@ compitable with jdk >= 1.6 (never tested with jdk 1.5, but I think it is compita
  
  Add the following to your pom.xml:
  
- ```
+ ```xml
  <repositories>
 	<repository>
 		<id>jitpack.io</id>
@@ -20,7 +20,7 @@ compitable with jdk >= 1.6 (never tested with jdk 1.5, but I think it is compita
 ```
 
 and in the dependecies section add:
-```
+```xml
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
