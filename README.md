@@ -85,4 +85,7 @@ System.out.println(result.list());   // print the list of objects that wrap the 
 
 ```
 
+##Not implemented features:
+spwrap doesn't support INOUT parameters (yet!)
+
 See test cases for more usage scenarios.
