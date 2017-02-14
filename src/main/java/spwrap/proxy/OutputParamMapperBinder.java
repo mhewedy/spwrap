@@ -24,7 +24,6 @@ class OutputParamMapperBinder {
 		}
 
 		try {
-
 			TypedOutputParamMapper<?> outParamsInstance = outParamMapperClass.newInstance();
 			metadata.outputParamMapper = outParamsInstance;
 			log.debug("TypedOutputParamMapper overridden from @Mapper is: {} for method: {}", outParamsInstance,
