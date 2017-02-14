@@ -45,8 +45,7 @@ class OutputParamMapperBinder {
 
 		if (TypedOutputParamMapper.class.isAssignableFrom(returnType)) {
 
-			Class<TypedOutputParamMapper<?>> outParamMapperClass = (Class<TypedOutputParamMapper<?>>) returnType;
-			_steFromReturnType(method, metadata, outParamMapperClass);
+			_steFromReturnType(method, metadata, (Class<TypedOutputParamMapper<?>>) returnType);
 
 		} else if (Tuple.class.isAssignableFrom(returnType)) {
 

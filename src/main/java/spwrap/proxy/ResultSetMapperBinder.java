@@ -2,12 +2,14 @@ package spwrap.proxy;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import spwrap.CallException;
 import spwrap.Caller.ResultSetMapper;
+import spwrap.Tuple;
 
 class ResultSetMapperBinder {
 
@@ -32,22 +34,26 @@ class ResultSetMapperBinder {
 
 	static void setFromReturnType(Method method, Metadata metadata) {
 
-		ParameterizedType listType = (ParameterizedType) method.getGenericReturnType();
-		Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
+		if (List.class.isAssignableFrom(method.getReturnType())
+				|| Tuple.class.isAssignableFrom(method.getReturnType())) {
 
-		if (ResultSetMapper.class.isAssignableFrom(listClass)) {
+			ParameterizedType listType = (ParameterizedType) method.getGenericReturnType();
+			Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
 
-			@SuppressWarnings("unchecked")
-			Class<ResultSetMapper<?>> rsMapperClass = (Class<ResultSetMapper<?>>) listClass;
+			if (ResultSetMapper.class.isAssignableFrom(listClass)) {
 
-			try {
-				ResultSetMapper<?> resultSetMapper = rsMapperClass.newInstance();
-				metadata.rsMapper = resultSetMapper;
+				@SuppressWarnings("unchecked")
+				Class<ResultSetMapper<?>> rsMapperClass = (Class<ResultSetMapper<?>>) listClass;
 
-				log.debug("setFromReturnType:: ResultSetMapper from Method return type is: {} for method: {}",
-						resultSetMapper, method.getName());
-			} catch (Exception e) {
-				throw new CallException("cannot create resultSet Mapper", e);
+				try {
+					ResultSetMapper<?> resultSetMapper = rsMapperClass.newInstance();
+					metadata.rsMapper = resultSetMapper;
+
+					log.debug("setFromReturnType:: ResultSetMapper from Method return type is: {} for method: {}",
+							resultSetMapper, method.getName());
+				} catch (Exception e) {
+					throw new CallException("cannot create resultSet Mapper", e);
+				}
 			}
 		}
 	}
