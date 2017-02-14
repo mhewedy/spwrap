@@ -37,7 +37,6 @@ class OutputParamMapperBinder {
 			}
 
 			log.debug("TypedOutputParamMapper Types are: {} for method: {}", metadata.outParamTypes, method.getName());
-
 		} catch (Exception e) {
 			throw new CallException("cannot create outParams Mapper", e);
 		}
@@ -58,7 +57,6 @@ class OutputParamMapperBinder {
 
 				log.debug("TypedOutputParamMapper from Method return type is: {} for method: {}", outParamsInstance,
 						method.getName());
-
 			} catch (Exception e) {
 				throw new CallException("cannot create outParams Mapper", e);
 			}

@@ -23,7 +23,6 @@ class ResultSetMapperBinder {
 			metadata.rsMapper = resultSetMapper;
 			log.debug("ResultSetMapper overridden from @Mapper is: {} for method: {}", resultSetMapper,
 					method.getName());
-
 		} catch (Exception e) {
 			throw new CallException("cannot create resultSet Mapper", e);
 		}
@@ -44,7 +43,6 @@ class ResultSetMapperBinder {
 
 				log.debug("ResultSetMapper from Method return type is: {} for method: {}", resultSetMapper,
 						method.getName());
-
 			} catch (Exception e) {
 				throw new CallException("cannot create resultSet Mapper", e);
 			}
