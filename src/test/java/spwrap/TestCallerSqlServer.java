@@ -25,11 +25,11 @@ public class TestCallerSqlServer {
 	private final OutputParamMapper<DateHolder> DATA_HOLDER_MAPPER = new OutputParamMapper<DateHolder>() {
 
 		@Override
-		public DateHolder map(Result call, int index){
+		public DateHolder map(Result result, int index) {
 			DateHolder holder = new DateHolder();
-			holder.s1 = call.getString(index);
-			holder.s2 = call.getString(index + 1);
-			holder.l1 = call.getLong(index + 2);
+			holder.s1 = result.getString(index);
+			holder.s2 = result.getString(index + 1);
+			holder.l1 = result.getLong(index + 2);
 			return holder;
 		}
 	};
@@ -79,8 +79,8 @@ public class TestCallerSqlServer {
 				new ResultSetMapper<SPInfo>() {
 
 					@Override
-					public SPInfo map(Result rs) {
-						return new SPInfo(rs.getString(1), rs.getTimestamp(2));
+					public SPInfo map(Result result) {
+						return new SPInfo(result.getString(1), result.getTimestamp(2));
 					}
 				});
 
@@ -90,7 +90,6 @@ public class TestCallerSqlServer {
 
 		Assert.assertTrue(result.list().size() >= 4);
 
-		
 	}
 
 	@Test(expected = CallException.class)
