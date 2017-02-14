@@ -29,7 +29,7 @@ import java.sql.Timestamp;
  */
 public class Result {
 
-	private static final String OBJECT_ARE_NULL = "resultSet and callableStatement are null";
+	private static final String OBJECTS_ARE_NULL = "resultSet and callableStatement are null";
 
 	private final ResultSet rs;
 
@@ -63,7 +63,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getString(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -77,7 +77,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getBoolean(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -91,7 +91,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getByte(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -106,7 +106,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getShort(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -120,7 +120,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getInt(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -134,7 +134,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getLong(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -148,7 +148,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getFloat(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -162,7 +162,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getDouble(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -176,7 +176,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getBytes(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -190,7 +190,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getDate(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -204,7 +204,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getTime(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -218,7 +218,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getTimestamp(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -232,7 +232,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getObject(columnIndex, clazz);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -246,7 +246,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getCharacterStream(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -260,7 +260,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getBigDecimal(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -274,7 +274,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getRef(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -288,7 +288,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getBlob(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -302,7 +302,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getClob(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -316,7 +316,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getArray(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -330,7 +330,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getURL(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -344,7 +344,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getRowId(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -358,7 +358,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getNClob(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -372,7 +372,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getSQLXML(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -386,7 +386,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getNString(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
@@ -400,7 +400,7 @@ public class Result {
 			} else if (cstmt != null) {
 				return cstmt.getNCharacterStream(columnIndex);
 			} else {
-				throw new RuntimeException(OBJECT_ARE_NULL);
+				throw new RuntimeException(OBJECTS_ARE_NULL);
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);
