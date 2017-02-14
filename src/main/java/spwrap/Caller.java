@@ -188,7 +188,7 @@ public class Caller {
 	 * @param rsMapper
 	 * @return
 	 */
-	public final <T, U> Result<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
+	public final <T, U> Tuple<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper) {
 		
 		final long startTime = System.currentTimeMillis();
@@ -199,7 +199,7 @@ public class Caller {
 		final String callableStmt = Util.createCallableString(procName, COUNT_OF_RESULT_PARAMS
 				+ (inParams != null ? inParams.size() : 0) + (outParamsTypes != null ? outParamsTypes.size() : 0));
 
-		Result<T, U> result = null;
+		Tuple<T, U> result = null;
 		try {
 
 			if (dataSource != null) {
@@ -240,7 +240,7 @@ public class Caller {
 				log.debug("reading result set");
 				rs = call.getResultSet();
 				while (rs.next()) {
-					list.add(rsMapper.map(new spwrap.ResultSet(rs, null)));
+					list.add(rsMapper.map(new spwrap.Result(rs, null)));
 				}
 			}
 
@@ -248,7 +248,7 @@ public class Caller {
 			if (outParamsTypes != null) {
 				log.debug("reading output parameters");
 				for (int i = 0; i < outParamsTypes.size(); i++) {
-					object = paramMapper.map(new spwrap.ResultSet(null, call), startOfOutParamCnt);
+					object = paramMapper.map(new spwrap.Result(null, call), startOfOutParamCnt);
 				}
 			}
 
@@ -259,7 +259,7 @@ public class Caller {
 						"error code: " + resultCode + (resultMsg != null ? (", error msg: " + resultMsg) : ""));
 			}
 			
-			result = new Result<T, U>(list, object);
+			result = new Tuple<T, U>(list, object);
 
 		} catch (Exception ex) {
 			log.error("[" + callableStmt + "]", ex.getMessage());
@@ -278,11 +278,11 @@ public class Caller {
 	// --------------
 
 	public static interface OutputParamMapper<T> {
-		T map(spwrap.ResultSet call, int index) throws SQLException;
+		T map(spwrap.Result call, int index) throws SQLException;
 	}
 
 	public static interface ResultSetMapper<T> {
-		T map(spwrap.ResultSet rs);
+		T map(spwrap.Result rs);
 	}
 
 	// -------------

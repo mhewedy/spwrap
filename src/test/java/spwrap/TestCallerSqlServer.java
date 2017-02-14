@@ -25,7 +25,7 @@ public class TestCallerSqlServer {
 	private final OutputParamMapper<DateHolder> DATA_HOLDER_MAPPER = new OutputParamMapper<DateHolder>() {
 
 		@Override
-		public DateHolder map(ResultSet call, int index){
+		public DateHolder map(Result call, int index){
 			DateHolder holder = new DateHolder();
 			holder.s1 = call.getString(index);
 			holder.s2 = call.getString(index + 1);
@@ -74,12 +74,12 @@ public class TestCallerSqlServer {
 	@Test
 	public void test5() {
 
-		Result<SPInfo, DateHolder> result = dsCaller.call("OUTPUT_WITH_RS", null,
+		Tuple<SPInfo, DateHolder> result = dsCaller.call("OUTPUT_WITH_RS", null,
 				paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), DATA_HOLDER_MAPPER,
 				new ResultSetMapper<SPInfo>() {
 
 					@Override
-					public SPInfo map(ResultSet rs) {
+					public SPInfo map(Result rs) {
 						return new SPInfo(rs.getString(1), rs.getTimestamp(2));
 					}
 				});

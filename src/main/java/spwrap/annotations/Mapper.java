@@ -10,7 +10,7 @@ import java.util.List;
 
 import spwrap.Caller.OutputParamMapper;
 import spwrap.Caller.ResultSetMapper;
-import spwrap.ResultSet;
+import spwrap.Result;
 
 @Retention(RUNTIME)
 @Target(METHOD)
@@ -26,14 +26,14 @@ public @interface Mapper {
 
 	static final class NullResultSetMapper implements ResultSetMapper<Object> {
 		@Override
-		public Object map(ResultSet rs) {
+		public Object map(Result rs) {
 			return null;
 		}
 	}
 
 	static final class NullTypedOutputParamMapper implements TypedOutputParamMapper<Object> {
 		@Override
-		public Object map(ResultSet call, int index) throws SQLException {
+		public Object map(Result call, int index) throws SQLException {
 			return null;
 		}
 

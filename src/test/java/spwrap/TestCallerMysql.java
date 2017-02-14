@@ -40,7 +40,7 @@ public class TestCallerMysql {
 	@Test
 	public void test5() {
 
-		Result<SPInfo, DateHolder> result = dsCaller.call("OUTPUT_WITH_RS", null, paramTypes(VARCHAR, VARCHAR, BIGINT),
+		Tuple<SPInfo, DateHolder> result = dsCaller.call("OUTPUT_WITH_RS", null, paramTypes(VARCHAR, VARCHAR, BIGINT),
 				new DateHolder(), new SPInfo());
 
 		Assert.assertEquals("HELLO", result.object().s1);
@@ -53,14 +53,14 @@ public class TestCallerMysql {
 	interface MyService {
 		@Mapper(resultSet = SPInfo.class, outParams = DateHolder.class)
 		@StoredProc("OUTPUT_WITH_RS")
-		Result<SPInfo, DateHolder> callMySp();
+		Tuple<SPInfo, DateHolder> callMySp();
 	}
 
 	@Test
 	public void test6() {
 
 		MyService myService = dsCaller.create(MyService.class);
-		Result<SPInfo, DateHolder> result = myService.callMySp();
+		Tuple<SPInfo, DateHolder> result = myService.callMySp();
 
 		Assert.assertEquals("HELLO", result.object().s1);
 		Assert.assertEquals("WORLD", result.object().s2);
@@ -76,7 +76,7 @@ public class TestCallerMysql {
 		private long l1;
 
 		@Override
-		public DateHolder map(ResultSet call, int index) {
+		public DateHolder map(Result call, int index) {
 			DateHolder holder = new DateHolder();
 			holder.s1 = call.getString(index);
 			holder.s2 = call.getString(index + 1);
@@ -108,12 +108,12 @@ public class TestCallerMysql {
 			this.created = created;
 		}
 
-		public SPInfo(ResultSet rs) {
+		public SPInfo(Result rs) {
 			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		public SPInfo map(ResultSet rs) {
+		public SPInfo map(Result rs) {
 			return new SPInfo(rs.getString(1), rs.getTimestamp(2));
 		}
 

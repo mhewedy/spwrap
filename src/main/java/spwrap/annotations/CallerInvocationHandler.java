@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import spwrap.Caller;
 import spwrap.Caller.ParamType;
 import spwrap.Caller.ResultSetMapper;
-import spwrap.Result;
+import spwrap.Tuple;
 import spwrap.annotations.Mapper.NullResultSetMapper;
 import spwrap.annotations.Mapper.NullTypedOutputParamMapper;
 import spwrap.annotations.Mapper.TypedOutputParamMapper;
@@ -35,7 +35,7 @@ public class CallerInvocationHandler implements InvocationHandler {
 		Metadata metaData = getMetaData(method, args);
 
 		Caller caller = new Caller(dataSource);
-		Result<?, ?> call = caller.call(metaData.storedProcName, metaData.inParams, metaData.outParamTypes,
+		Tuple<?, ?> call = caller.call(metaData.storedProcName, metaData.inParams, metaData.outParamTypes,
 				metaData.outputParamMapper, metaData.rsMapper);
 		return call;
 	}
