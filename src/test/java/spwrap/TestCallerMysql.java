@@ -1,11 +1,13 @@
 package spwrap;
 
+import static java.sql.Types.*;
 import static spwrap.Caller.*;
 
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import static java.sql.Types.*;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,27 +15,16 @@ import org.junit.Test;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-import spwrap.Caller.OutputParamMapper;
 import spwrap.Caller.ResultSetMapper;
+import spwrap.annotations.Mapper;
+import spwrap.annotations.StoredProc;
+import spwrap.annotations.Mapper.TypedOutputParamMapper;
 
-//RUN src/test/resources/sqlserver_script.sql first
+//RUN src/test/resources/mysql_script.sql first
 
 public class TestCallerMysql {
 
 	private Caller dsCaller;
-	private Caller jdbcCaller;
-
-	private final OutputParamMapper<DateHolder> DATA_HOLDER_MAPPER = new OutputParamMapper<DateHolder>() {
-
-		@Override
-		public DateHolder map(CallableStatement call, int index) throws SQLException {
-			DateHolder holder = new DateHolder();
-			holder.s1 = call.getString(index);
-			holder.s2 = call.getString(index + 1);
-			holder.l1 = call.getLong(index + 2);
-			return holder;
-		}
-	};
 
 	@Before
 	public void setup() {
@@ -45,51 +36,59 @@ public class TestCallerMysql {
 		ds.setPassword("");
 
 		dsCaller = new Caller(ds);
-
-		jdbcCaller = new Caller("jdbc:mysql://localhost:3306/testdb", "root", "");
 	}
 
 	@Test
 	public void test5() {
 
-		Result<SPInfo, DateHolder> result = dsCaller.call("OUTPUT_WITH_RS", null,
-				paramTypes(VARCHAR, VARCHAR, BIGINT), DATA_HOLDER_MAPPER,
-				new ResultSetMapper<SPInfo>() {
-
-					@Override
-					public SPInfo map(ResultSet rs) {
-						return new SPInfo(rs.getString(1), rs.getTimestamp(2));
-					}
-				});
+		Result<SPInfo, DateHolder> result = dsCaller.call("OUTPUT_WITH_RS", null, paramTypes(VARCHAR, VARCHAR, BIGINT),
+				new DateHolder(), new SPInfo());
 
 		Assert.assertEquals("HELLO", result.object().s1);
 		Assert.assertEquals("WORLD", result.object().s2);
 		Assert.assertEquals(99, result.object().l1);
 
 		Assert.assertTrue(result.list().size() >= 40);
-		/*
-		result = jdbcCaller.call("OUTPUT_WITH_RS", null, paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
-				DATA_HOLDER_MAPPER, new ResultSetMapper<SPInfo>() {
+	}
 
-					@Override
-					public SPInfo map(ResultSet rs) {
-						return new SPInfo(rs);
-					}
-				});
+	interface MyService {
+		@Mapper(resultSet = SPInfo.class, outParams = DateHolder.class)
+		@StoredProc("OUTPUT_WITH_RS")
+		Result<SPInfo, DateHolder> callMySp();
+	}
+
+	@Test
+	public void test6() {
+
+		MyService myService = dsCaller.create(MyService.class);
+		Result<SPInfo, DateHolder> result = myService.callMySp();
 
 		Assert.assertEquals("HELLO", result.object().s1);
 		Assert.assertEquals("WORLD", result.object().s2);
 		Assert.assertEquals(99, result.object().l1);
 
 		Assert.assertTrue(result.list().size() >= 40);
-		*/
 	}
 
 	// -----------------------------
 
-	static class DateHolder {
-		String s1, s2;
-		long l1;
+	public static class DateHolder implements TypedOutputParamMapper<DateHolder> {
+		private String s1, s2;
+		private long l1;
+
+		@Override
+		public DateHolder map(CallableStatement call, int index) throws SQLException {
+			DateHolder holder = new DateHolder();
+			holder.s1 = call.getString(index);
+			holder.s2 = call.getString(index + 1);
+			holder.l1 = call.getLong(index + 2);
+			return holder;
+		}
+
+		@Override
+		public List<Integer> getSQLTypes() {
+			return Arrays.asList(VARCHAR, VARCHAR, BIGINT);
+		}
 
 		@Override
 		public String toString() {
@@ -97,11 +96,14 @@ public class TestCallerMysql {
 		}
 	}
 
-	static class SPInfo {
+	public static class SPInfo implements ResultSetMapper<SPInfo> {
 		String spName;
 		Timestamp created;
 
-		public SPInfo(String spName, Timestamp created) {
+		public SPInfo() {
+		}
+
+		private SPInfo(String spName, Timestamp created) {
 			super();
 			this.spName = spName;
 			this.created = created;
@@ -109,6 +111,11 @@ public class TestCallerMysql {
 
 		public SPInfo(ResultSet rs) {
 			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public SPInfo map(ResultSet rs) {
+			return new SPInfo(rs.getString(1), rs.getTimestamp(2));
 		}
 
 		@Override

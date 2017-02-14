@@ -1,5 +1,6 @@
 package spwrap;
 
+import java.lang.reflect.Proxy;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +15,8 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import spwrap.annotations.CallerInvocationHandler;
 
 /**
  * All execute methods in this class expects 2 output parameters: <br />
@@ -78,6 +81,12 @@ public class Caller {
 		this.username = username;
 		this.password = password;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T create(Class<T> service) {
+		return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[] { service },
+				new CallerInvocationHandler(this.dataSource));
+	}
 
 	/**
 	 * execute SP with input parameters and result list of result from result
@@ -86,7 +95,7 @@ public class Caller {
 	 * @param inParams
 	 * @param rsMapper
 	 * @return
-	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
+	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
 	 */
 	public final <T> List<T> call(String procName, List<Param> inParams, ResultSetMapper<T> rsMapper) {
 		return call(procName, inParams, null, null, rsMapper).list();
@@ -109,7 +118,7 @@ public class Caller {
 	 * @param procName
 	 * @param inParams
 	 * @return
-	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
+	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
 	 */
 	public final void call(String procName, List<Param> inParams) {
 		call(procName, inParams, null, null);
@@ -120,7 +129,7 @@ public class Caller {
 	 * 
 	 * @param procName
 	 * @return
-	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
+	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
 	 */
 	public final void call(String procName) {
 		call(procName, null, null, null);
@@ -132,9 +141,9 @@ public class Caller {
 	 * @param procName
 	 * @param outParamsTypes
 	 *            (don't add types for result code and result message)
-	 * @param paramMapper
+	 * @param outputParamMapper
 	 * @return
-	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
+	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
 	 */
 	public final <T> T call(String procName, List<ParamType> outParamsTypes, OutputParamMapper<T> paramMapper) {
 		return call(procName, null, outParamsTypes, paramMapper);
@@ -148,9 +157,9 @@ public class Caller {
 	 * @param inParams
 	 * @param outParamsTypes
 	 *            (don't add types for result code and result message)
-	 * @param paramMapper
+	 * @param outputParamMapper
 	 * @return
-	 * @see {@link #call(String, List, List, OutputParamMapper, ResultSetMapper)}
+	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
 	 */
 	public final <T> T call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<T> paramMapper) {
@@ -175,7 +184,7 @@ public class Caller {
 	 * @param procName
 	 * @param inParams
 	 * @param outParamsTypes
-	 * @param paramMapper
+	 * @param outputParamMapper
 	 * @param rsMapper
 	 * @return
 	 */
@@ -278,8 +287,14 @@ public class Caller {
 
 	// -------------
 
-	private static class ParamType {
+	public static class ParamType {
 		protected int sqlType;
+		
+		public static ParamType of(int sqlType) {
+			ParamType p = new ParamType();
+			p.sqlType = sqlType;
+			return p;
+		}
 
 		@Override
 		public String toString() {
