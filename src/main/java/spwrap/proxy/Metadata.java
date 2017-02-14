@@ -7,7 +7,7 @@ import spwrap.Caller.Param;
 import spwrap.Caller.ParamType;
 import spwrap.Caller.ResultSetMapper;
 
-public class Metadata {
+class Metadata {
 
 	String storedProcName;
 	List<Param> inParams;
