@@ -1,6 +1,7 @@
 package spwrap.proxy;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import spwrap.CallException;
 import spwrap.Caller;
 import spwrap.Caller.ParamType;
 import spwrap.Caller.TypedOutputParamMapper;
+import spwrap.Tuple;
 
 class OutputParamMapperBinder {
 
@@ -26,40 +28,60 @@ class OutputParamMapperBinder {
 		try {
 			TypedOutputParamMapper<?> outParamsInstance = outParamMapperClass.newInstance();
 			metadata.outputParamMapper = outParamsInstance;
-			log.debug("TypedOutputParamMapper overridden from @Mapper is: {} for method: {}", outParamsInstance,
-					method.getName());
 
-			metadata.outParamTypes = new ArrayList<Caller.ParamType>();
-			List<Integer> types = outParamsInstance.getTypes();
+			log.debug("overrideFromAnnotation:: TypedOutputParamMapper overridden from @Mapper is: {} for method: {}",
+					outParamsInstance, method.getName());
 
-			for (Integer type : types) {
-				metadata.outParamTypes.add(ParamType.of(type));
-			}
-
-			log.debug("TypedOutputParamMapper Types are: {} for method: {}", metadata.outParamTypes, method.getName());
+			setOutParamTypes(method, metadata, outParamsInstance);
 		} catch (Exception e) {
 			throw new CallException("cannot create outParams Mapper", e);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	static void setFromReturnType(Method method, Metadata metadata) {
 
 		Class<?> returnType = method.getReturnType();
 
 		if (TypedOutputParamMapper.class.isAssignableFrom(returnType)) {
 
-			@SuppressWarnings("unchecked")
 			Class<TypedOutputParamMapper<?>> outParamMapperClass = (Class<TypedOutputParamMapper<?>>) returnType;
+			_steFromReturnType(method, metadata, outParamMapperClass);
 
-			try {
-				TypedOutputParamMapper<?> outParamsInstance = outParamMapperClass.newInstance();
-				metadata.outputParamMapper = outParamsInstance;
+		} else if (Tuple.class.isAssignableFrom(returnType)) {
 
-				log.debug("TypedOutputParamMapper from Method return type is: {} for method: {}", outParamsInstance,
-						method.getName());
-			} catch (Exception e) {
-				throw new CallException("cannot create outParams Mapper", e);
-			}
+			ParameterizedType type = (ParameterizedType) method.getGenericReturnType();
+			Class<?> listClass = (Class<?>) type.getActualTypeArguments()[1];
+
+			_steFromReturnType(method, metadata, (Class<TypedOutputParamMapper<?>>) listClass);
 		}
+	}
+
+	private static void _steFromReturnType(Method method, Metadata metadata,
+			Class<TypedOutputParamMapper<?>> outParamMapperClass) {
+		try {
+			TypedOutputParamMapper<?> outParamsInstance = outParamMapperClass.newInstance();
+			metadata.outputParamMapper = outParamsInstance;
+
+			log.debug("setFromReturnType:: TypedOutputParamMapper from Method return type is: {} for method: {}",
+					outParamsInstance, method.getName());
+
+			setOutParamTypes(method, metadata, outParamsInstance);
+		} catch (Exception e) {
+			throw new CallException("cannot create outParams Mapper", e);
+		}
+	}
+
+	private static void setOutParamTypes(Method method, Metadata metadata,
+			TypedOutputParamMapper<?> outParamsInstance) {
+
+		metadata.outParamTypes = new ArrayList<Caller.ParamType>();
+		List<Integer> types = outParamsInstance.getTypes();
+
+		for (Integer type : types) {
+			metadata.outParamTypes.add(ParamType.of(type));
+		}
+
+		log.debug("TypedOutputParamMapper Types are: {} for method: {}", metadata.outParamTypes, method.getName());
 	}
 }

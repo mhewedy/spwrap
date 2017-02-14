@@ -21,7 +21,7 @@ import spwrap.annotations.StoredProc;
 
 //RUN src/test/resources/mysql_script.sql first
 
-public class TestCallerMysql {
+public class CallerMysqlIntTest {
 
 	private Caller dsCaller;
 

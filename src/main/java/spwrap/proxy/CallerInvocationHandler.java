@@ -30,7 +30,7 @@ public class CallerInvocationHandler implements InvocationHandler {
 		Caller caller = new Caller(dataSource);
 		Tuple<?, ?> call = caller.call(metadata.storedProcName, metadata.inParams, metadata.outParamTypes,
 				metadata.outputParamMapper, metadata.rsMapper);
-
+		
 		if (metadata.outputParamMapper == null) {
 			return call.list();
 		}

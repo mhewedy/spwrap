@@ -1,11 +1,11 @@
 package spwrap;
 
-import static spwrap.Caller.paramTypes;
-import static spwrap.Caller.params;
-import static spwrap.Caller.Param.of;
+import static spwrap.Caller.*;
+import static spwrap.Caller.Param.*;
 
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import spwrap.Caller.ResultSetMapper;
 
 //RUN src/test/resources/sqlserver_script.sql first
 
-public class TestCallerSqlServer {
+public class CallerSqlServerIntTest {
 
 	private Caller dsCaller;
 
@@ -56,7 +56,16 @@ public class TestCallerSqlServer {
 
 	@Test
 	public void test3() {
-		dsCaller.call("ECHO", params(of("hello", Types.VARCHAR)));
+		String value = "hello";
+		List<String> call = dsCaller.call("ECHO", params(of(value, Types.VARCHAR)), new ResultSetMapper<String>() {
+
+			@Override
+			public String map(Result result) {
+				return result.getString(1);
+			}
+		});
+
+		Assert.assertEquals(value, call.get(0));
 	}
 
 	@Test
@@ -95,6 +104,21 @@ public class TestCallerSqlServer {
 	@Test(expected = CallException.class)
 	public void test6() {
 		dsCaller.call("SP_WITH_INT_OUTPUT");
+	}
+
+	@Test
+	public void test7() {
+		String value = "hello";
+		String call = dsCaller.call("ECHO2", params(of(value, Types.VARCHAR)), paramTypes(Types.VARCHAR),
+				new OutputParamMapper<String>() {
+
+					@Override
+					public String map(Result result, int index) {
+						return result.getString(index);
+					}
+				});
+
+		Assert.assertEquals(value, call);
 	}
 
 	// -----------------------------

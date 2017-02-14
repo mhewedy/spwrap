@@ -81,7 +81,7 @@ public class Caller {
 		this.username = username;
 		this.password = password;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> T create(Class<T> service) {
 		return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[] { service },
@@ -190,7 +190,7 @@ public class Caller {
 	 */
 	public final <T, U> Tuple<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper) {
-		
+
 		final long startTime = System.currentTimeMillis();
 
 		Connection con = null;
@@ -258,7 +258,7 @@ public class Caller {
 				throw new CallException(
 						"error code: " + resultCode + (resultMsg != null ? (", error msg: " + resultMsg) : ""));
 			}
-			
+
 			result = new Tuple<T, U>(list, object);
 
 		} catch (Exception ex) {
@@ -282,8 +282,15 @@ public class Caller {
 	}
 
 	public static interface ResultSetMapper<T> {
+		/**
+		 * method should return a new object
+		 * 
+		 * @param result
+		 * @return
+		 */
 		T map(Result result);
 	}
+
 	public static interface TypedOutputParamMapper<T> extends OutputParamMapper<T> {
 		/**
 		 * 
@@ -296,7 +303,7 @@ public class Caller {
 
 	public static class ParamType {
 		protected int sqlType;
-		
+
 		public static ParamType of(int sqlType) {
 			ParamType p = new ParamType();
 			p.sqlType = sqlType;

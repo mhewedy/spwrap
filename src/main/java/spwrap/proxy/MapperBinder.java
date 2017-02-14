@@ -53,7 +53,7 @@ class MapperBinder {
 
 		for (Class<?> clazz : mapperClasses) {
 			if (!ResultSetMapper.class.isAssignableFrom(clazz)
-					|| TypedOutputParamMapper.class.isAssignableFrom(clazz)) {
+					&& !TypedOutputParamMapper.class.isAssignableFrom(clazz)) {
 				throw new CallException(
 						"Mapper classes should implement either ResultSetMapper or TypedOutputParamMapper");
 			}
