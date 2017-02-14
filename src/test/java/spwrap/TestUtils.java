@@ -11,7 +11,7 @@ public class TestUtils {
 	
 	static HikariDataSource ds = new HikariDataSource();
 
-	private static final String SQL_PATH = "/Volumes/osxdata/work/spwrap/src/test/resources/schema.sql";
+	private static final String SQL_PATH = "src/test/resources/schema.sql";
 
 	static void loadData() {
 		
