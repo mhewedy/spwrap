@@ -5,42 +5,22 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.sql.SQLException;
-import java.util.List;
 
-import spwrap.Caller.OutputParamMapper;
 import spwrap.Caller.ResultSetMapper;
-import spwrap.Result;
+import spwrap.Caller.TypedOutputParamMapper;
 
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface Mapper {
 
-	Class<? extends spwrap.Caller.ResultSetMapper<?>> resultSet() default NullResultSetMapper.class;
-
-	Class<? extends TypedOutputParamMapper<?>> outParams() default NullTypedOutputParamMapper.class;
-
-	static interface TypedOutputParamMapper<T> extends OutputParamMapper<T> {
-		List<Integer> getSQLTypes();
-	}
-
-	static final class NullResultSetMapper implements ResultSetMapper<Object> {
-		@Override
-		public Object map(Result rs) {
-			return null;
-		}
-	}
-
-	static final class NullTypedOutputParamMapper implements TypedOutputParamMapper<Object> {
-		@Override
-		public Object map(Result call, int index) throws SQLException {
-			return null;
-		}
-
-		@Override
-		public List<Integer> getSQLTypes() {
-			return null;
-		}
-	}
-
+	/**
+	 * classes that implement either {@link TypedOutputParamMapper} or
+	 * {@link ResultSetMapper}
+	 * 
+	 * <br />
+	 * Maximum 2 classes allowed, one for implements each interface
+	 * 
+	 * @return
+	 */
+	Class<?>[] value();
 }

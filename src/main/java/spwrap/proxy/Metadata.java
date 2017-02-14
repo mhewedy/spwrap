@@ -1,4 +1,4 @@
-package spwrap.annotations;
+package spwrap.proxy;
 
 import java.util.List;
 

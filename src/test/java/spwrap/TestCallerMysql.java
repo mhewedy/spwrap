@@ -15,8 +15,8 @@ import org.junit.Test;
 import com.zaxxer.hikari.HikariDataSource;
 
 import spwrap.Caller.ResultSetMapper;
+import spwrap.Caller.TypedOutputParamMapper;
 import spwrap.annotations.Mapper;
-import spwrap.annotations.Mapper.TypedOutputParamMapper;
 import spwrap.annotations.StoredProc;
 
 //RUN src/test/resources/mysql_script.sql first
@@ -51,7 +51,7 @@ public class TestCallerMysql {
 	}
 
 	interface MyService {
-		@Mapper(resultSet = SPInfo.class, outParams = DateHolder.class)
+		@Mapper({SPInfo.class, DateHolder.class})
 		@StoredProc("OUTPUT_WITH_RS")
 		Tuple<SPInfo, DateHolder> callMySp();
 	}
@@ -76,16 +76,16 @@ public class TestCallerMysql {
 		private long l1;
 
 		@Override
-		public DateHolder map(Result call, int index) {
+		public DateHolder map(Result result, int index) {
 			DateHolder holder = new DateHolder();
-			holder.s1 = call.getString(index);
-			holder.s2 = call.getString(index + 1);
-			holder.l1 = call.getLong(index + 2);
+			holder.s1 = result.getString(index);
+			holder.s2 = result.getString(index + 1);
+			holder.l1 = result.getLong(index + 2);
 			return holder;
 		}
 
 		@Override
-		public List<Integer> getSQLTypes() {
+		public List<Integer> getTypes() {
 			return Arrays.asList(VARCHAR, VARCHAR, BIGINT);
 		}
 

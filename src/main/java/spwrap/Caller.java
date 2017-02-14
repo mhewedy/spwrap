@@ -5,7 +5,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +15,8 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import spwrap.annotations.CallerInvocationHandler;
+import spwrap.annotations.Mapper;
+import spwrap.proxy.CallerInvocationHandler;
 
 /**
  * All execute methods in this class expects 2 output parameters: <br />
@@ -278,11 +278,18 @@ public class Caller {
 	// --------------
 
 	public static interface OutputParamMapper<T> {
-		T map(spwrap.Result call, int index) throws SQLException;
+		T map(Result result, int index);
 	}
 
 	public static interface ResultSetMapper<T> {
-		T map(spwrap.Result rs);
+		T map(Result result);
+	}
+	public static interface TypedOutputParamMapper<T> extends OutputParamMapper<T> {
+		/**
+		 * 
+		 * @return list of Types as in {@link java.sql.Types}
+		 */
+		List<Integer> getTypes();
 	}
 
 	// -------------
