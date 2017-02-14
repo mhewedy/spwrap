@@ -33,8 +33,7 @@ public class AnnotationSqlServerIntTest {
 		ds.setUsername("test");
 		ds.setPassword("test");
 
-		Caller dsCaller = new Caller(ds);
-		testService = dsCaller.create(TestService.class);
+		testService = new Caller(ds).create(TestService.class);
 
 	}
 
