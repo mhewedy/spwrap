@@ -240,7 +240,7 @@ public class Caller {
 				log.debug("reading result set");
 				rs = call.getResultSet();
 				while (rs.next()) {
-					list.add(rsMapper.map(new spwrap.ResultSet(rs)));
+					list.add(rsMapper.map(new spwrap.ResultSet(rs, null)));
 				}
 			}
 
@@ -248,7 +248,7 @@ public class Caller {
 			if (outParamsTypes != null) {
 				log.debug("reading output parameters");
 				for (int i = 0; i < outParamsTypes.size(); i++) {
-					object = paramMapper.map(call, startOfOutParamCnt);
+					object = paramMapper.map(new spwrap.ResultSet(null, call), startOfOutParamCnt);
 				}
 			}
 
@@ -278,7 +278,7 @@ public class Caller {
 	// --------------
 
 	public static interface OutputParamMapper<T> {
-		T map(CallableStatement call, int index) throws SQLException;
+		T map(spwrap.ResultSet call, int index) throws SQLException;
 	}
 
 	public static interface ResultSetMapper<T> {

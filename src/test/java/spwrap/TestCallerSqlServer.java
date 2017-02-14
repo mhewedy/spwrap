@@ -1,10 +1,9 @@
 package spwrap;
 
-import static spwrap.Caller.*;
-import static spwrap.Caller.Param.*;
+import static spwrap.Caller.paramTypes;
+import static spwrap.Caller.params;
+import static spwrap.Caller.Param.of;
 
-import java.sql.CallableStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 
@@ -22,12 +21,11 @@ import spwrap.Caller.ResultSetMapper;
 public class TestCallerSqlServer {
 
 	private Caller dsCaller;
-	private Caller jdbcCaller;
 
 	private final OutputParamMapper<DateHolder> DATA_HOLDER_MAPPER = new OutputParamMapper<DateHolder>() {
 
 		@Override
-		public DateHolder map(CallableStatement call, int index) throws SQLException {
+		public DateHolder map(ResultSet call, int index){
 			DateHolder holder = new DateHolder();
 			holder.s1 = call.getString(index);
 			holder.s2 = call.getString(index + 1);
@@ -39,31 +37,26 @@ public class TestCallerSqlServer {
 	@Before
 	public void setup() {
 		HikariDataSource ds = new HikariDataSource();
-		ds.setJdbcUrl("jdbc:sqlserver://localhost:1433;DatabaseName=TEST");
+		ds.setJdbcUrl("jdbc:sqlserver://192.168.43.12:1433;DatabaseName=TEST");
 		ds.setUsername("test");
 		ds.setPassword("test");
 
 		dsCaller = new Caller(ds);
-
-		jdbcCaller = new Caller("jdbc:sqlserver://localhost:1433;DatabaseName=TEST", "test", "test");
 	}
 
 	@Test
 	public void test1() {
 		dsCaller.call("EXE_NO_IN_NO_OUT");
-		jdbcCaller.call("EXE_NO_IN_NO_OUT");
 	}
 
 	@Test(expected = CallException.class)
 	public void test2() {
 		dsCaller.call("NOT_FOUND");
-		jdbcCaller.call("NOT_FOUND");
 	}
 
 	@Test
 	public void test3() {
 		dsCaller.call("ECHO", params(of("hello", Types.VARCHAR)));
-		jdbcCaller.call("ECHO", params(of("hello", Types.VARCHAR)));
 	}
 
 	@Test
@@ -76,11 +69,6 @@ public class TestCallerSqlServer {
 		Assert.assertEquals("WORLD", result.s2);
 		Assert.assertEquals(99, result.l1);
 
-		result = jdbcCaller.call("OUTPUT", paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT), DATA_HOLDER_MAPPER);
-
-		Assert.assertEquals("HELLO", result.s1);
-		Assert.assertEquals("WORLD", result.s2);
-		Assert.assertEquals(99, result.l1);
 	}
 
 	@Test
@@ -102,26 +90,12 @@ public class TestCallerSqlServer {
 
 		Assert.assertTrue(result.list().size() >= 4);
 
-		result = jdbcCaller.call("OUTPUT_WITH_RS", null, paramTypes(Types.VARCHAR, Types.VARCHAR, Types.BIGINT),
-				DATA_HOLDER_MAPPER, new ResultSetMapper<SPInfo>() {
-
-					@Override
-					public SPInfo map(ResultSet rs) {
-						return new SPInfo(rs.getString(1), rs.getTimestamp(2));
-					}
-				});
-
-		Assert.assertEquals("HELLO", result.object().s1);
-		Assert.assertEquals("WORLD", result.object().s2);
-		Assert.assertEquals(99, result.object().l1);
-
-		Assert.assertTrue(result.list().size() >= 4);
+		
 	}
 
 	@Test(expected = CallException.class)
 	public void test6() {
 		dsCaller.call("SP_WITH_INT_OUTPUT");
-		jdbcCaller.call("SP_WITH_INT_OUTPUT");
 	}
 
 	// -----------------------------

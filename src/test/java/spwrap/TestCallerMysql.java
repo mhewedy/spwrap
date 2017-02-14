@@ -1,10 +1,9 @@
 package spwrap;
 
-import static java.sql.Types.*;
-import static spwrap.Caller.*;
+import static java.sql.Types.BIGINT;
+import static java.sql.Types.VARCHAR;
+import static spwrap.Caller.paramTypes;
 
-import java.sql.CallableStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
@@ -17,8 +16,8 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import spwrap.Caller.ResultSetMapper;
 import spwrap.annotations.Mapper;
-import spwrap.annotations.StoredProc;
 import spwrap.annotations.Mapper.TypedOutputParamMapper;
+import spwrap.annotations.StoredProc;
 
 //RUN src/test/resources/mysql_script.sql first
 
@@ -77,7 +76,7 @@ public class TestCallerMysql {
 		private long l1;
 
 		@Override
-		public DateHolder map(CallableStatement call, int index) throws SQLException {
+		public DateHolder map(ResultSet call, int index) {
 			DateHolder holder = new DateHolder();
 			holder.s1 = call.getString(index);
 			holder.s2 = call.getString(index + 1);

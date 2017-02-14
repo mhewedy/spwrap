@@ -1,11 +1,11 @@
 package spwrap;
 
-import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Array;
 import java.sql.Blob;
+import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.Date;
 import java.sql.NClob;
@@ -15,24 +15,37 @@ import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Map;
 
 public class ResultSet {
 
-	private final java.sql.ResultSet resultSet;
+	private static final String OBJECT_ARE_NULL = "resultSet and callableStatement are null";
 
-	public ResultSet(java.sql.ResultSet resultSet) {
-		this.resultSet = resultSet;
+	private final java.sql.ResultSet rs;
+
+	private final CallableStatement cstmt;
+
+	public ResultSet(java.sql.ResultSet resultSet, CallableStatement callableStatement) {
+		this.rs = resultSet;
+		this.cstmt = callableStatement;
 	}
 
 	public java.sql.ResultSet getResultSet() {
-		return resultSet;
+		return rs;
+	}
+
+	public CallableStatement getCallableStatement() {
+		return cstmt;
 	}
 
 	public String getString(int columnIndex) {
 		try {
-			return resultSet.getString(columnIndex);
+			if (rs != null) {
+				return rs.getString(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getString(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -40,7 +53,13 @@ public class ResultSet {
 
 	public boolean getBoolean(int columnIndex) {
 		try {
-			return resultSet.getBoolean(columnIndex);
+			if (rs != null) {
+				return rs.getBoolean(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getBoolean(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -48,15 +67,28 @@ public class ResultSet {
 
 	public byte getByte(int columnIndex) {
 		try {
-			return resultSet.getByte(columnIndex);
+			if (rs != null) {
+				return rs.getByte(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getByte(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
+
 	}
 
 	public short getShort(int columnIndex) {
 		try {
-			return resultSet.getShort(columnIndex);
+			if (rs != null) {
+				return rs.getShort(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getShort(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -64,7 +96,13 @@ public class ResultSet {
 
 	public int getInt(int columnIndex) {
 		try {
-			return resultSet.getInt(columnIndex);
+			if (rs != null) {
+				return rs.getInt(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getInt(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -72,7 +110,13 @@ public class ResultSet {
 
 	public long getLong(int columnIndex) {
 		try {
-			return resultSet.getLong(columnIndex);
+			if (rs != null) {
+				return rs.getLong(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getLong(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -80,7 +124,13 @@ public class ResultSet {
 
 	public float getFloat(int columnIndex) {
 		try {
-			return resultSet.getFloat(columnIndex);
+			if (rs != null) {
+				return rs.getFloat(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getFloat(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -88,7 +138,13 @@ public class ResultSet {
 
 	public double getDouble(int columnIndex) {
 		try {
-			return resultSet.getDouble(columnIndex);
+			if (rs != null) {
+				return rs.getDouble(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getDouble(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -96,7 +152,13 @@ public class ResultSet {
 
 	public BigDecimal getBigDecimal(int columnIndex, int scale) {
 		try {
-			return resultSet.getBigDecimal(columnIndex, scale);
+			if (rs != null) {
+				return rs.getBigDecimal(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getBigDecimal(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -104,7 +166,13 @@ public class ResultSet {
 
 	public byte[] getBytes(int columnIndex) {
 		try {
-			return resultSet.getBytes(columnIndex);
+			if (rs != null) {
+				return rs.getBytes(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getBytes(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -112,7 +180,13 @@ public class ResultSet {
 
 	public Date getDate(int columnIndex) {
 		try {
-			return resultSet.getDate(columnIndex);
+			if (rs != null) {
+				return rs.getDate(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getDate(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -120,7 +194,13 @@ public class ResultSet {
 
 	public Time getTime(int columnIndex) {
 		try {
-			return resultSet.getTime(columnIndex);
+			if (rs != null) {
+				return rs.getTime(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getTime(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -128,175 +208,27 @@ public class ResultSet {
 
 	public Timestamp getTimestamp(int columnIndex) {
 		try {
-			return resultSet.getTimestamp(columnIndex);
+			if (rs != null) {
+				return rs.getTimestamp(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getTimestamp(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
 	}
 
-	public InputStream getAsciiStream(int columnIndex) {
+	public <T> T getObject(int columnIndex, Class<T> clazz) {
 		try {
-			return resultSet.getAsciiStream(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public InputStream getUnicodeStream(int columnIndex) {
-		try {
-			return resultSet.getUnicodeStream(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public InputStream getBinaryStream(int columnIndex) {
-		try {
-			return resultSet.getBinaryStream(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public String getString(String columnLabel) {
-		try {
-			return resultSet.getString(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public boolean getBoolean(String columnLabel) {
-		try {
-			return resultSet.getBoolean(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public byte getByte(String columnLabel) {
-		try {
-			return resultSet.getByte(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public short getShort(String columnLabel) {
-		try {
-			return resultSet.getShort(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public int getInt(String columnLabel) {
-		try {
-			return resultSet.getInt(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public long getLong(String columnLabel) {
-		try {
-			return resultSet.getLong(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public float getFloat(String columnLabel) {
-		try {
-			return resultSet.getFloat(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public double getDouble(String columnLabel) {
-		try {
-			return resultSet.getDouble(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public BigDecimal getBigDecimal(String columnLabel, int scale) {
-		try {
-			return resultSet.getBigDecimal(columnLabel, scale);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public byte[] getBytes(String columnLabel) {
-		try {
-			return resultSet.getBytes(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Date getDate(String columnLabel) {
-		try {
-			return resultSet.getDate(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Time getTime(String columnLabel) {
-		try {
-			return resultSet.getTime(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Timestamp getTimestamp(String columnLabel) {
-		try {
-			return resultSet.getTimestamp(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public InputStream getAsciiStream(String columnLabel) {
-		try {
-			return resultSet.getAsciiStream(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public InputStream getUnicodeStream(String columnLabel) {
-		try {
-			return resultSet.getUnicodeStream(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public InputStream getBinaryStream(String columnLabel) {
-		try {
-			return resultSet.getBinaryStream(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Object getObject(int columnIndex) {
-		try {
-			return resultSet.getObject(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Object getObject(String columnLabel) {
-		try {
-			return resultSet.getObject(columnLabel);
+			if (rs != null) {
+				return rs.getObject(columnIndex, clazz);
+			} else if (cstmt != null) {
+				return cstmt.getObject(columnIndex, clazz);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -304,15 +236,13 @@ public class ResultSet {
 
 	public Reader getCharacterStream(int columnIndex) {
 		try {
-			return resultSet.getCharacterStream(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Reader getCharacterStream(String columnLabel) {
-		try {
-			return resultSet.getCharacterStream(columnLabel);
+			if (rs != null) {
+				return rs.getCharacterStream(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getCharacterStream(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -320,23 +250,13 @@ public class ResultSet {
 
 	public BigDecimal getBigDecimal(int columnIndex) {
 		try {
-			return resultSet.getBigDecimal(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public BigDecimal getBigDecimal(String columnLabel) {
-		try {
-			return resultSet.getBigDecimal(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Object getObject(int columnIndex, Map<String, Class<?>> map) {
-		try {
-			return resultSet.getObject(columnIndex, map);
+			if (rs != null) {
+				return rs.getBigDecimal(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getBigDecimal(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -344,7 +264,13 @@ public class ResultSet {
 
 	public Ref getRef(int columnIndex) {
 		try {
-			return resultSet.getRef(columnIndex);
+			if (rs != null) {
+				return rs.getRef(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getRef(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -352,7 +278,13 @@ public class ResultSet {
 
 	public Blob getBlob(int columnIndex) {
 		try {
-			return resultSet.getBlob(columnIndex);
+			if (rs != null) {
+				return rs.getBlob(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getBlob(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -360,7 +292,13 @@ public class ResultSet {
 
 	public Clob getClob(int columnIndex) {
 		try {
-			return resultSet.getClob(columnIndex);
+			if (rs != null) {
+				return rs.getClob(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getClob(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -368,95 +306,13 @@ public class ResultSet {
 
 	public Array getArray(int columnIndex) {
 		try {
-			return resultSet.getArray(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Object getObject(String columnLabel, Map<String, Class<?>> map) {
-		try {
-			return resultSet.getObject(columnLabel, map);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Ref getRef(String columnLabel) {
-		try {
-			return resultSet.getRef(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Blob getBlob(String columnLabel) {
-		try {
-			return resultSet.getBlob(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Clob getClob(String columnLabel) {
-		try {
-			return resultSet.getClob(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Array getArray(String columnLabel) {
-		try {
-			return resultSet.getArray(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Date getDate(int columnIndex, Calendar cal) {
-		try {
-			return resultSet.getDate(columnIndex, cal);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Date getDate(String columnLabel, Calendar cal) {
-		try {
-			return resultSet.getDate(columnLabel, cal);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Time getTime(int columnIndex, Calendar cal) {
-		try {
-			return resultSet.getTime(columnIndex, cal);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Time getTime(String columnLabel, Calendar cal) {
-		try {
-			return resultSet.getTime(columnLabel, cal);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Timestamp getTimestamp(int columnIndex, Calendar cal) {
-		try {
-			return resultSet.getTimestamp(columnIndex, cal);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public Timestamp getTimestamp(String columnLabel, Calendar cal) {
-		try {
-			return resultSet.getTimestamp(columnLabel, cal);
+			if (rs != null) {
+				return rs.getArray(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getArray(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -464,15 +320,13 @@ public class ResultSet {
 
 	public URL getURL(int columnIndex) {
 		try {
-			return resultSet.getURL(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public URL getURL(String columnLabel) {
-		try {
-			return resultSet.getURL(columnLabel);
+			if (rs != null) {
+				return rs.getURL(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getURL(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -480,15 +334,13 @@ public class ResultSet {
 
 	public RowId getRowId(int columnIndex) {
 		try {
-			return resultSet.getRowId(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public RowId getRowId(String columnLabel) {
-		try {
-			return resultSet.getRowId(columnLabel);
+			if (rs != null) {
+				return rs.getRowId(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getRowId(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -496,15 +348,13 @@ public class ResultSet {
 
 	public NClob getNClob(int columnIndex) {
 		try {
-			return resultSet.getNClob(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public NClob getNClob(String columnLabel) {
-		try {
-			return resultSet.getNClob(columnLabel);
+			if (rs != null) {
+				return rs.getNClob(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getNClob(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -512,15 +362,13 @@ public class ResultSet {
 
 	public SQLXML getSQLXML(int columnIndex) {
 		try {
-			return resultSet.getSQLXML(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public SQLXML getSQLXML(String columnLabel) {
-		try {
-			return resultSet.getSQLXML(columnLabel);
+			if (rs != null) {
+				return rs.getSQLXML(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getSQLXML(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -528,15 +376,13 @@ public class ResultSet {
 
 	public String getNString(int columnIndex) {
 		try {
-			return resultSet.getNString(columnIndex);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-
-	public String getNString(String columnLabel) {
-		try {
-			return resultSet.getNString(columnLabel);
+			if (rs != null) {
+				return rs.getNString(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getNString(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
@@ -544,17 +390,16 @@ public class ResultSet {
 
 	public Reader getNCharacterStream(int columnIndex) {
 		try {
-			return resultSet.getNCharacterStream(columnIndex);
+			if (rs != null) {
+				return rs.getNCharacterStream(columnIndex);
+			} else if (cstmt != null) {
+				return cstmt.getNCharacterStream(columnIndex);
+			} else {
+				throw new RuntimeException(OBJECT_ARE_NULL);
+			}
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}
 	}
 
-	public Reader getNCharacterStream(String columnLabel) {
-		try {
-			return resultSet.getNCharacterStream(columnLabel);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
 }

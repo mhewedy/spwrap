@@ -1,11 +1,10 @@
 package spwrap.annotations;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -34,9 +33,10 @@ public @interface Mapper {
 
 	static final class NullTypedOutputParamMapper implements TypedOutputParamMapper<Object> {
 		@Override
-		public Object map(CallableStatement call, int index) throws SQLException {
+		public Object map(ResultSet call, int index) throws SQLException {
 			return null;
 		}
+
 		@Override
 		public List<Integer> getSQLTypes() {
 			return null;
