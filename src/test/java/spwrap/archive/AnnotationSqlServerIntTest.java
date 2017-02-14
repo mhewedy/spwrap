@@ -1,4 +1,4 @@
-package spwrap;
+package spwrap.archive;
 
 import java.sql.Date;
 import java.sql.Types;
@@ -11,6 +11,9 @@ import org.junit.Test;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import spwrap.Caller;
+import spwrap.Result;
+import spwrap.Tuple;
 import spwrap.Caller.ResultSetMapper;
 import spwrap.Caller.TypedOutputParamMapper;
 import spwrap.annotations.Mapper;

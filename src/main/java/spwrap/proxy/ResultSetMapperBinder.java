@@ -20,7 +20,6 @@ class ResultSetMapperBinder {
 		if (rsMapperClass == null) {
 			return;
 		}
-
 		try {
 			ResultSetMapper<?> resultSetMapper = rsMapperClass.newInstance();
 			metadata.rsMapper = resultSetMapper;

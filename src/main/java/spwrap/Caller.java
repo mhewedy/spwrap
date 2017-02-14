@@ -232,7 +232,8 @@ public class Caller {
 			call.registerOutParameter(resultCodeIndex, Types.BOOLEAN); // RESULT_CODE
 			call.registerOutParameter(resultCodeIndex + 1, Types.VARCHAR); // RESULT_MSG
 
-			boolean hasResult = call.execute();
+			/*boolean hasResult = */call.execute();
+			boolean hasResult = call.getMoreResults();
 
 			List<T> list = null;
 			if (hasResult && rsMapper != null) {

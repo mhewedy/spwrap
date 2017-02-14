@@ -1,4 +1,4 @@
-package spwrap;
+package spwrap.archive;
 
 import static spwrap.Caller.*;
 import static spwrap.Caller.Param.*;
@@ -13,6 +13,10 @@ import org.junit.Test;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import spwrap.CallException;
+import spwrap.Caller;
+import spwrap.Result;
+import spwrap.Tuple;
 import spwrap.Caller.OutputParamMapper;
 import spwrap.Caller.ResultSetMapper;
 
