@@ -232,8 +232,13 @@ public class Caller {
 			call.registerOutParameter(resultCodeIndex, Types.BOOLEAN); // RESULT_CODE
 			call.registerOutParameter(resultCodeIndex + 1, Types.VARCHAR); // RESULT_MSG
 
-			/*boolean hasResult = */call.execute();
-			boolean hasResult = call.getMoreResults();
+			boolean hasResult = call.execute();
+			
+			// TODO: if more db-specific staff is growing, then encapsulate such
+			// code into its own abstraction
+			if (con.getMetaData().getDatabaseProductName().contains("HSQL")) {
+				hasResult = call.getMoreResults();
+			}
 
 			List<T> list = null;
 			if (hasResult && rsMapper != null) {
