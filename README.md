@@ -3,8 +3,7 @@ Stored Procedure caller
 
 Wrap Stored Procedures exeuction code.
 
-compitable with jdk >= 1.6 (never tested with jdk 1.5, but I think it is compitable as well)
-
+compitable with `jdk` >= `1.6` (never tested with jdk 1.5), with 1 dependency on `slf4j-api`
 
 ## Usage
  ```xml
@@ -220,5 +219,7 @@ For full example and more, see Test cases.
 spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
 
 spwrap doesn't support returning multi-result sets from the stored procedure.
+
+Tested on MySQL, SQL Server and HSQL
 
 See test cases for more usage scenarios.
