@@ -85,7 +85,9 @@ System.out.println(result.list());   // print the list of objects that wrap the 
 
 ```
 
-##Not implemented features:
+##Limitations:
 spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
+
+spwrap doesn't support returning multi-result sets from the stored procedure.
 
 See test cases for more usage scenarios.
