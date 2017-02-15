@@ -220,4 +220,6 @@ spwrap doesn't support returning multi-result sets from the stored procedure.
 
 Tested on MySQL, SQL Server and HSQL
 
+**NOTE**: `spwrap` will not map the result from database into java for your, you have to deal with it via Mappers (`TypedOutputParamMapper` and `ResultSetMapper`). I did so because I intented to make this simple library as simple as possible, without going into SQL-to-Java types mapping details.
+
 See test cases for more usage scenarios.
