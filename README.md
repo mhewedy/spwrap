@@ -65,8 +65,6 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
 
 **Note**: You can override the result code default success value setting system property `spwarp.success_code` to any `short` value.
 
-Note: All stored procedures should return 2 output parameters at least, result code and result message, that looks like:
-
 ## Step 1 (Create The Domain Object):
 Here's the Java Domain class:
 
