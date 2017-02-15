@@ -6,10 +6,7 @@ Wrap Stored Procedures exeuction code.
 compitable with jdk >= 1.6 (never tested with jdk 1.5, but I think it is compitable as well)
 
 
-##Usage
- 
- Add the following to your pom.xml:
- 
+## Usage
  ```xml
  <repositories>
 	<repository>
@@ -18,72 +15,189 @@ compitable with jdk >= 1.6 (never tested with jdk 1.5, but I think it is compita
 	</repository>
 </repositories>
 ```
-
-and in the dependecies section add:
+And in the dependecies section add:
 ```xml
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>0.0.6</version>
+	<version>0.0.8</version>
 </dependency>
 ```
 
-for gradle and tools see: https://jitpack.io/#mhewedy/spwrap/0.0.6
+for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.8
+
+## Step 0 (Create Store Procedures):
+
+Suppose you have 3 Stored Procedures to save customer to database, get customer by id and list all customer.
+
+For example here's SP code using HSQL:
+```sql
+/* IN */
+CREATE PROCEDURE new_customer(firstname VARCHAR(50), lastname VARCHAR(50), OUT code SMALLINT, OUT msg VARCHAR(50))
+   	MODIFIES SQL DATA DYNAMIC RESULT SETS 1
+   	BEGIN ATOMIC
+    	INSERT INTO CUSTOMERS VALUES (DEFAULT, firstname, lastname);
+    	SET code = 0;
+	END
+;;
+
+/* IN, OUT */
+CREATE PROCEDURE get_customer(IN pid INT, OUT firstname VARCHAR(50), OUT lastname VARCHAR(50), OUT code SMALLINT, OUT msg VARCHAR(50)) 
+	READS SQL DATA
+	BEGIN ATOMIC
+   		SELECT first_name, last_name INTO firstname, lastname FROM customers WHERE id = pid;
+   		SET code = 0;
+	END
+;;
+
+/* RS */
+CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
+   	READS SQL DATA DYNAMIC RESULT SETS 1
+   	BEGIN ATOMIC
+    	DECLARE result CURSOR FOR SELECT * FROM CUSTOMERS;
+     	OPEN result;
+     	SET code = 0;
+  	END
+;;
+```
+
+**Note**: Every Stored Procedure should have additional 2 Output Parameters at the end of its parameter list. One of type SMALLINT and the other of type VARCHAR for result code and message respectively, where result code `0` means success, and fail otherwise.
+
+**Note**: You can override the result code default success value setting system property `spwarp.success_code` to any `short` value.
 
 Note: All stored procedures should return 2 output parameters at least, result code and result message, that looks like:
 
-```sql
-CREATE PROCEDURE [dbo].[SOME_SP]
-  @SUCCESS SMALLINT OUTPUT, 
-  @MESSAGE varchar(50) OUTPUT
-AS
--- .....
---- .....
-
-SET @SUCCESS = 0 -- 0 means success, otherwise is false, if you want to override the success value, set the property spwarp.success_code to any short value
-SET @MESSAGE = 'some output message'
-
-GO
-```
-##Examples
+## Step 1 (Create The Domain Object):
+Here's the Java Domain class:
 
 ```java
-DataSource datasource = // .....
-Caller caller = new Caller(datasource);
+public class Customer {
 
-// call sp without input or output parameters
-caller.call("STORED_RROC_WITH_NO_INPUT_OR_OUTPUT_PARAMETERS") // again, the result code and result message is not counted here, they should be added to any Stored Procedure
+	private Integer id;
+	private String firstName, lastName;
 
-// call sp with input-only parameters
-caller.call("STORED_RROC_WITH_INPUT_PARAMETERS", params(of("input", VARCHAR)));
+	public Customer(Integer id, String firstName, String lastName) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
 
+	public Integer id() {
+		return id;
+	}
 
-// return output parameters
-// this is Java 8 syntax, you can use anonymous inner class as well.
-MyDataObject result = caller.call("STORED_RROC_WITH_OUTPUT_PARAMETERS",
-	paramTypes(VARCHAR, VARCHAR, BIGINT), (call, index) -> {
-		MyDataObject holder = new MyDataObject();
-		holder.s1 = call.getString(index);
-		holder.s2 = call.getString(index + 1);
-		holder.l1 = call.getLong(index + 2);
-		return holder;
-	});
+	public String firstName() {
+		return firstName;
+	}
 
+	public String lastName() {
+		return lastName;
+	}
 
-// can return output parameters and result set as well (and can also take input parameters)
-Result<SPInfo, DateHolder> result = caller.call("OUTPUT_WITH_RS", null,
-		paramTypes(VARCHAR, VARCHAR, BIGINT), (call, index) -> {
-			DateHolder holder = new DateHolder();
-			holder.s1 = call.getString(index);
-			holder.s2 = call.getString(index + 1);
-			holder.l1 = call.getLong(index + 2);
-			return holder;
-		}, SPInfo::new);
-
-System.out.println(result.object()); // print the object that wraps output parameters
-System.out.println(result.list());   // print the list of objects that wrap the result set 
-
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+	}
+}
 ```
+
+## Step 2 (Create The DAO interface):
+
+Now you Need to create the DAO **interface**:
+```java
+public interface CustomerDAO {
+
+	@StoredProc("new_customer")
+	void createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
+
+	@StoredProc("get_customer")
+	Customer getCustomer(@Param(INTEGER) Integer id);	
+	
+	@StoredProc("list_customers")
+	List<Customer> listCustomers();
+}
+```
+
+## Step 3 (Create Mappings):
+
+Before start using the `CustomerDAO` interface, one last step is required, to *map* the result of the `get_customer` and `list_customers` stored procedures.
+
+* `get_customer` stored proc returns the result as Output Parameters, so you need to have a class to implement `TypedOutputParamMapper` interface.
+* `list_customers` stored proc returns the result as Result Set, so you need to have a class to implement `ResultSetMapper` interface.
+
+Let's change Out customer class to implement both interfaces:
+
+```java
+public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapper<Customer> {
+
+	private Integer id;
+	private String firstName, lastName;
+
+	// mandatory when implementing TypedOutputParamMapper or ResultSetMapper
+	public Customer() {
+	}
+
+	public Customer(Integer id, String firstName, String lastName) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
+	public Integer id() {
+		return id;
+	}
+
+	public String firstName() {
+		return firstName;
+	}
+
+	public String lastName() {
+		return lastName;
+	}
+
+	@Override
+	public Customer map(Result result, int index) {
+		this.firstName = result.getString(index);
+		this.lastName = result.getString(index + 1);
+		return this;
+	}
+
+	@Override
+	public List<Integer> getTypes() {
+		return Arrays.asList(VARCHAR, VARCHAR);
+	}
+
+	@Override
+	public Customer map(Result result) {
+	        // When you impelement ResultSetMapper, you need always to return a new Object
+		return new Customer(result.getInt(1), result.getString(2), result.getString(3));
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+	}
+}
+```
+
+
+Now you can start using the interface to call the stored procedures:
+```java
+CustomerDAO customerDao = new Caller(dataSource).create(CustomerDAO.class);
+
+customerDao.createCustomer("Abdullah", "Muhammad");
+Customer abdullah = customerDao.getCustomer1(0);
+// ......
+```
+
+For full example and more, see Test cases.
+
+##
+
+
+
 
 ##Limitations:
 spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
