@@ -155,6 +155,7 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 		return lastName;
 	}
 
+	//TypedOutputParamMapper
 	@Override
 	public Customer map(Result result, int index) {
 		this.firstName = result.getString(index);
@@ -162,14 +163,16 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 		return this;
 	}
 
+	//TypedOutputParamMapper
 	@Override
 	public List<Integer> getTypes() {
 		return Arrays.asList(VARCHAR, VARCHAR);
 	}
 
+	//ResultSetMapper
 	@Override
 	public Customer map(Result result) {
-	        // When you impelement ResultSetMapper, you need always to return a new Object
+		// When you impelement ResultSetMapper, you need always to return a new Object
 		return new Customer(result.getInt(1), result.getString(2), result.getString(3));
 	}
 
@@ -192,10 +195,26 @@ Customer abdullah = customerDao.getCustomer1(0);
 
 For full example and more, see Test cases.
 
-##
+## Additional staff:
 
+* If you don't supply the stored procedure name to `@StoredProc`, it will use the method name by default.
 
+* `@Param` annotation should used for *ALL* method parameters and accepts the SQL Type per `java.sql.Types`.
 
+* If you don't want to tie your Domain Object with `spwrap` as of step 3 above, you can have another class to implement the Mapper interfaces (`TypedOutputParamMapper` and `ResultSetMapper`) and pass it to the annotaion `@Mapper` like:
+```java
+	@Mapper(CustomResultSetMapper.class)
+	@StoredProc("list_customers")
+	List<Customer> listCustomers();
+```
+* `@Mapper` annotation overrides the mapping specified by the return type object, i.e. `spwrap` extract Mapping infromation from the return type class, and then override it with the classes set by `@Mapper` annotation if found.
+
+* Your Stored procedure can return output parameter as well as 1 Result set in one call, to achieve this use `Tuple` return type:
+```java
+	@Mapper({CustomResultSetMapper.class, DateMapper.class})
+	@StoredProc("list_customers_with_date")
+	Tuple<Customer, Date> listCustomersWithDate();
+```
 
 ##Limitations:
 spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
