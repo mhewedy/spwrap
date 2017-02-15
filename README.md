@@ -188,7 +188,7 @@ Now you can start using the interface to call the stored procedures:
 CustomerDAO customerDao = new Caller(dataSource).create(CustomerDAO.class);
 
 customerDao.createCustomer("Abdullah", "Muhammad");
-Customer abdullah = customerDao.getCustomer1(0);
+Customer abdullah = customerDao.getCustomer(0);
 // ......
 ```
 
