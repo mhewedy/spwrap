@@ -184,19 +184,18 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 And let's create GenericIdMapper:
 
 ```java
+public static class GenericIdMapper implements TypedOutputParamMapper<Integer> {
 
-	public static class GenericIdMapper implements TypedOutputParamMapper<Integer> {
+	@Override
+	public Integer map(Result result, int index) {
+		return result.getInt(index);
+	}
 
-		@Override
-		public Integer map(Result result, int index) {
-			return result.getInt(index);
-		}
-
-		@Override
-		public List<Integer> getTypes() {
-			return Arrays.asList(INTEGER);
-		}
-	};
+	@Override
+	public List<Integer> getTypes() {
+		return Arrays.asList(INTEGER);
+	}
+};
 ```
 
 
