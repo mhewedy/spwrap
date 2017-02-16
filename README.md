@@ -212,17 +212,19 @@ Customer abdullah = customerDao.getCustomer(0);
 For full example and more, see Test cases.
 
 ## About Mapping strategies:
-`swrap` provides 2 mapping strategies:
- - The domain Object to implement either `ResultSetMapper` or `TypedOutputParamMapper` or both
- - Create a custom class that implement either interfaces and annotate the DAO method with `@Mapper(MyCustomMappingClass.clss)`
+`spwrap` provides 2 mapping strategies:
+ - The domain Object - that is used as a return type to the DAO method - to implement either `ResultSetMapper` or `TypedOutputParamMapper` or both.
+ - Create a custom class that implement either interfaces and annotate the DAO method with `@Mapper(MyCustomMappingClass.clss)`.
  
-So, which strategy to follow?
-The answer is depends on you use case, if the Stored procedure returns the whole object (like in `getCustomer` and `listCustomers` method in the example above, then choose the first strategy by making your domain object impelements the mapping interfaces.
+*So, which strategy to follow?*
+
+The answer is depends on you use case, if the Stored procedure returns the whole object (like in `getCustomer` and `listCustomers` method in the example above), then choose the first strategy by making your domain object impelements the mapping interfaces.
+
 But if the Stored procedure return some output that is not domain-object related (like returning the newly created customer Id, in the example above of `createCustomer` method, then custom mapping strategy is better fit here.
 
-**NOTE**: Custom mapping strategies could be reused across your domain objects, actually it is better to have a set of generic mapping strategies and use then across your system (like the `GenericIdMapper`).
+**NOTE**: Custom mapping strategies could be reused across your domain objects, actually it is better to have a set of generic mapping strategies and use them across your system (like the `GenericIdMapper`).
 
-**NOTE**: Mapping classes specified in `@Mapper` annotation overrides the mapping in the return object, in other words if your DAO method returns an object which implements a Mapping interface (either `ResultSetMapper` or `TypedOutputParamMapper`) and the method also annotated with `@Mapper` that points to an object implemeting a Mapping interface, then the object in @Mapper will take precedence.
+**NOTE**: Mapping classes specified in `@Mapper` annotation overrides the mapping of the return object, in other words if your DAO method returns an object which implements a Mapping interface (either `ResultSetMapper` or `TypedOutputParamMapper`) and the method also annotated with `@Mapper` that points to an object implemeting a Mapping interface, then the mapping in the object specified in`@Mapper` will take precedence.
 
 ## Additional staff:
 
