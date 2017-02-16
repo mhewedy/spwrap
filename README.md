@@ -103,8 +103,9 @@ Now you Need to create the DAO **interface**:
 ```java
 public interface CustomerDAO {
 
+	@Mapper(GenericIdMapper.class)
 	@StoredProc("new_customer")
-	void createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
+	Integer createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
 
 	@StoredProc("get_customer")
 	Customer getCustomer(@Param(INTEGER) Integer id);	
@@ -121,7 +122,7 @@ Before start using the `CustomerDAO` interface, one last step is required, to *m
 * `get_customer` stored proc returns the result as Output Parameters, so you need to have a class to implement `TypedOutputParamMapper` interface.
 * `list_customers` stored proc returns the result as Result Set, so you need to have a class to implement `ResultSetMapper` interface.
 
-Let's change Out customer class to implement both interfaces:
+Let's change Our customer class to implement both interfaces:
 
 ```java
 public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapper<Customer> {
@@ -180,6 +181,24 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 }
 ```
 
+And let's create GenericIdMapper:
+
+```java
+
+	public static class GenericIdMapper implements TypedOutputParamMapper<Integer> {
+
+		@Override
+		public Integer map(Result result, int index) {
+			return result.getInt(index);
+		}
+
+		@Override
+		public List<Integer> getTypes() {
+			return Arrays.asList(INTEGER);
+		}
+	};
+```
+
 
 Now you can start using the interface to call the stored procedures:
 ```java
@@ -191,6 +210,19 @@ Customer abdullah = customerDao.getCustomer(0);
 ```
 
 For full example and more, see Test cases.
+
+## About Mapping strategies:
+`swrap` provides 2 mapping strategies:
+ - The domain Object to implement either `ResultSetMapper` or `TypedOutputParamMapper` or both
+ - Create a custom class that implement either interfaces and annotate the DAO method with `@Mapper(MyCustomMappingClass.clss)`
+ 
+So, which strategy to follow?
+The answer is depends on you use case, if the Stored procedure returns the whole object (like in `getCustomer` and `listCustomers` method in the example above, then choose the first strategy by making your domain object impelements the mapping interfaces.
+But if the Stored procedure return some output that is not domain-object related (like returning the newly created customer Id, in the example above of `createCustomer` method, then custom mapping strategy is better fit here.
+
+**NOTE**: Custom mapping strategies could be reused across your domain objects, actually it is better to have a set of generic mapping strategies and use then across your system (like the `GenericIdMapper`).
+
+**NOTE**: Mapping classes specified in `@Mapper` annotation overrides the mapping in the return object, in other words if your DAO method returns an object which implements a Mapping interface (either `ResultSetMapper` or `TypedOutputParamMapper`) and the method also annotated with `@Mapper` that points to an object implemeting a Mapping interface, then the object in @Mapper will take precedence.
 
 ## Additional staff:
 

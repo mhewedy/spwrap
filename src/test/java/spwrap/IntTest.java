@@ -25,8 +25,11 @@ public class IntTest {
 
 	@Test
 	public void _1_testCreateCustomer() {
-		customerDao.createCustomer("Abdullah", "Muhammad");
-		customerDao.createCustomer("Farida", "Muhammad");
+		Integer id1 = customerDao.createCustomer("Abdullah", "Muhammad");
+		Integer id2 = customerDao.createCustomer("Farida", "Muhammad");
+		
+		Assert.assertTrue(0 == id1);
+		Assert.assertTrue(1 == id2);
 	}
 
 	@Test

@@ -8,6 +8,7 @@ import java.util.List;
 import spwrap.CustomMappers.CustomParamsMapper;
 import spwrap.CustomMappers.CustomResultSetMapper;
 import spwrap.CustomMappers.DateMapper;
+import spwrap.CustomMappers.GenericIdMapper;
 import spwrap.CustomMappers.TableNamesMapper;
 import spwrap.annotations.Mapper;
 import spwrap.annotations.Param;
@@ -15,8 +16,9 @@ import spwrap.annotations.StoredProc;
 
 public interface CustomerDAO {
 
+	@Mapper(GenericIdMapper.class)
 	@StoredProc("new_customer")
-	void createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
+	Integer createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
 
 	@Mapper(CustomParamsMapper.class)
 	@StoredProc("get_customer")
