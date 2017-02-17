@@ -24,7 +24,7 @@ public class CallerInvocationHandler implements InvocationHandler {
 
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-		Metadata metadata = getMetaData(method, args);
+		MetaData metadata = getMetaData(method, args);
 
 		Caller caller = new Caller(dataSource);
 		Tuple<?, ?> call = caller.call(metadata.storedProcName, metadata.inParams, metadata.outParamTypes,
@@ -41,8 +41,8 @@ public class CallerInvocationHandler implements InvocationHandler {
 		return call;
 	}
 
-	private Metadata getMetaData(Method method, Object[] args) {
-		Metadata metadata = new Metadata();
+	private MetaData getMetaData(Method method, Object[] args) {
+		MetaData metadata = new MetaData();
 
 		StoredProc storedProcAnnot = method.getDeclaredAnnotation(StoredProc.class);
 		if (storedProcAnnot != null) {

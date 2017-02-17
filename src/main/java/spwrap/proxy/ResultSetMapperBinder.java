@@ -15,7 +15,7 @@ class ResultSetMapperBinder {
 
 	private static Logger log = LoggerFactory.getLogger(ResultSetMapperBinder.class);
 
-	static void overrideFromAnnotation(Method method, Metadata metadata, Class<ResultSetMapper<?>> rsMapperClass) {
+	static void overrideFromAnnotation(Method method, MetaData metadata, Class<ResultSetMapper<?>> rsMapperClass) {
 
 		if (rsMapperClass == null) {
 			return;
@@ -31,7 +31,7 @@ class ResultSetMapperBinder {
 		}
 	}
 
-	static void setFromReturnType(Method method, Metadata metadata) {
+	static void setFromReturnType(Method method, MetaData metadata) {
 
 		if (List.class.isAssignableFrom(method.getReturnType())
 				|| Tuple.class.isAssignableFrom(method.getReturnType())) {

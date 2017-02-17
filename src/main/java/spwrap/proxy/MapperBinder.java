@@ -10,7 +10,7 @@ import spwrap.annotations.Mapper;
 class MapperBinder {
 
 	@SuppressWarnings("unchecked")
-	static void setMappers(Method method, Metadata metadata) {
+	static void setMappers(Method method, MetaData metadata) {
 
 		ResultSetMapperBinder.setFromReturnType(method, metadata);
 		OutputParamMapperBinder.setFromReturnType(method, metadata);

@@ -13,7 +13,7 @@ class ParamsBinder {
 
 	private static Logger log = LoggerFactory.getLogger(ParamsBinder.class);
 
-	static void setInParams(Method method, Object[] args, Metadata metadata) {
+	static void setInParams(Method method, Object[] args, MetaData metadata) {
 		Parameter[] parameters = method.getParameters();
 		if (parameters.length > 0) {
 			metadata.inParams = new ArrayList<Caller.Param>();

@@ -18,7 +18,7 @@ class OutputParamMapperBinder {
 
 	private static Logger log = LoggerFactory.getLogger(OutputParamMapperBinder.class);
 
-	static void overrideFromAnnotation(Method method, Metadata metadata,
+	static void overrideFromAnnotation(Method method, MetaData metadata,
 			Class<TypedOutputParamMapper<?>> outParamMapperClass) {
 
 		if (outParamMapperClass == null) {
@@ -38,7 +38,7 @@ class OutputParamMapperBinder {
 	}
 
 	@SuppressWarnings("unchecked")
-	static void setFromReturnType(Method method, Metadata metadata) {
+	static void setFromReturnType(Method method, MetaData metadata) {
 
 		Class<?> returnType = method.getReturnType();
 
@@ -57,7 +57,7 @@ class OutputParamMapperBinder {
 		}
 	}
 
-	private static void _steFromReturnType(Method method, Metadata metadata,
+	private static void _steFromReturnType(Method method, MetaData metadata,
 			Class<TypedOutputParamMapper<?>> outParamMapperClass) {
 		try {
 			TypedOutputParamMapper<?> outParamsInstance = outParamMapperClass.newInstance();
@@ -72,7 +72,7 @@ class OutputParamMapperBinder {
 		}
 	}
 
-	private static void setOutParamTypes(Method method, Metadata metadata,
+	private static void setOutParamTypes(Method method, MetaData metadata,
 			TypedOutputParamMapper<?> outParamsInstance) {
 
 		metadata.outParamTypes = new ArrayList<Caller.ParamType>();
