@@ -22,7 +22,6 @@ public class CallerInvocationHandler implements InvocationHandler {
 		this.dataSource = dataSource;
 	}
 
-	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 		Metadata metadata = getMetaData(method, args);

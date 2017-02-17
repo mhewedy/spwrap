@@ -45,7 +45,6 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	 * ResultSetMapper, so to distinguish between both of them use #isResultSet
 	 * or #isCallableStatement as below
 	 */
-	@Override
 	public Customer map(Result<?> result) {
 		if (result.isResultSet()) {
 			// ResultSetMapper
@@ -59,7 +58,6 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	}
 
 	// TypedOutputParamMapper
-	@Override
 	public List<Integer> getTypes() {
 		return Arrays.asList(VARCHAR, VARCHAR);
 	}
