@@ -139,27 +139,16 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	public String lastName() {
 		return lastName;
 	}
-
-	/*
-	 * this method implement both interface `TypedOutputParamMapper` and
-	 * `ResultSetMapper`, so to distinguish between both of them use #isResultSet
-	 * or #isCallableStatement as below:
-	 * (note: result is a 1-based index container wrapper for results)
-	 */
+	
 	@Override
 	public Customer map(Result<?> result) {
 		if (result.isResultSet()) {
-			// ResultSetMapper
-			// SAME order and types of result set of list_customers stored proc
 			return new Customer(result.getInt(1), result.getString(2), result.getString(3));
 		} else {
-			// TypedOutputParamMapper
-			// SAME order and types of output params of get_customer stored proc
 			return new Customer(null, result.getString(1), result.getString(2));
 		}
 	}
 
-	// TypedOutputParamMapper
 	@Override
 	public List<Integer> getTypes() {
 		return Arrays.asList(VARCHAR, VARCHAR);
@@ -229,7 +218,7 @@ for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.8
 
 The answer is, it depends! and the case above is a good example (`createCustomer` have a custom mapper class because its return type `Integer` cannot act as a Mapper class however `getCustomer` and `listCustomers` dons't need a custom mapper class as the return type object itself act as a mapper class)
  
-**NOTE**: Mapper classes (classes that implements `ResultSetMapper` or `TypedOutputParamMapper`) can be reused across your application.
+[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
 
 ## Additional staff:
 
