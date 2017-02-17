@@ -119,9 +119,9 @@ public interface CustomerDAO {
 
 ## Step 3 (Create Mappings):
 
-Before start using the `CustomerDAO` interface, one last step is required, to *map* the result of the `get_customer` and `list_customers` stored procedures.
+Before start using the `CustomerDAO` interface, one last step is required, to *map* the result of the `createCustomer`, `get_customer` and `list_customers` stored procedures.
 
-* `get_customer` stored proc returns the result as Output Parameters, so you need to have a class to implement `TypedOutputParamMapper` interface.
+* `createCustomer` and `get_customer` stored procs returns the result as Output Parameters, so you need to have a class to implement `TypedOutputParamMapper` interface.
 * `list_customers` stored proc returns the result as Result Set, so you need to have a class to implement `ResultSetMapper` interface.
 
 Let's change Our customer class to implement both interfaces:
@@ -200,32 +200,24 @@ public static class GenericIdMapper implements TypedOutputParamMapper<Integer> {
 };
 ```
 
+**Note** Because the return type of `getCustomer` and `listCustomers` methods is the `Customer` which is the same class that implements the `ResultSetMapper` and `TypedOutputParamMapper` you don't need to use `@Mapper(Customer.class)`, However in case of `createCustomer`, the return type is `Integer` and hence you cannot change it to make it implement `TypedOutputParamMapper` then you have to create a new Mapper class `GenericIdMapper` and pass it to `@Mapper` annotation.
 
 Now you can start using the interface to call the stored procedures:
 ```java
 CustomerDAO customerDao = new Caller(dataSource).create(CustomerDAO.class);
 
-customerDao.createCustomer("Abdullah", "Muhammad");
-Customer abdullah = customerDao.getCustomer(0);
+Integer custId = customerDao.createCustomer("Abdullah", "Muhammad");
+Customer abdullah = customerDao.getCustomer(custId);
 // ......
 ```
-
 For full example and more, see Test cases.
 
-## About Mapping strategies:
-`spwrap` provides 2 mapping strategies:
- - The domain Object - that is used as a return type to the DAO method - to implement either `ResultSetMapper` or `TypedOutputParamMapper` or both.
- - Create a custom class that implement either interfaces and annotate the DAO method with `@Mapper(MyCustomMappingClass.clss)`.
+## More about Mapping:
+*Question*, Should I use @Mapper annotation at all, or just make the return type implements one of the Mapper interfaces (`ResultSetMapper` or `TypedOutputParamMapper`)?
+
+The answer is, it depends! and the case above is a good example (`createCustomer` have a custom mapper class because its return type `Integer` cannot act as a Mapper class however `getCustomer` and `listCustomers` dons't need a custom mapper class as the return type object itself act as a mapper class)
  
-*So, which strategy to follow?*
-
-The answer is depends on you use case, if the Stored procedure returns the whole object (like in `getCustomer` and `listCustomers` method in the example above), then choose the first strategy by making your domain object impelements the mapping interfaces.
-
-But if the Stored procedure return some output that is not domain-object related (like returning the newly created customer Id, in the example above of `createCustomer` method, then custom mapping strategy is better fit here.
-
-**NOTE**: Custom mapping strategies could be reused across your domain objects, actually it is better to have a set of generic mapping strategies and use them across your system (like the `GenericIdMapper`).
-
-**NOTE**: Mapping classes specified in `@Mapper` annotation overrides the mapping of the return object, in other words if your DAO method returns an object which implements a Mapping interface (either `ResultSetMapper` or `TypedOutputParamMapper`) and the method also annotated with `@Mapper` that points to an object implemeting a Mapping interface, then the mapping in the object specified in`@Mapper` will take precedence.
+**NOTE**: Mapper classes (classes that implements `ResultSetMapper` or `TypedOutputParamMapper`) can be reused across your application.
 
 ## Additional staff:
 
