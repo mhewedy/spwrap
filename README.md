@@ -3,26 +3,6 @@ Stored Procedure caller; simply execute stored procedure from java code.
 
 compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`)
 
-## Usage
- ```xml
- <repositories>
-	<repository>
-		<id>jitpack.io</id>
-		<url>https://jitpack.io</url>
-	</repository>
-</repositories>
-```
-And in the dependecies section add:
-```xml
-<dependency>
-	<groupId>com.github.mhewedy</groupId>
-	<artifactId>spwrap</artifactId>
-	<version>0.0.8</version>
-</dependency>
-```
-
-for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.8
-
 ## Step 0 (Create Store Procedures):
 
 Suppose you have 3 Stored Procedures to save customer to database, get customer by id and list all customer.
@@ -210,6 +190,8 @@ public static class GenericIdMapper implements TypedOutputParamMapper<Integer> {
 
 **Note** Because the return type of `getCustomer` and `listCustomers` methods is the `Customer` which is the same class that implements the `ResultSetMapper` and `TypedOutputParamMapper` you don't need to use `@Mapper(Customer.class)`, However in case of `createCustomer`, the return type is `Integer` and hence you cannot change it to make it implement `TypedOutputParamMapper` then you have to create a new Mapper class `GenericIdMapper` and pass it to `@Mapper` annotation.
 
+## Step 4 (Lets use it):
+
 Now you can start using the interface to call the stored procedures:
 ```java
 CustomerDAO customerDao = new Caller(dataSource).create(CustomerDAO.class);
@@ -219,6 +201,26 @@ Customer abdullah = customerDao.getCustomer(custId);
 // ......
 ```
 For full example and more, see Test cases.
+
+## installation
+ ```xml
+ <repositories>
+	<repository>
+		<id>jitpack.io</id>
+		<url>https://jitpack.io</url>
+	</repository>
+</repositories>
+```
+And in the dependecies section add:
+```xml
+<dependency>
+	<groupId>com.github.mhewedy</groupId>
+	<artifactId>spwrap</artifactId>
+	<version>0.0.8</version>
+</dependency>
+```
+
+for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.8
 
 ## More about Mapping:
 *Question*, Should I use @Mapper annotation at all, or just make the return type implements one of the Mapper interfaces (`ResultSetMapper` or `TypedOutputParamMapper`)?
