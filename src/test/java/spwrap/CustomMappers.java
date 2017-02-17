@@ -8,6 +8,7 @@ import java.util.List;
 
 import spwrap.Caller.ResultSetMapper;
 import spwrap.Caller.TypedOutputParamMapper;
+import spwrap.result.Result;
 
 public class CustomMappers {
 
@@ -21,8 +22,8 @@ public class CustomMappers {
 	public static class GenericIdMapper implements TypedOutputParamMapper<Integer> {
 
 		@Override
-		public Integer map(Result result, int index) {
-			return result.getInt(index);
+		public Integer map(Result<?> result) {
+			return result.getInt(1);
 		}
 
 		@Override
@@ -34,8 +35,8 @@ public class CustomMappers {
 	public static class CustomParamsMapper implements TypedOutputParamMapper<Customer> {
 
 		@Override
-		public Customer map(Result result, int index) {
-			return new Customer(null, result.getString(index), result.getString(index + 1));
+		public Customer map(Result<?> result) {
+			return new Customer(null, result.getString(1), result.getString(2));
 		}
 
 		@Override
@@ -47,7 +48,7 @@ public class CustomMappers {
 	public static class CustomResultSetMapper implements ResultSetMapper<Customer> {
 
 		@Override
-		public Customer map(Result result) {
+		public Customer map(Result<?> result) {
 			return new Customer(result.getInt(1), result.getString(2), result.getString(3));
 		}
 	}
@@ -55,8 +56,8 @@ public class CustomMappers {
 	public static class DateMapper implements TypedOutputParamMapper<Date> {
 
 		@Override
-		public Date map(Result result, int index) {
-			return result.getDate(index);
+		public Date map(Result<?> result) {
+			return result.getDate(1);
 		}
 
 		@Override
@@ -68,7 +69,7 @@ public class CustomMappers {
 	public static class TableNamesMapper implements ResultSetMapper<String> {
 
 		@Override
-		public String map(Result result) {
+		public String map(Result<?> result) {
 			return result.getString(1);
 		}
 

@@ -17,7 +17,7 @@ import spwrap.annotations.StoredProc;
 public interface CustomerDAO {
 
 	@Mapper(GenericIdMapper.class)
-	@StoredProc("new_customer")
+	@StoredProc("create_customer")
 	Integer createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
 
 	@Mapper(CustomParamsMapper.class)

@@ -30,19 +30,22 @@ Suppose you have 3 Stored Procedures to save customer to database, get customer 
 For example here's SP code using HSQL:
 ```sql
 /* IN */
-CREATE PROCEDURE new_customer(firstname VARCHAR(50), lastname VARCHAR(50), OUT code SMALLINT, OUT msg VARCHAR(50))
+CREATE PROCEDURE create_customer(firstname VARCHAR(50), lastname VARCHAR(50), OUT custId INT, 
+		OUT code SMALLINT, OUT msg VARCHAR(50))
    	MODIFIES SQL DATA DYNAMIC RESULT SETS 1
    	BEGIN ATOMIC
     	INSERT INTO CUSTOMERS VALUES (DEFAULT, firstname, lastname);
+    	SET custId = IDENTITY();
     	SET code = 0;
 	END
 ;;
 
 /* IN, OUT */
-CREATE PROCEDURE get_customer(IN pid INT, OUT firstname VARCHAR(50), OUT lastname VARCHAR(50), OUT code SMALLINT, OUT msg VARCHAR(50)) 
+CREATE PROCEDURE get_customer(IN custId INT, OUT firstname VARCHAR(50), OUT lastname VARCHAR(50), 
+		OUT code SMALLINT, OUT msg VARCHAR(50)) 
 	READS SQL DATA
 	BEGIN ATOMIC
-   		SELECT first_name, last_name INTO firstname, lastname FROM customers WHERE id = pid;
+   		SELECT first_name, last_name INTO firstname, lastname FROM customers WHERE id = custId;
    		SET code = 0;
 	END
 ;;
@@ -106,7 +109,7 @@ Now you Need to create the DAO **interface**:
 public interface CustomerDAO {
 
 	@Mapper(GenericIdMapper.class)
-	@StoredProc("new_customer")
+	@StoredProc("create_customer")
 	Integer createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
 
 	@StoredProc("get_customer")
@@ -124,7 +127,7 @@ Before start using the `CustomerDAO` interface, one last step is required, to *m
 * `createCustomer` and `get_customer` stored procs returns the result as Output Parameters, so you need to have a class to implement `TypedOutputParamMapper` interface.
 * `list_customers` stored proc returns the result as Result Set, so you need to have a class to implement `ResultSetMapper` interface.
 
-Let's change Our customer class to implement both interfaces:
+Let's change Our customer class to implement both interfaces (for `getCustomer` and `listCustomers`):
 
 ```java
 public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapper<Customer> {
@@ -155,25 +158,29 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 		return lastName;
 	}
 
-	//TypedOutputParamMapper
+	/*
+	 * this method implement both interface `TypedOutputParamMapper` and
+	 * `ResultSetMapper`, so to distinguish between both of them use #isResultSet
+	 * or #isCallableStatement as below:
+	 * (note: result is a 1-based index container wrapper for results)
+	 */
 	@Override
-	public Customer map(Result result, int index) {
-		this.firstName = result.getString(index);
-		this.lastName = result.getString(index + 1);
-		return this;
+	public Customer map(Result<?> result) {
+		if (result.isResultSet()) {
+			// ResultSetMapper
+			// SAME order and types of result set of list_customers stored proc
+			return new Customer(result.getInt(1), result.getString(2), result.getString(3));
+		} else {
+			// TypedOutputParamMapper
+			// SAME order and types of output params of get_customer stored proc
+			return new Customer(null, result.getString(1), result.getString(2));
+		}
 	}
 
-	//TypedOutputParamMapper
+	// TypedOutputParamMapper
 	@Override
 	public List<Integer> getTypes() {
 		return Arrays.asList(VARCHAR, VARCHAR);
-	}
-
-	//ResultSetMapper
-	@Override
-	public Customer map(Result result) {
-		// When you impelement ResultSetMapper, you need always to return a new Object
-		return new Customer(result.getInt(1), result.getString(2), result.getString(3));
 	}
 
 	@Override
@@ -183,14 +190,15 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 }
 ```
 
-And let's create GenericIdMapper:
+And let's create GenericIdMapper for `createCustomer`:
 
 ```java
 public static class GenericIdMapper implements TypedOutputParamMapper<Integer> {
 
 	@Override
-	public Integer map(Result result, int index) {
-		return result.getInt(index);
+	public Integer map(Result result) {
+		// SAME order and types of output params of `create_customer` stored proc
+		return result.getInt(1);
 	}
 
 	@Override

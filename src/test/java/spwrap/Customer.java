@@ -6,6 +6,7 @@ import java.util.List;
 
 import spwrap.Caller.ResultSetMapper;
 import spwrap.Caller.TypedOutputParamMapper;
+import spwrap.result.Result;
 
 public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapper<Customer> {
 
@@ -35,26 +36,36 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 		return lastName;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see spwrap.Caller.OutputParamMapper#map(spwrap.result.Result)
+	 * 
+	 * this method implement both interface TypedOutputParamMapper and
+	 * ResultSetMapper, so to distinguish between both of them use #isResultSet
+	 * or #isCallableStatement as below
+	 */
 	@Override
-	public Customer map(Result result, int index) {
-		this.firstName = result.getString(index);
-		this.lastName = result.getString(index + 1);
-		return this;
+	public Customer map(Result<?> result) {
+		if (result.isResultSet()) {
+			// ResultSetMapper
+			// SAME order and types of result set of list_customers stored proc
+			return new Customer(result.getInt(1), result.getString(2), result.getString(3));
+		} else {
+			// TypedOutputParamMapper
+			// SAME order and types of output params of get_customer stored proc
+			return new Customer(null, result.getString(1), result.getString(2));
+		}
 	}
 
+	// TypedOutputParamMapper
 	@Override
 	public List<Integer> getTypes() {
 		return Arrays.asList(VARCHAR, VARCHAR);
 	}
 
 	@Override
-	public Customer map(Result result) {
-		return new Customer(result.getInt(1), result.getString(2), result.getString(3));
-	}
-
-	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
-
 }

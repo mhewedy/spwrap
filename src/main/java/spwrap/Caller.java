@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import spwrap.annotations.Mapper;
 import spwrap.proxy.CallerInvocationHandler;
+import spwrap.result.Result;
 
 /**
  * All execute methods in this class expects 2 output parameters: <br />
@@ -210,20 +211,20 @@ public class Caller {
 
 			call = con.prepareCall(callableStmt);
 
-			int startOfOutParamCnt = 1;
+			int startOfOutParamCnt = inParams != null ? inParams.size() : 0;
 
 			if (inParams != null) {
 				for (int i = 0; i < inParams.size(); i++) {
 					int jdbcParamId = i + JDBC_PARAM_OFFSIT;
 					call.setObject(jdbcParamId, inParams.get(i).value, inParams.get(i).sqlType);
-					startOfOutParamCnt = jdbcParamId + 1;
 				}
 			}
 
 			if (outParamsTypes != null) {
 				log.debug("setting input parameters");
 				for (int i = 0; i < outParamsTypes.size(); i++) {
-					call.registerOutParameter(i + startOfOutParamCnt, outParamsTypes.get(i).sqlType);
+					call.registerOutParameter(i + startOfOutParamCnt + JDBC_PARAM_OFFSIT,
+							outParamsTypes.get(i).sqlType);
 				}
 			}
 
@@ -233,7 +234,7 @@ public class Caller {
 			call.registerOutParameter(resultCodeIndex + 1, Types.VARCHAR); // RESULT_MSG
 
 			boolean hasResult = call.execute();
-			
+
 			// TODO: if more db-specific staff is growing, then encapsulate such
 			// code into its own abstraction
 			if (con.getMetaData().getDatabaseProductName().contains("HSQL")) {
@@ -246,7 +247,7 @@ public class Caller {
 				log.debug("reading result set");
 				rs = call.getResultSet();
 				while (rs.next()) {
-					list.add(rsMapper.map(new spwrap.Result(rs, null)));
+					list.add(rsMapper.map(Result.of(rs, null, -1)));
 				}
 			}
 
@@ -254,7 +255,7 @@ public class Caller {
 			if (outParamsTypes != null) {
 				log.debug("reading output parameters");
 				for (int i = 0; i < outParamsTypes.size(); i++) {
-					object = paramMapper.map(new spwrap.Result(null, call), startOfOutParamCnt);
+					object = paramMapper.map(Result.of(null, call, startOfOutParamCnt));
 				}
 			}
 
@@ -284,17 +285,31 @@ public class Caller {
 	// --------------
 
 	public static interface OutputParamMapper<T> {
-		T map(Result result, int index);
+		/**
+		 * Use result.getXXX(1) to access the result of the first output
+		 * parameter and result.getXXX(2) to access the second and so on.
+		 * 
+		 * @param result
+		 *            A 1-based container for output parameter values
+		 * @return
+		 */
+		T map(Result<?> result);
 	}
 
 	public static interface ResultSetMapper<T> {
 		/**
-		 * method should return a new object
+		 * 
+		 * Use result.getXXX(1) to access the result of the first column in the
+		 * result set and result.getXXX(2) to access the second and so on.
+		 * <br />
+		 * <br />
+		 * NOTE: this method should return a new object.
 		 * 
 		 * @param result
+		 *            A 1-based container for output parameter values
 		 * @return
 		 */
-		T map(Result result);
+		T map(Result<?> result);
 	}
 
 	public static interface TypedOutputParamMapper<T> extends OutputParamMapper<T> {
