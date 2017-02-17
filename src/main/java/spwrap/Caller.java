@@ -48,12 +48,9 @@ public class Caller {
 	private static Logger log = LoggerFactory.getLogger(Caller.class);
 
 	private static final int JDBC_PARAM_OFFSIT = 1;
-	private static final int COUNT_OF_RESULT_PARAMS = 2;
+	private static final int NUM_OF_STATUS_FIELDS = 2;
 
-	private static final String SUCCESS_CODE_PROP = "spwarp.success_code";
-
-	private static final short SUCCESS = System.getProperty(SUCCESS_CODE_PROP) != null
-			? Short.parseShort(System.getProperty(SUCCESS_CODE_PROP)) : 0;
+	private Config config = new Config();
 
 	private final DataSource dataSource;
 
@@ -197,8 +194,11 @@ public class Caller {
 		Connection con = null;
 		CallableStatement call = null;
 		ResultSet rs = null;
-		final String callableStmt = Util.createCallableString(procName, COUNT_OF_RESULT_PARAMS
-				+ (inParams != null ? inParams.size() : 0) + (outParamsTypes != null ? outParamsTypes.size() : 0));
+
+		final String callableStmt = Util.createCallableString(procName,
+				(config.useStatusFields() ? NUM_OF_STATUS_FIELDS : 0)
+						+ (inParams != null ? inParams.size() : 0)
+						+ (outParamsTypes != null ? outParamsTypes.size() : 0));
 
 		Tuple<T, U> result = null;
 		try {
@@ -230,8 +230,10 @@ public class Caller {
 
 			int resultCodeIndex = (inParams != null ? inParams.size() : 0)
 					+ (outParamsTypes != null ? outParamsTypes.size() : 0) + 1;
-			call.registerOutParameter(resultCodeIndex, Types.BOOLEAN); // RESULT_CODE
-			call.registerOutParameter(resultCodeIndex + 1, Types.VARCHAR); // RESULT_MSG
+			if (config.useStatusFields()) {
+				call.registerOutParameter(resultCodeIndex, Types.BOOLEAN); // RESULT_CODE
+				call.registerOutParameter(resultCodeIndex + 1, Types.VARCHAR); // RESULT_MSG
+			}
 
 			boolean hasResult = call.execute();
 
@@ -259,11 +261,12 @@ public class Caller {
 				}
 			}
 
-			short resultCode = call.getShort(resultCodeIndex);
-			if (resultCode != SUCCESS) {
-				String resultMsg = call.getString(resultCodeIndex + 1);
-				throw new CallException(
-						"error code: " + resultCode + (resultMsg != null ? (", error msg: " + resultMsg) : ""));
+			if (config.useStatusFields()) {
+				short resultCode = call.getShort(resultCodeIndex);
+				if (resultCode != config.successCode()) {
+					String resultMsg = call.getString(resultCodeIndex + 1);
+					throw new CallException(resultCode, resultMsg);
+				}
 			}
 
 			result = new Tuple<T, U>(list, object);

@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class IntTest {
+public class IntegrationTests {
 
 	static CustomerDAO customerDao;
 
@@ -24,16 +24,16 @@ public class IntTest {
 	}
 
 	@Test
-	public void _1_testCreateCustomer() {
+	public void _a_testCreateCustomer() {
 		Integer id1 = customerDao.createCustomer("Abdullah", "Muhammad");
 		Integer id2 = customerDao.createCustomer("Farida", "Muhammad");
-		
+
 		Assert.assertTrue(0 == id1);
 		Assert.assertTrue(1 == id2);
 	}
 
 	@Test
-	public void _2_testGetCustomer1() {
+	public void _b_testGetCustomer1() {
 		Customer abdullah = customerDao.getCustomer1(0);
 		Customer farida = customerDao.getCustomer1(1);
 
@@ -45,7 +45,7 @@ public class IntTest {
 	}
 
 	@Test
-	public void _3_testGetCustomer2() {
+	public void _c_testGetCustomer2() {
 		Customer abdullah = customerDao.getCustomer2(0);
 		Customer farida = customerDao.getCustomer2(1);
 
@@ -57,7 +57,7 @@ public class IntTest {
 	}
 
 	@Test
-	public void _4_testListCustomers1() {
+	public void _d_testListCustomers1() {
 		List<Customer> list = customerDao.listCustomers1();
 
 		Assert.assertTrue(2 == list.size());
@@ -74,7 +74,7 @@ public class IntTest {
 	}
 
 	@Test
-	public void _5_testListCustomers2() {
+	public void _e_testListCustomers2() {
 		List<Customer> list = customerDao.listCustomers2();
 
 		Assert.assertTrue(2 == list.size());
@@ -91,7 +91,7 @@ public class IntTest {
 	}
 
 	@Test
-	public void _6_testListCustomersWithDate() {
+	public void _f_testListCustomersWithDate() {
 		Tuple<Customer, Date> tuple = customerDao.list_customers_with_date();
 
 		Assert.assertTrue(2 == tuple.list().size());
@@ -110,7 +110,7 @@ public class IntTest {
 	}
 
 	@Test
-	public void _7_testListCustomersWithDate() {
+	public void _g_testListCustomersWithDate() {
 		Tuple<Customer, Date> tuple = customerDao.listCustomersWithDate();
 
 		Assert.assertTrue(2 == tuple.list().size());
@@ -129,7 +129,7 @@ public class IntTest {
 	}
 
 	@Test
-	public void _8_testListTables() {
+	public void _h_testListTables() {
 		List<String> listTables = customerDao.listTables();
 
 		Assert.assertTrue(listTables.size() > 2);
@@ -138,8 +138,18 @@ public class IntTest {
 	}
 
 	@Test(expected = CallException.class)
-	public void _9_testListTables() {
+	public void _i_testListTables() {
 		customerDao.callStoredProcWithError();
+	}
+
+	@Test
+	public void _j_testGetCustomerWithNoErrorCodeOrMessage() {
+		System.setProperty("spwarp.use_status_fields", "false");
+		
+		CustomerDAO customerDAO2 = new Caller(TestUtils.ds).create(CustomerDAO.class);
+		Assert.assertNotNull(customerDAO2.getFirstTableNameNoResultFields());
+		
+		System.setProperty("spwarp.use_status_fields", "true");
 	}
 
 }

@@ -66,4 +66,16 @@ public class CustomMappers {
 		}
 
 	}
+
+	public static class SingleStringMapper implements TypedOutputParamMapper<String> {
+
+		public String map(Result<?> result) {
+			return result.getString(1);
+		}
+
+		public List<Integer> getTypes() {
+			return Arrays.asList(VARCHAR);
+		}
+
+	}
 }

@@ -9,6 +9,7 @@ import spwrap.CustomMappers.CustomParamsMapper;
 import spwrap.CustomMappers.CustomResultSetMapper;
 import spwrap.CustomMappers.DateMapper;
 import spwrap.CustomMappers.GenericIdMapper;
+import spwrap.CustomMappers.SingleStringMapper;
 import spwrap.CustomMappers.TableNamesMapper;
 import spwrap.annotations.Mapper;
 import spwrap.annotations.Param;
@@ -55,5 +56,9 @@ public interface CustomerDAO {
 	
 	@StoredProc("error_sp")
 	void callStoredProcWithError();
+	
+	@Mapper(SingleStringMapper.class)
+	@StoredProc("get_first_table_name_no_resultfields")
+	String getFirstTableNameNoResultFields() ;
 
 }
