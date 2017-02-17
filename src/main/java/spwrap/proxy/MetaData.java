@@ -7,12 +7,12 @@ import spwrap.Caller.Param;
 import spwrap.Caller.ParamType;
 import spwrap.Caller.ResultSetMapper;
 
-class MetaData {
+class 
+/*struct*/ MetaData {
 
 	String storedProcName;
 	List<Param> inParams;
 	List<ParamType> outParamTypes;
 	OutputParamMapper<?> outputParamMapper;
 	ResultSetMapper<?> rsMapper;
-
 }
