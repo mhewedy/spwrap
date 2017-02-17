@@ -16,7 +16,7 @@ CREATE PROCEDURE create_customer(firstname VARCHAR(50), lastname VARCHAR(50), OU
    	BEGIN ATOMIC
     	INSERT INTO CUSTOMERS VALUES (DEFAULT, firstname, lastname);
     	SET custId = IDENTITY();
-    	SET code = 0;
+    	SET code = 0 -- success;
 	END
 ;;
 
@@ -26,7 +26,7 @@ CREATE PROCEDURE get_customer(IN custId INT, OUT firstname VARCHAR(50), OUT last
 	READS SQL DATA
 	BEGIN ATOMIC
    		SELECT first_name, last_name INTO firstname, lastname FROM customers WHERE id = custId;
-   		SET code = 0;
+   		SET code = 0 -- success;
 	END
 ;;
 
@@ -36,18 +36,14 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
    	BEGIN ATOMIC
     	DECLARE result CURSOR FOR SELECT * FROM CUSTOMERS;
      	OPEN result;
-     	SET code = 0;
+     	SET code = 0 -- success;
   	END
 ;;
 ```
 
-**Note**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type SMALLINT and the other of type VARCHAR for result code and message respectively, where result code `0` means success, and fail otherwise. However this is not a mandatory, you can turn this feature off by setting system property `spwarp.use_status_fields` to `false`.
-
-**Note**: You can override the result code default success value setting system property `spwarp.success_code` to any `short` value.
+**Note**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [the wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations).
 
 **Note**: When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters and then the 2 additional output parameters of the status code and message.
-
-For list of configuration options see [the wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations)
 
 ## Step 1 (Create The Domain Object):
 Here's the Java Domain class:
@@ -76,11 +72,6 @@ public class Customer {
 	public String lastName() {
 		return lastName;
 	}
-
-	@Override
-	public String toString() {
-		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
-	}
 }
 ```
 
@@ -90,9 +81,8 @@ Now you Need to create the DAO **interface**:
 ```java
 public interface CustomerDAO {
 
-	@Mapper(GenericIdMapper.class)
 	@StoredProc("create_customer")
-	Integer createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
+	void createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
 
 	@StoredProc("get_customer")
 	Customer getCustomer(@Param(INTEGER) Integer id);	
@@ -104,9 +94,9 @@ public interface CustomerDAO {
 
 ## Step 3 (Create Mappings):
 
-Before start using the `CustomerDAO` interface, one last step is required, to *map* the result of the `createCustomer`, `get_customer` and `list_customers` stored procedures.
+Before start using the `CustomerDAO` interface, one last step is required, to *map* the result of the `get_customer` and `list_customers` stored procedures.
 
-* `createCustomer` and `get_customer` stored procs returns the result as Output Parameters, so you need to have a class to implement `TypedOutputParamMapper` interface.
+* `get_customer` stored procs returns the result as Output Parameters, so you need to have a class to implement `TypedOutputParamMapper` interface.
 * `list_customers` stored proc returns the result as Result Set, so you need to have a class to implement `ResultSetMapper` interface.
 
 Let's change Our customer class to implement both interfaces (for `getCustomer` and `listCustomers`):
@@ -117,7 +107,6 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	private Integer id;
 	private String firstName, lastName;
 
-	// mandatory when implementing TypedOutputParamMapper or ResultSetMapper
 	public Customer() {
 	}
 
@@ -142,44 +131,20 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	
 	@Override
 	public Customer map(Result<?> result) {
-		if (result.isResultSet()) {
+		if (result.isResultSet()) {// for ResultSetMapper
 			return new Customer(result.getInt(1), result.getString(2), result.getString(3));
-		} else {
+		} else { // for TypedOutputParamMapper
 			return new Customer(null, result.getString(1), result.getString(2));
 		}
 	}
 
+	// for TypedOutputParamMapper
 	@Override
 	public List<Integer> getTypes() {
 		return Arrays.asList(VARCHAR, VARCHAR);
 	}
-
-	@Override
-	public String toString() {
-		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
-	}
 }
 ```
-
-And let's create GenericIdMapper for `createCustomer`:
-
-```java
-public static class GenericIdMapper implements TypedOutputParamMapper<Integer> {
-
-	@Override
-	public Integer map(Result result) {
-		// SAME order and types of output params of `create_customer` stored proc
-		return result.getInt(1);
-	}
-
-	@Override
-	public List<Integer> getTypes() {
-		return Arrays.asList(INTEGER);
-	}
-};
-```
-
-**Note** Because the return type of `getCustomer` and `listCustomers` methods is the `Customer` which is the same class that implements the `ResultSetMapper` and `TypedOutputParamMapper` you don't need to use `@Mapper(Customer.class)`, However in case of `createCustomer`, the return type is `Integer` and hence you cannot change it to make it implement `TypedOutputParamMapper` then you have to create a new Mapper class `GenericIdMapper` and pass it to `@Mapper` annotation.
 
 ## Step 4 (Lets use it):
 
@@ -187,11 +152,11 @@ Now you can start using the interface to call the stored procedures:
 ```java
 CustomerDAO customerDao = new Caller(dataSource).create(CustomerDAO.class);
 
-Integer custId = customerDao.createCustomer("Abdullah", "Muhammad");
-Customer abdullah = customerDao.getCustomer(custId);
+customerDao.createCustomer("Abdullah", "Muhammad");
+Customer abdullah = customerDao.getCustomer(0);
 // ......
 ```
-For full example and more, see Test cases.
+For full example and more, see Test cases and [wiki](https://github.com/mhewedy/spwrap/wiki).
 
 ## installation
  ```xml
@@ -214,10 +179,6 @@ And in the dependecies section add:
 for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.8
 
 ## More about Mapping:
-*Question*, Should I use @Mapper annotation at all, or just make the return type implements one of the Mapper interfaces (`ResultSetMapper` or `TypedOutputParamMapper`)?
-
-The answer is, it depends! and the case above is a good example (`createCustomer` have a custom mapper class because its return type `Integer` cannot act as a Mapper class however `getCustomer` and `listCustomers` dons't need a custom mapper class as the return type object itself act as a mapper class)
- 
 [Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
 
 ## Additional staff:
@@ -240,6 +201,7 @@ The answer is, it depends! and the case above is a good example (`createCustomer
 	@StoredProc("list_customers_with_date")
 	Tuple<Customer, Date> listCustomersWithDate();
 ```
+[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
 
 ##Limitations:
 spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
