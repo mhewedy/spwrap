@@ -3,8 +3,6 @@ package spwrap.proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,20 +14,19 @@ public class CallerInvocationHandler implements InvocationHandler {
 
 	private static Logger log = LoggerFactory.getLogger(CallerInvocationHandler.class);
 
-	private final DataSource dataSource;
+	private final Caller caller;
 
-	public CallerInvocationHandler(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public CallerInvocationHandler(Caller caller) {
+		this.caller = caller;
 	}
 
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 		MetaData metadata = getMetaData(method, args);
 
-		Caller caller = new Caller(dataSource);
 		Tuple<?, ?> call = caller.call(metadata.storedProcName, metadata.inParams, metadata.outParamTypes,
 				metadata.outputParamMapper, metadata.rsMapper);
-		
+
 		if (metadata.outputParamMapper == null) {
 			return call.list();
 		}

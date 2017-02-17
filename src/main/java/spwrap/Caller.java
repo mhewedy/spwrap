@@ -83,7 +83,7 @@ public class Caller {
 	@SuppressWarnings("unchecked")
 	public <T> T create(Class<T> service) {
 		return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[] { service },
-				new CallerInvocationHandler(this.dataSource));
+				new CallerInvocationHandler(this));
 	}
 
 	/**
