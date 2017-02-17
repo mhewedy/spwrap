@@ -229,7 +229,7 @@ for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.8
 
 The answer is, it depends! and the case above is a good example (`createCustomer` have a custom mapper class because its return type `Integer` cannot act as a Mapper class however `getCustomer` and `listCustomers` dons't need a custom mapper class as the return type object itself act as a mapper class)
  
-**NOTE**: Mapper classes (classes that implements `ResultSetMapper` or `TypedOutputParamMapper`) can be reused across your application.
+[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
 
 ## Additional staff:
 
