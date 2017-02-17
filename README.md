@@ -41,11 +41,13 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
 ;;
 ```
 
-**Note**: Every Stored Procedure should have additional 2 Output Parameters at the end of its parameter list. One of type SMALLINT and the other of type VARCHAR for result code and message respectively, where result code `0` means success, and fail otherwise.
+**Note**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type SMALLINT and the other of type VARCHAR for result code and message respectively, where result code `0` means success, and fail otherwise. However this is not a mandatory, you can turn this feature off by setting system property `spwarp.use_status_fields` to `false`.
 
 **Note**: You can override the result code default success value setting system property `spwarp.success_code` to any `short` value.
 
 **Note**: When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters and then the 2 additional output parameters of the status code and message.
+
+For list of configuration options see [the wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations)
 
 ## Step 1 (Create The Domain Object):
 Here's the Java Domain class:
@@ -259,4 +261,4 @@ Tested on MySQL, SQL Server and HSQL
 
 **NOTE**: `spwrap` will not map the result from database into java for your, you have to deal with it via Mappers (`TypedOutputParamMapper` and `ResultSetMapper`). I did so because I intented to make this simple library as simple as possible, without going into SQL-to-Java types mapping details.
 
-See test cases for more usage scenarios.
+See [wiki page] (https://github.com/mhewedy/spwrap/wiki) for more info and test cases for more usage scenarios.
