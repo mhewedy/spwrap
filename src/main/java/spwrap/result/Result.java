@@ -66,7 +66,9 @@ public abstract class Result<T> {
 	}
 
 	public static <U> Result<?> of(ResultSet rs, CallableStatement cstmt, int outParamStartIndex) {
-		if (rs != null) {
+		if (rs != null && cstmt != null) {
+			throw new CallException("rs and cstmt both cannot be non-null");
+		}else if (rs != null) {
 			return new ResultSetWrapper(rs);
 		} else if (cstmt != null) {
 			return new CallableStatementWrapper(cstmt, outParamStartIndex);
