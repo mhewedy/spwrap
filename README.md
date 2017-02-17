@@ -139,27 +139,16 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	public String lastName() {
 		return lastName;
 	}
-
-	/*
-	 * this method implement both interface `TypedOutputParamMapper` and
-	 * `ResultSetMapper`, so to distinguish between both of them use #isResultSet
-	 * or #isCallableStatement as below:
-	 * (note: result is a 1-based index container wrapper for results)
-	 */
+	
 	@Override
 	public Customer map(Result<?> result) {
 		if (result.isResultSet()) {
-			// ResultSetMapper
-			// SAME order and types of result set of list_customers stored proc
 			return new Customer(result.getInt(1), result.getString(2), result.getString(3));
 		} else {
-			// TypedOutputParamMapper
-			// SAME order and types of output params of get_customer stored proc
 			return new Customer(null, result.getString(1), result.getString(2));
 		}
 	}
 
-	// TypedOutputParamMapper
 	@Override
 	public List<Integer> getTypes() {
 		return Arrays.asList(VARCHAR, VARCHAR);
