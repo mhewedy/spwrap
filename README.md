@@ -3,7 +3,7 @@ Stored Procedure caller; simply execute stored procedure from java code.
 
 compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`)
 
-## Step 0 (Create Store Procedures):
+## Step 0 (Create Stored Procedures):
 
 Suppose you have 3 Stored Procedures to save customer to database, get customer by id and list all customer.
 
