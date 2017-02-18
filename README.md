@@ -204,6 +204,8 @@ for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.8
 ```
 [Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
 
+>**NOTE**: If your stored procedure returns a single output parameter with no result set, then you can use the `@Scalar` annotation and you will not need to provide a Mapper class yourself, the mapping will done for you. [see wiki page about scalars for more](https://github.com/mhewedy/spwrap/wiki/Scalar)
+
 ##Limitations:
 spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
 
