@@ -15,7 +15,7 @@ public class CustomMappers {
 
 	/**
 	 * Used with any Stored Procedure that returns 1 output parameter of type
-	 * Integer, typically a save new Record Stored Procedure, could be replaced with {@link @Scalar(INTEGER)}
+	 * Integer, typically a save new Record Stored Procedure, could be replaced with {@link Scalar}
 	 * 
 	 * @author mhewedy
 	 *
