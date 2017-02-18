@@ -174,11 +174,11 @@ And in the dependecies section add:
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>0.0.8</version>
+	<version>0.0.9</version>
 </dependency>
 ```
 
-for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.8
+for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.9
 
 ## More about Mapping:
 [Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
