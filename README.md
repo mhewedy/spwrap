@@ -150,7 +150,8 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 
 Now you can start using the interface to call the stored procedures:
 ```java
-CustomerDAO customerDao = new Caller(dataSource).create(CustomerDAO.class);
+DAO dao = new DAO.Builder(dataSource).build();
+CustomerDAO customerDao = dao.create(CustomerDAO.class);
 
 customerDao.createCustomer("Abdullah", "Muhammad");
 Customer abdullah = customerDao.getCustomer(0);
