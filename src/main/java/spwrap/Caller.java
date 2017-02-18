@@ -18,25 +18,8 @@ import spwrap.annotations.Mapper;
 import spwrap.result.Result;
 
 /**
- * All execute methods in this class expects 2 output parameters: <br />
- * code (of type BOOLEAN) and message (of type VARCHAR) <br />
- * and these 2 output parameters should be the last parameters in the SP
- * parameter list parameters. <br />
- * <br />
- * Note, you are freely to choose these 2 output parameters names <br />
- * <br />
- * This class is Thread-safe, It is good practice to reuse a single instance of
- * it.
- * 
- * <br />
- * <br />
- * 
- * This class consider the return value of parameter result code (first of the
- * two mandatory output parameters mentioned about), it consider it success if
- * it is value is returned as zero, false otherwise. <br />
- * <br />
- * You can override the success value by setting the system property <br />
- * {@code spwarp.success_code} to any short value.
+ * Execute Stored Procedures read the wiki and github README for more
+ * information
  * 
  * @author mhewedy
  *
