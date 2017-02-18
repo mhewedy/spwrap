@@ -2,11 +2,29 @@ package spwrap;
 
 public class Config {
 
-	public boolean useStatusFields() {
-		return Boolean.parseBoolean(System.getProperty("spwarp.use_status_fields", "true"));
+	// default values
+	private boolean useStatusFields = true;
+	private short successCode = 0;
+
+	// setter methods -------------------------
+
+	public Config useStatusFields(boolean useStatusFields) {
+		this.useStatusFields = useStatusFields;
+		return this;
 	}
 
-	public short successCode() {
-		return Short.parseShort(System.getProperty("spwarp.success_code", "0"));
+	public Config successCode(short successCode) {
+		this.successCode = successCode;
+		return this;
+	}
+
+	// query method -------------------------
+
+	short successCode() {
+		return this.successCode;
+	}
+
+	boolean useStatusFields() {
+		return this.useStatusFields;
 	}
 }

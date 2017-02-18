@@ -1,6 +1,5 @@
 package spwrap;
 
-import java.lang.reflect.Proxy;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import spwrap.annotations.Mapper;
-import spwrap.proxy.CallerInvocationHandler;
 import spwrap.result.Result;
 
 /**
@@ -58,7 +56,7 @@ public class Caller {
 	private final String username;
 	private final String password;
 
-	public Caller(DataSource dataSource) {
+	Caller(DataSource dataSource) {
 		this.jdbcUrl = null;
 		this.username = null;
 		this.password = null;
@@ -72,18 +70,16 @@ public class Caller {
 	 * @param username
 	 * @param password
 	 */
-	public Caller(String jdbcUrl, String username, String password) {
+	Caller(String jdbcUrl, String username, String password) {
 		super();
 		this.dataSource = null;
 		this.jdbcUrl = jdbcUrl;
 		this.username = username;
 		this.password = password;
 	}
-
-	@SuppressWarnings("unchecked")
-	public <T> T create(Class<T> service) {
-		return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[] { service },
-				new CallerInvocationHandler(this));
+	
+	void setConfig(Config config) {
+		this.config = config;
 	}
 
 	/**

@@ -20,7 +20,9 @@ public class IntegrationTests {
 		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
 		TestUtils.loadData();
-		customerDao = new Caller(TestUtils.ds).create(CustomerDAO.class);
+		
+		DAO dao = new DAO.Builder(TestUtils.ds).build();
+		customerDao = dao.create(CustomerDAO.class);
 	}
 
 	@Test
@@ -144,12 +146,24 @@ public class IntegrationTests {
 
 	@Test
 	public void _j_testGetCustomerWithNoErrorCodeOrMessage() {
-		System.setProperty("spwarp.use_status_fields", "false");
 		
-		CustomerDAO customerDAO2 = new Caller(TestUtils.ds).create(CustomerDAO.class);
+		DAO dao = new DAO.Builder(TestUtils.ds)
+				.config(new Config().useStatusFields(false))
+				.build();
+		
+		CustomerDAO customerDAO2 = dao.create(CustomerDAO.class);
 		Assert.assertNotNull(customerDAO2.getFirstTableNameNoResultFields());
+	}
+	
+	@Test
+	public void _k_changeSuccessValue() {
 		
-		System.setProperty("spwarp.use_status_fields", "true");
+		DAO dao = new DAO.Builder(TestUtils.ds)
+				.config(new Config().successCode((short) 1))
+				.build();
+		
+		CustomerDAO customerDAO2 = dao.create(CustomerDAO.class);
+		customerDAO2.callStoredProcWithError();
 	}
 
 }
