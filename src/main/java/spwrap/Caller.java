@@ -274,6 +274,7 @@ public class Caller {
 		 * @param result
 		 *            A 1-based container for output parameter values
 		 * @return
+		 * @see Result
 		 */
 		T map(Result<?> result);
 	}
@@ -290,6 +291,7 @@ public class Caller {
 		 * @param result
 		 *            A 1-based container for output parameter values
 		 * @return
+		 * @see Result
 		 */
 		T map(Result<?> result);
 	}
