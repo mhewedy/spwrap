@@ -110,6 +110,8 @@ public abstract class Result<T> {
 	public abstract Timestamp getTimestamp(int columnIndex);
 
 	public abstract <U> U getObject(int columnIndex, Class<U> clazz);
+	
+	public abstract Object getObject(int columnIndex);
 
 	public abstract Reader getCharacterStream(int columnIndex);
 

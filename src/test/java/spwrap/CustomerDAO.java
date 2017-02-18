@@ -9,15 +9,15 @@ import spwrap.CustomMappers.CustomParamsMapper;
 import spwrap.CustomMappers.CustomResultSetMapper;
 import spwrap.CustomMappers.DateMapper;
 import spwrap.CustomMappers.GenericIdMapper;
-import spwrap.CustomMappers.SingleStringMapper;
 import spwrap.CustomMappers.TableNamesMapper;
 import spwrap.annotations.Mapper;
 import spwrap.annotations.Param;
+import spwrap.annotations.Scalar;
 import spwrap.annotations.StoredProc;
 
 public interface CustomerDAO {
 
-	@Mapper(GenericIdMapper.class)
+	@Scalar(INTEGER)
 	@StoredProc("create_customer")
 	Integer createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
 
@@ -49,16 +49,19 @@ public interface CustomerDAO {
 	Tuple<Customer, Date> listCustomersWithDate();
 	
 	
+	@StoredProc("error_sp")
+	void callStoredProcWithError();
+	
+	@Scalar(VARCHAR)
+	@StoredProc("get_first_table_name_no_resultfields")
+	String getFirstTableNameNoResultFields() ;
+	
 	@Mapper(TableNamesMapper.class)
 	@StoredProc("list_tables")
 	List<String> listTables();
 	
-	
-	@StoredProc("error_sp")
-	void callStoredProcWithError();
-	
-	@Mapper(SingleStringMapper.class)
-	@StoredProc("get_first_table_name_no_resultfields")
-	String getFirstTableNameNoResultFields() ;
-
+	@Scalar(INTEGER)
+	@Mapper(GenericIdMapper.class)
+	@StoredProc("create_customer")
+	Integer failAsCannotUseMapperAndScalarTogether(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
 }

@@ -140,6 +140,15 @@ final class ResultSetWrapper extends Result<ResultSet> {
 			throw new CallException(e);
 		}
 	}
+	
+	@Override
+	public Object getObject(int columnIndex) {
+		try {
+			return wrappedObject.getObject(columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
 
 	@Override
 	public Reader getCharacterStream(int columnIndex) {

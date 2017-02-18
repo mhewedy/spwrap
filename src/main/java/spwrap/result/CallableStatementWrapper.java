@@ -143,6 +143,15 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
 			throw new CallException(e);
 		}
 	}
+	
+	@Override
+	public Object getObject(int columnIndex) {
+		try {
+			return wrappedObject.getObject(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
 
 	@Override
 	public Reader getCharacterStream(int columnIndex) {

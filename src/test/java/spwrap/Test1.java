@@ -130,15 +130,6 @@ public class Test1 {
 		Assert.assertNotNull(tuple.object());
 	}
 
-	@Test
-	public void _h_testListTables() {
-		List<String> listTables = customerDao.listTables();
-
-		Assert.assertTrue(listTables.size() > 2);
-		Assert.assertTrue(listTables.contains("ROUTINES"));
-		Assert.assertTrue(listTables.contains("CUSTOMERS"));
-	}
-
 	@Test(expected = CallException.class)
 	public void _i_testListTables() {
 		customerDao.callStoredProcWithError();
@@ -164,6 +155,20 @@ public class Test1 {
 		
 		CustomerDAO customerDAO2 = dao.create(CustomerDAO.class);
 		customerDAO2.callStoredProcWithError();
+	}
+	
+	@Test
+	public void _l_testListTables2() {
+		List<String> listTables = customerDao.listTables();
+
+		Assert.assertTrue(listTables.size() > 2);
+		Assert.assertTrue(listTables.contains("ROUTINES"));
+		Assert.assertTrue(listTables.contains("CUSTOMERS"));
+	}
+	
+	@Test(expected = CallException.class)
+	public void _m_testCannotUseMapperAndScalarTogether() {
+		customerDao.failAsCannotUseMapperAndScalarTogether(null, null);
 	}
 
 }

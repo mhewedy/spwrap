@@ -42,11 +42,6 @@ class MapperBinder {
 			ResultSetMapperBinder.overrideFromAnnotation(method, metadata, rsMapperClass);
 			OutputParamMapperBinder.overrideFromAnnotation(method, metadata, outParamMapperClass);
 		}
-
-		if (metadata.rsMapper == null && metadata.outputParamMapper == null && method.getReturnType() != void.class) {
-			throw new CallException(
-					String.format("method %s return type is not void however no mapping provided!", method.getName()));
-		}
 	}
 
 	private static void validate(Mapper mapperAnnot) {

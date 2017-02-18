@@ -8,13 +8,14 @@ import java.util.List;
 
 import spwrap.Caller.ResultSetMapper;
 import spwrap.Caller.TypedOutputParamMapper;
+import spwrap.annotations.Scalar;
 import spwrap.result.Result;
 
 public class CustomMappers {
 
 	/**
 	 * Used with any Stored Procedure that returns 1 output parameter of type
-	 * Integer, typically a save new Record Stored Procedure
+	 * Integer, typically a save new Record Stored Procedure, could be replaced with {@link @Scalar(INTEGER)}
 	 * 
 	 * @author mhewedy
 	 *
