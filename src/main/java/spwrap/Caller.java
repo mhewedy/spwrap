@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import spwrap.annotations.Mapper;
+import spwrap.db.Database;
+import spwrap.db.DefaultDatabase;
 import spwrap.result.Result;
 
 /**
@@ -213,14 +215,9 @@ public class Caller {
 				call.registerOutParameter(resultCodeIndex, Types.BOOLEAN); // RESULT_CODE
 				call.registerOutParameter(resultCodeIndex + 1, Types.VARCHAR); // RESULT_MSG
 			}
-
-			boolean hasResult = call.execute();
-
-			// TODO: if more db-specific staff is growing, then encapsulate such
-			// code into its own abstraction
-			if (con.getMetaData().getDatabaseProductName().contains("HSQL")) {
-				hasResult = call.getMoreResults();
-			}
+			
+			Database database = DefaultDatabase.from(con);
+			boolean hasResult = database.executeCall(call);
 
 			List<T> list = null;
 			if (hasResult && rsMapper != null) {
