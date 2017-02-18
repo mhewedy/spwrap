@@ -32,13 +32,15 @@ public class TestUtils {
 			
 			for (String sql : split) {
 				System.out.println(sql);
-				stmt.executeQuery(sql.trim());
+				stmt.execute(sql.trim());
 			}
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			scanner.close();
+			if (scanner != null) {
+				scanner.close();	
+			}
 			Util.closeDBObjects(connection, stmt, null);
 		}
 	}
