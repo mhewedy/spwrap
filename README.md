@@ -41,7 +41,7 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
 ;;
 ```
 
-**Note**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [the wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations).
+**Note**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [see the configuration wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations).
 
 **Note**: When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters and then the 2 additional output parameters of the status code and message.
 
