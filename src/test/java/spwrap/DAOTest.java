@@ -3,6 +3,7 @@ package spwrap;
 import java.sql.Date;
 import java.util.List;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -10,7 +11,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class Test1 {
+public class DAOTest {
 
 	static CustomerDAO customerDao;
 
@@ -19,10 +20,15 @@ public class Test1 {
 
 		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
 
-		TestUtils.loadData();
-		
+		TestUtils.install();
+
 		DAO dao = new DAO.Builder(TestUtils.ds).build();
 		customerDao = dao.create(CustomerDAO.class);
+	}
+
+	@AfterClass
+	public static void tearDown() {
+		TestUtils.rollback();
 	}
 
 	@Test
@@ -137,26 +143,22 @@ public class Test1 {
 
 	@Test
 	public void _j_testGetCustomerWithNoErrorCodeOrMessage() {
-		
-		DAO dao = new DAO.Builder(TestUtils.ds)
-				.config(new Config().useStatusFields(false))
-				.build();
-		
+
+		DAO dao = new DAO.Builder(TestUtils.ds).config(new Config().useStatusFields(false)).build();
+
 		CustomerDAO customerDAO2 = dao.create(CustomerDAO.class);
 		Assert.assertNotNull(customerDAO2.getFirstTableNameNoResultFields());
 	}
-	
+
 	@Test
 	public void _k_changeSuccessValue() {
-		
-		DAO dao = new DAO.Builder(TestUtils.ds)
-				.config(new Config().successCode((short) 1))
-				.build();
-		
+
+		DAO dao = new DAO.Builder(TestUtils.ds).config(new Config().successCode((short) 1)).build();
+
 		CustomerDAO customerDAO2 = dao.create(CustomerDAO.class);
 		customerDAO2.callStoredProcWithError();
 	}
-	
+
 	@Test
 	public void _l_testListTables2() {
 		List<String> listTables = customerDao.listTables();
@@ -165,7 +167,7 @@ public class Test1 {
 		Assert.assertTrue(listTables.contains("ROUTINES"));
 		Assert.assertTrue(listTables.contains("CUSTOMERS"));
 	}
-	
+
 	@Test(expected = CallException.class)
 	public void _m_testCannotUseMapperAndScalarTogether() {
 		customerDao.failAsCannotUseMapperAndScalarTogether(null, null);
