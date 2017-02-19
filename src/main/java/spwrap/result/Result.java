@@ -68,7 +68,7 @@ public abstract class Result<T> {
 	public static <U> Result<?> of(ResultSet rs, CallableStatement cstmt, int outParamStartIndex) {
 		if (rs != null && cstmt != null) {
 			throw new CallException("rs and cstmt both cannot be non-null");
-		}else if (rs != null) {
+		} else if (rs != null) {
 			return new ResultSetWrapper(rs);
 		} else if (cstmt != null) {
 			return new CallableStatementWrapper(cstmt, outParamStartIndex);
@@ -109,8 +109,6 @@ public abstract class Result<T> {
 
 	public abstract Timestamp getTimestamp(int columnIndex);
 
-	public abstract <U> U getObject(int columnIndex, Class<U> clazz);
-	
 	public abstract Object getObject(int columnIndex);
 
 	public abstract Reader getCharacterStream(int columnIndex);
@@ -136,5 +134,55 @@ public abstract class Result<T> {
 	public abstract String getNString(int columnIndex);
 
 	public abstract Reader getNCharacterStream(int columnIndex);
+
+	public abstract String getString(String columnLabelOrParameterName);
+
+	public abstract boolean getBoolean(String columnLabelOrParameterName);
+
+	public abstract byte getByte(String columnLabelOrParameterName);
+
+	public abstract short getShort(String columnLabelOrParameterName);
+
+	public abstract int getInt(String columnLabelOrParameterName);
+
+	public abstract long getLong(String columnLabelOrParameterName);
+
+	public abstract float getFloat(String columnLabelOrParameterName);
+
+	public abstract double getDouble(String columnLabelOrParameterName);
+
+	public abstract byte[] getBytes(String columnLabelOrParameterName);
+
+	public abstract Date getDate(String columnLabelOrParameterName);
+
+	public abstract Time getTime(String columnLabelOrParameterName);
+
+	public abstract Timestamp getTimestamp(String columnLabelOrParameterName);
+
+	public abstract Object getObject(String columnLabelOrParameterName);
+
+	public abstract Reader getCharacterStream(String columnLabelOrParameterName);
+
+	public abstract BigDecimal getBigDecimal(String columnLabelOrParameterName);
+
+	public abstract Ref getRef(String columnLabelOrParameterName);
+
+	public abstract Blob getBlob(String columnLabelOrParameterName);
+
+	public abstract Clob getClob(String columnLabelOrParameterName);
+
+	public abstract Array getArray(String columnLabelOrParameterName);
+
+	public abstract URL getURL(String columnLabelOrParameterName);
+
+	public abstract RowId getRowId(String columnLabelOrParameterName);
+
+	public abstract NClob getNClob(String columnLabelOrParameterName);
+
+	public abstract SQLXML getSQLXML(String columnLabelOrParameterName);
+
+	public abstract String getNString(String columnLabelOrParameterName);
+
+	public abstract Reader getNCharacterStream(String columnLabelOrParameterName);
 
 }
