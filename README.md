@@ -41,9 +41,9 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
 ;;
 ```
 
->**NOTE**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [see the configuration wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations).
-
 >**NOTE**: When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters and then the 2 additional output parameters of the status code and message.
+
+>**NOTE**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [see the configuration wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations).
 
 ## Step 1: Create The DAO interface:
 ```java
@@ -132,7 +132,7 @@ For full example and more, see Test cases and [wiki](https://github.com/mhewedy/
 
 ## installation
  ```xml
- <repositories>
+<repositories>
 	<repository>
 		<id>jitpack.io</id>
 		<url>https://jitpack.io</url>
@@ -166,12 +166,10 @@ for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.9
 
 * Your Stored procedure can return output parameter as well as 1 Result set in one call, to achieve this use `Tuple` return type:
 ```java
-	@Mapper({CustomResultSetMapper.class, DateMapper.class})
+	@Mapper({MyResultSetMapper.class, MyOutputParameterMapper.class})
 	@StoredProc("list_customers_with_date")
 	Tuple<Customer, Date> listCustomersWithDate();
 ```
-[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
-
 ##Limitations:
 spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
 
