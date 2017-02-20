@@ -2,9 +2,19 @@ package spwrap.proxy;
 
 import java.lang.reflect.Method;
 
-interface MapperBinder<T, C> extends Binder<T> {
+abstract class MapperBinder<T, C> implements Binder<T> {
 
-	T fromAnnotation(Method method);
+	public final T bind(Method method, Object... args) {
 
-	T fromReturnType(Method method);
+		T outputParam = fromAnnotation(method);
+
+		if (outputParam == null) {
+			outputParam = fromReturnType(method);
+		}
+		return outputParam;
+	}
+
+	abstract T fromAnnotation(Method method);
+
+	abstract T fromReturnType(Method method);
 }

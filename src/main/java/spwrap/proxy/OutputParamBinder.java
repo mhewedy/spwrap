@@ -15,20 +15,10 @@ import spwrap.Tuple;
 import spwrap.annotations.Mapper;
 import spwrap.proxy.MetaData.OutputParam;
 
-class OutputParamBinder implements MapperBinder<OutputParam, Class<TypedOutputParamMapper<?>>> {
+class OutputParamBinder extends MapperBinder<OutputParam, Class<TypedOutputParamMapper<?>>> {
 
 	private static final int SECOND_GENERIC_TYPE_INDEX = 1;
 	private static Logger log = LoggerFactory.getLogger(OutputParamBinder.class);
-
-	public OutputParam bind(Method method, Object... args) {
-
-		OutputParam outputParam = fromAnnotation(method);
-
-		if (outputParam == null) {
-			outputParam = fromReturnType(method);
-		}
-		return outputParam;
-	}
 
 	@SuppressWarnings("unchecked")
 	public OutputParam fromAnnotation(Method method) {

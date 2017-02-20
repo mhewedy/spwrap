@@ -12,20 +12,10 @@ import spwrap.Caller.ResultSetMapper;
 import spwrap.Tuple;
 import spwrap.annotations.Mapper;
 
-class ResultSetMapperBinder implements MapperBinder<ResultSetMapper<?>, Class<ResultSetMapper<?>>> {
+class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>, Class<ResultSetMapper<?>>> {
 
 	private static final int FIRST_GENERIC_TYPE_INDEX = 0;
 	private static Logger log = LoggerFactory.getLogger(ResultSetMapperBinder.class);
-
-	public ResultSetMapper<?> bind(Method method, Object... args) {
-
-		ResultSetMapper<?> resultSetMapper = fromAnnotation(method);
-
-		if (resultSetMapper == null) {
-			resultSetMapper = fromReturnType(method);
-		}
-		return resultSetMapper;
-	}
 
 	@SuppressWarnings("unchecked")
 	public ResultSetMapper<?> fromAnnotation(Method method) {
