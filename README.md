@@ -3,7 +3,7 @@ Stored Procedure caller; simply execute stored procedure from java code.
 
 compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`)
 
-## Step 0 (Create Stored Procedures):
+## Step 0: Create Stored Procedures:
 
 Suppose you have 3 Stored Procedures to save customer to database, get customer by id and list all customer.
 
@@ -45,7 +45,7 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
 
 >**NOTE**: When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters and then the 2 additional output parameters of the status code and message.
 
-## Step 1 Create The DAO interface:
+## Step 1: Create The DAO interface:
 ```java
 public interface CustomerDAO {
 
@@ -60,7 +60,7 @@ public interface CustomerDAO {
 }
 ```
 
-## Step 2 Map Output parameters and Result set (if any):
+## Step 2: Map Output parameters and Result set (if any):
 
 Before start using the `CustomerDAO` interface, one last step is required, to *map* the result of the `get_customer` and `list_customers` stored procedures.
 
@@ -117,7 +117,7 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 
 >**NOTE**: If your stored procedure returns a single **output parameter** with no result set, then you can use the `@Scalar` annotation and you will not need to provide a Mapper class yourself, the mapping will done for you. [see wiki page about scalars for more](https://github.com/mhewedy/spwrap/wiki/Scalar)
 
-## Step 3 The call:
+## Step 3: Using the DAO interface:
 
 Now you can start using the interface to call the stored procedures:
 ```java
