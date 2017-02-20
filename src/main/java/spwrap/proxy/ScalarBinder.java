@@ -10,23 +10,28 @@ import org.slf4j.LoggerFactory;
 import spwrap.Caller.ParamType;
 import spwrap.Caller.TypedOutputParamMapper;
 import spwrap.annotations.Scalar;
+import spwrap.proxy.MetaData.OutputParam;
 import spwrap.result.Result;
 
-class ScalarBinder {
+class ScalarBinder implements Binder<OutputParam> {
 
 	private static Logger log = LoggerFactory.getLogger(ScalarBinder.class);
 
-	static void setScalar(Method method, MetaData metadata) {
+	public OutputParam bind(Method method, Object... args) {
+		OutputParam outputParam = null;
 
 		Scalar scalarAnnot = method.getDeclaredAnnotation(Scalar.class);
 		if (scalarAnnot != null) {
 
 			log.debug("Scalar annotation exists, try auto-mapping");
 			int sqlType = scalarAnnot.value();
-			
-			metadata.outputParamMapper = new ScalarTypedOutputParamMapper(sqlType);
-			metadata.outParamTypes = Arrays.asList(ParamType.of(sqlType));
+
+			outputParam = new OutputParam();
+			outputParam.outputParamMapper = new ScalarTypedOutputParamMapper(sqlType);
+			outputParam.outParamTypes = Arrays.asList(ParamType.of(sqlType));
 		}
+
+		return outputParam;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -45,4 +50,5 @@ class ScalarBinder {
 			return Arrays.asList(sqlType);
 		}
 	}
+
 }
