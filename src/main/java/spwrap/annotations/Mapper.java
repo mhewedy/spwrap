@@ -14,13 +14,13 @@ import spwrap.Caller.TypedOutputParamMapper;
 public @interface Mapper {
 
 	/**
-	 * classes that implement either {@link TypedOutputParamMapper} or
+	 * Classes that implement either {@link TypedOutputParamMapper} or
 	 * {@link ResultSetMapper}
 	 * 
 	 * <br />
-	 * Maximum 2 classes allowed, one for implements each interface
+	 * Maximum 2 classes allowed, one that implements each interface.
 	 * 
 	 * @return
 	 */
-	Class<?>[] value();
+	Class<? extends spwrap.Caller.Mapper<?>>[] value();
 }

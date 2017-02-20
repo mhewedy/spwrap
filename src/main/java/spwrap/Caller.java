@@ -14,7 +14,6 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import spwrap.annotations.Mapper;
 import spwrap.db.Database;
 import spwrap.db.DefaultDatabase;
 import spwrap.result.Result;
@@ -262,8 +261,12 @@ public class Caller {
 	}
 
 	// --------------
+	
+	public static interface Mapper<T>{
+		T map(Result<?> result);
+	}
 
-	public static interface OutputParamMapper<T> {
+	public static interface OutputParamMapper<T> extends Mapper<T> {
 		/**
 		 * Use result.getXXX(1) to access the result of the first output
 		 * parameter and result.getXXX(2) to access the second and so on.
@@ -276,7 +279,7 @@ public class Caller {
 		T map(Result<?> result);
 	}
 
-	public static interface ResultSetMapper<T> {
+	public static interface ResultSetMapper<T> extends Mapper<T>{
 		/**
 		 * 
 		 * Use result.getXXX(1) to access the result of the first column in the
