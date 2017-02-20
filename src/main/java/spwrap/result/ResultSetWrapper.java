@@ -133,15 +133,6 @@ final class ResultSetWrapper extends Result<ResultSet> {
 	}
 
 	@Override
-	public <U> U getObject(int columnIndex, Class<U> clazz) {
-		try {
-			return wrappedObject.getObject(columnIndex, clazz);
-		} catch (SQLException e) {
-			throw new CallException(e);
-		}
-	}
-	
-	@Override
 	public Object getObject(int columnIndex) {
 		try {
 			return wrappedObject.getObject(columnIndex);
@@ -253,6 +244,231 @@ final class ResultSetWrapper extends Result<ResultSet> {
 	public Reader getNCharacterStream(int columnIndex) {
 		try {
 			return wrappedObject.getNCharacterStream(columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public String getString(String columnLabel) {
+		try {
+			return wrappedObject.getString(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public boolean getBoolean(String columnLabel) {
+		try {
+			return wrappedObject.getBoolean(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public byte getByte(String columnLabel) {
+		try {
+			return wrappedObject.getByte(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public short getShort(String columnLabel) {
+		try {
+			return wrappedObject.getShort(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public int getInt(String columnLabel) {
+		try {
+			return wrappedObject.getInt(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public long getLong(String columnLabel) {
+		try {
+			return wrappedObject.getLong(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public float getFloat(String columnLabel) {
+		try {
+			return wrappedObject.getFloat(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public double getDouble(String columnLabel) {
+		try {
+			return wrappedObject.getDouble(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public byte[] getBytes(String columnLabel) {
+		try {
+			return wrappedObject.getBytes(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Date getDate(String columnLabel) {
+		try {
+			return wrappedObject.getDate(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Time getTime(String columnLabel) {
+		try {
+			return wrappedObject.getTime(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Timestamp getTimestamp(String columnLabel) {
+		try {
+			return wrappedObject.getTimestamp(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Object getObject(String columnLabel) {
+		try {
+			return wrappedObject.getObject(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Reader getCharacterStream(String columnLabel) {
+		try {
+			return wrappedObject.getCharacterStream(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public BigDecimal getBigDecimal(String columnLabel) {
+		try {
+			return wrappedObject.getBigDecimal(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Ref getRef(String columnLabel) {
+		try {
+			return wrappedObject.getRef(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Blob getBlob(String columnLabel) {
+		try {
+			return wrappedObject.getBlob(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Clob getClob(String columnLabel) {
+		try {
+			return wrappedObject.getClob(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Array getArray(String columnLabel) {
+		try {
+			return wrappedObject.getArray(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public URL getURL(String columnLabel) {
+		try {
+			return wrappedObject.getURL(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public RowId getRowId(String columnLabel) {
+		try {
+			return wrappedObject.getRowId(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public NClob getNClob(String columnLabel) {
+		try {
+			return wrappedObject.getNClob(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public SQLXML getSQLXML(String columnLabel) {
+		try {
+			return wrappedObject.getSQLXML(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public String getNString(String columnLabel) {
+		try {
+			return wrappedObject.getNString(columnLabel);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
+	}
+
+	@Override
+	public Reader getNCharacterStream(String columnLabel) {
+		try {
+			return wrappedObject.getNCharacterStream(columnLabel);
 		} catch (SQLException e) {
 			throw new CallException(e);
 		}

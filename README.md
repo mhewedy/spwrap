@@ -3,7 +3,7 @@ Stored Procedure caller; simply execute stored procedure from java code.
 
 compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`)
 
-## Step 0 (Create Stored Procedures):
+## Step 0: Create Stored Procedures:
 
 Suppose you have 3 Stored Procedures to save customer to database, get customer by id and list all customer.
 
@@ -41,43 +41,11 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
 ;;
 ```
 
->**NOTE**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [see the configuration wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations).
-
 >**NOTE**: When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters and then the 2 additional output parameters of the status code and message.
 
-## Step 1 (Create The Domain Object):
-Here's the Java Domain class:
+>**NOTE**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [see the configuration wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations).
 
-```java
-public class Customer {
-
-	private Integer id;
-	private String firstName, lastName;
-
-	public Customer(Integer id, String firstName, String lastName) {
-		super();
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
-
-	public Integer id() {
-		return id;
-	}
-
-	public String firstName() {
-		return firstName;
-	}
-
-	public String lastName() {
-		return lastName;
-	}
-}
-```
-
-## Step 2 (Create The DAO interface):
-
-Now you Need to create the DAO **interface**:
+## Step 1: Create The DAO interface:
 ```java
 public interface CustomerDAO {
 
@@ -92,14 +60,14 @@ public interface CustomerDAO {
 }
 ```
 
-## Step 3 (Create Mappings):
+## Step 2: Map Output parameters and Result set (if any):
 
 Before start using the `CustomerDAO` interface, one last step is required, to *map* the result of the `get_customer` and `list_customers` stored procedures.
 
 * `get_customer` stored procs returns the result as Output Parameters, so you need to have a class to implement `TypedOutputParamMapper` interface.
 * `list_customers` stored proc returns the result as Result Set, so you need to have a class to implement `ResultSetMapper` interface.
 
-Let's change Our customer class to implement both interfaces (for `getCustomer` and `listCustomers`):
+Let's create Customer class to implement both interfaces (for `getCustomer` and `listCustomers`):
 
 ```java
 public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapper<Customer> {
@@ -145,9 +113,11 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	}
 }
 ```
+[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
+
 >**NOTE**: If your stored procedure returns a single **output parameter** with no result set, then you can use the `@Scalar` annotation and you will not need to provide a Mapper class yourself, the mapping will done for you. [see wiki page about scalars for more](https://github.com/mhewedy/spwrap/wiki/Scalar)
 
-## Step 4 (Lets use it):
+## Step 3: Using the DAO interface:
 
 Now you can start using the interface to call the stored procedures:
 ```java
@@ -155,14 +125,14 @@ DAO dao = new DAO.Builder(dataSource).build();
 CustomerDAO customerDao = dao.create(CustomerDAO.class);
 
 customerDao.createCustomer("Abdullah", "Muhammad");
-Customer abdullah = customerDao.getCustomer(0);
-// ......
+Customer customer = customerDao.getCustomer1(0);
+Assert.assertEquals("Abdullah", customer.firstName());
 ```
 For full example and more, see Test cases and [wiki](https://github.com/mhewedy/spwrap/wiki).
 
 ## installation
  ```xml
- <repositories>
+<repositories>
 	<repository>
 		<id>jitpack.io</id>
 		<url>https://jitpack.io</url>
@@ -178,10 +148,7 @@ And in the dependecies section add:
 </dependency>
 ```
 
-for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.9
-
-## More about Mapping:
-[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
+For other build tools : https://jitpack.io/#mhewedy/spwrap/0.0.9
 
 ## Additional staff:
 
@@ -199,12 +166,10 @@ for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.9
 
 * Your Stored procedure can return output parameter as well as 1 Result set in one call, to achieve this use `Tuple` return type:
 ```java
-	@Mapper({CustomResultSetMapper.class, DateMapper.class})
+	@Mapper({MyResultSetMapper.class, MyOutputParameterMapper.class})
 	@StoredProc("list_customers_with_date")
 	Tuple<Customer, Date> listCustomersWithDate();
 ```
-[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
-
 ##Limitations:
 spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
 
@@ -212,8 +177,8 @@ spwrap doesn't support returning multi-result sets from the stored procedure.
 
 Tested on MySQL, SQL Server and HSQL
 
-##Qestions:
+##FAQs:
 Q: Can `spwrap` do auto map for me for all fields?    
-A: `spwrap` will not map the result from database into java for your, you have to deal with it via Mappers (`TypedOutputParamMapper` and `ResultSetMapper`). I did so because I intented to make this simple library as simple as possible, without going into SQL-to-Java types mapping details.
+A: `spwrap` will not map the result from database into java domain objects for your, you have to deal with it via Mappers (`TypedOutputParamMapper` and `ResultSetMapper`). I did so because I intented to make this simple library as simple as possible, without going into `SQL-to-Java` types mapping details.
 
 See [wiki page] (https://github.com/mhewedy/spwrap/wiki) for more info and test cases for more usage scenarios.
