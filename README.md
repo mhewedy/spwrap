@@ -148,7 +148,7 @@ And in the dependecies section add:
 </dependency>
 ```
 
-for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.9
+For other build tools : https://jitpack.io/#mhewedy/spwrap/0.0.9
 
 ## Additional staff:
 
