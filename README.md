@@ -45,39 +45,7 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
 
 >**NOTE**: When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters and then the 2 additional output parameters of the status code and message.
 
-## Step 1 (Create The Domain Object):
-Here's the Java Domain class:
-
-```java
-public class Customer {
-
-	private Integer id;
-	private String firstName, lastName;
-
-	public Customer(Integer id, String firstName, String lastName) {
-		super();
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
-
-	public Integer id() {
-		return id;
-	}
-
-	public String firstName() {
-		return firstName;
-	}
-
-	public String lastName() {
-		return lastName;
-	}
-}
-```
-
-## Step 2 (Create The DAO interface):
-
-Now you Need to create the DAO **interface**:
+## Step 1 Create The DAO interface:
 ```java
 public interface CustomerDAO {
 
@@ -92,14 +60,14 @@ public interface CustomerDAO {
 }
 ```
 
-## Step 3 (Create Mappings):
+## Step 2 Map Output parameters and Result set (if any):
 
 Before start using the `CustomerDAO` interface, one last step is required, to *map* the result of the `get_customer` and `list_customers` stored procedures.
 
 * `get_customer` stored procs returns the result as Output Parameters, so you need to have a class to implement `TypedOutputParamMapper` interface.
 * `list_customers` stored proc returns the result as Result Set, so you need to have a class to implement `ResultSetMapper` interface.
 
-Let's change Our customer class to implement both interfaces (for `getCustomer` and `listCustomers`):
+Let's create Customer class to implement both interfaces (for `getCustomer` and `listCustomers`):
 
 ```java
 public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapper<Customer> {
@@ -145,9 +113,11 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	}
 }
 ```
+[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
+
 >**NOTE**: If your stored procedure returns a single **output parameter** with no result set, then you can use the `@Scalar` annotation and you will not need to provide a Mapper class yourself, the mapping will done for you. [see wiki page about scalars for more](https://github.com/mhewedy/spwrap/wiki/Scalar)
 
-## Step 4 (Lets use it):
+## Step 3 The call:
 
 Now you can start using the interface to call the stored procedures:
 ```java
@@ -155,8 +125,8 @@ DAO dao = new DAO.Builder(dataSource).build();
 CustomerDAO customerDao = dao.create(CustomerDAO.class);
 
 customerDao.createCustomer("Abdullah", "Muhammad");
-Customer abdullah = customerDao.getCustomer(0);
-// ......
+Customer customer = customerDao.getCustomer1(0);
+Assert.assertEquals("Abdullah", customer.firstName());
 ```
 For full example and more, see Test cases and [wiki](https://github.com/mhewedy/spwrap/wiki).
 
@@ -179,9 +149,6 @@ And in the dependecies section add:
 ```
 
 for gradle and other tools see: https://jitpack.io/#mhewedy/spwrap/0.0.9
-
-## More about Mapping:
-[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
 
 ## Additional staff:
 
