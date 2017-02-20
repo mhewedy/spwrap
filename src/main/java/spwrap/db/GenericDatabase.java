@@ -6,14 +6,14 @@ import java.sql.SQLException;
 
 import spwrap.CallException;
 
-public class DefaultDatabase implements Database {
+public class GenericDatabase implements Database {
 
 	public static Database from(Connection connection) {
 		try {
 			if (connection.getMetaData().getDatabaseProductName().contains("HSQL")) {
 				return new HSQL();
 			} else {
-				return new DefaultDatabase();
+				return new GenericDatabase();
 			}
 		} catch (SQLException e) {
 			throw new CallException(e);

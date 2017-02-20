@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import spwrap.db.Database;
-import spwrap.db.DefaultDatabase;
+import spwrap.db.GenericDatabase;
 import spwrap.result.Result;
 
 /**
@@ -215,7 +215,7 @@ public class Caller {
 				call.registerOutParameter(resultCodeIndex + 1, Types.VARCHAR); // RESULT_MSG
 			}
 			
-			Database database = DefaultDatabase.from(con);
+			Database database = GenericDatabase.from(con);
 			boolean hasResult = database.executeCall(call);
 
 			List<T> list = null;

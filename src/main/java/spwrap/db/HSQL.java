@@ -3,7 +3,7 @@ package spwrap.db;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 
-class HSQL extends DefaultDatabase {
+class HSQL extends GenericDatabase {
 
 	@Override
 	public boolean executeCall(CallableStatement call) throws SQLException {
