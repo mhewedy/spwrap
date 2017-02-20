@@ -10,5 +10,11 @@ import java.lang.annotation.Target;
 @Target(METHOD)
 public @interface StoredProc {
 
+	/**
+	 * if not provided, the method name will be used as the stored procedure
+	 * name
+	 * 
+	 * @return
+	 */
 	String value() default "";
 }

@@ -18,7 +18,8 @@ import java.lang.annotation.Target;
 public @interface Scalar {
 
 	/**
-	 * {@link java.sql.Types} static fields
+	 * {@link java.sql.Types} static fields to represent the type of the only
+	 * output parameter of the stored procedure
 	 * 
 	 * @return
 	 */
