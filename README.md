@@ -40,9 +40,6 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
   	END
 ;;
 ```
-
->**NOTE**: When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters and then the 2 additional output parameters of the status code and message.
-
 >**NOTE**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [see the configuration wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations).
 
 ## Step 1: Create The DAO interface:
@@ -171,11 +168,13 @@ For other build tools : https://jitpack.io/#mhewedy/spwrap/0.0.11
 	Tuple<Customer, Date> listCustomersWithDate();
 ```
 ##Limitations:
-spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
+* spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
 
-spwrap doesn't support returning multi-result sets from the stored procedure.
+* spwrap doesn't support returning multi-result sets from the stored procedure.
 
-Tested on MySQL, SQL Server and HSQL
+* When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters.
+
+* Tested on MySQL, SQL Server and HSQL (so far).
 
 ##FAQs:
 Q: Can `spwrap` do auto map for me for all fields?    
