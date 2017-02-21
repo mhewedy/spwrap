@@ -1,6 +1,8 @@
 package spwrap
 
+import java.sql.*
 import spock.lang.*
+import spock.util.mop.ConfineMetaClassChanges
 
 // integration test
 @Unroll
@@ -312,6 +314,24 @@ class DAOTest extends Specification{
 		
 		then:
 			thrown(IllegalArgumentException)
+	}
+	
+	
+	@Ignore
+	@ConfineMetaClassChanges([CallableStatement])
+	def "Result of output parameter getInt throws SQLException" (){
+	
+		given:
+			def sqlExceptionMsg = "exception happend while tring to call getInt"
+			CallableStatement.metaClass.getObject = { int parameterIndex -> throw new SQLException(sqlExceptionMsg)}
+	
+		when:
+			def custId = customerDao.createCustomer("Abdullah", "Mohammad")
+			
+		then:
+			def e = thrown(CallException)
+			e.cause == SQLException
+			e.cause.message == sqlExceptionMsg
 	}
 
 }
