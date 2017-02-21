@@ -4,7 +4,7 @@ Stored Procedure caller; simply execute stored procedure from java code.
 compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`) [Tested on jdk >= 1.6)
 
 [![Build Status](https://travis-ci.org/mhewedy/spwrap.svg?branch=master)](https://travis-ci.org/mhewedy/spwrap)
-[![Coverage Status](https://coveralls.io/repos/github/mhewedy/spwrap/badge.svg?branch=master)](https://coveralls.io/github/mhewedy/spwrap?branch=master)
+[![Coverage Status](https://codecov.io/github/mhewedy/spwrap/coverage.svg?branch=master)](https://codecov.io/github/mhewedy/spwrap?branch=master)
 
 ## Step 0: Create Stored Procedures:
 
