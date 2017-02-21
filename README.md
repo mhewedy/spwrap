@@ -18,7 +18,6 @@ CREATE PROCEDURE create_customer(firstname VARCHAR(50), lastname VARCHAR(50), OU
     	SET custId = IDENTITY();
     	SET code = 0 -- success;
 	END
-;;
 
 /* IN, OUT */
 CREATE PROCEDURE get_customer(IN custId INT, OUT firstname VARCHAR(50), OUT lastname VARCHAR(50), 
@@ -28,7 +27,6 @@ CREATE PROCEDURE get_customer(IN custId INT, OUT firstname VARCHAR(50), OUT last
    		SELECT first_name, last_name INTO firstname, lastname FROM customers WHERE id = custId;
    		SET code = 0 -- success;
 	END
-;;
 
 /* RS */
 CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
