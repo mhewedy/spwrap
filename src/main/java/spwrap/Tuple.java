@@ -27,6 +27,6 @@ public class Tuple<T, U> implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Result [list=" + Util.listToString(list) + ", object=" + object + "]";
+		return "Tuple [list=" + Util.listToString(list) + ", object=" + object + "]";
 	}
 }
