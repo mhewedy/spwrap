@@ -37,7 +37,7 @@ public class TestUtils {
 			String[] split = content.split(";;");
 
 			for (String sql : split) {
-				System.out.println(sql);
+				// System.out.println(sql);
 				stmt.execute(sql.trim());
 			}
 

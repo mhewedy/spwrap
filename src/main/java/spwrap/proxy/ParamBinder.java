@@ -36,7 +36,7 @@ class ParamBinder implements Binder<List<Param>> {
 			}
 		}
 
-		log.debug("inParams are: {} for method: {}", params, method.getName());
+		log.debug("IN Params are: {} for method: {}", params, method.getName());
 
 		return params;
 	}

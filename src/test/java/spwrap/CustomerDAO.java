@@ -8,8 +8,8 @@ import java.util.List;
 import spwrap.CustomMappers.CustomParamsMapper;
 import spwrap.CustomMappers.CustomResultSetMapper;
 import spwrap.CustomMappers.DateMapper;
-import spwrap.CustomMappers.GenericIdMapper;
 import spwrap.CustomMappers.TableNamesMapper;
+import spwrap.Customer.NotMappedCustomer;
 import spwrap.annotations.Mapper;
 import spwrap.annotations.Param;
 import spwrap.annotations.Scalar;
@@ -17,19 +17,38 @@ import spwrap.annotations.StoredProc;
 
 public interface CustomerDAO {
 
+	@StoredProc("create_customer0")
+	void createCustomer0(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
+
 	@Scalar(INTEGER)
 	@StoredProc("create_customer")
 	Integer createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
+
+	@StoredProc("get_customer")
+	Customer getCustomer2(@Param(INTEGER) Integer id);
 
 	@Mapper(CustomParamsMapper.class)
 	@StoredProc("get_customer")
 	Customer getCustomer1(@Param(INTEGER) Integer id);
 
-	
+	@Scalar(VARCHAR) // ignored see test cases
 	@StoredProc("get_customer")
-	Customer getCustomer2(@Param(INTEGER) Integer id);
+	Customer getCustomer3(@Param(INTEGER) Integer id);
+
+	@Scalar(VARCHAR)
+	@StoredProc("get_customer")
+	NotMappedCustomer getCustomer4(@Param(INTEGER) Integer id);
 
 	
+	@Mapper({ CustomParamsMapper.class, DateMapper.class, TableNamesMapper.class })
+	@StoredProc("get_customer")
+	Customer getCustomer5(@Param(INTEGER) Integer id);
+
+	@Mapper({ CustomParamsMapper.class, DateMapper.class })
+	@StoredProc("get_customer")
+	Customer getCustomer6(@Param(INTEGER) Integer id);
+	
+
 	@Mapper(CustomResultSetMapper.class)
 	@StoredProc("list_customers")
 	List<Customer> listCustomers1();
@@ -60,8 +79,7 @@ public interface CustomerDAO {
 	@StoredProc("list_tables")
 	List<String> listTables();
 	
-	@Scalar(INTEGER)
-	@Mapper(GenericIdMapper.class)
-	@StoredProc("create_customer")
-	Integer failAsCannotUseMapperAndScalarTogether(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
+	@Scalar(VARCHAR)
+	@StoredProc("list_tables")
+	List<String> listTables2();
 }

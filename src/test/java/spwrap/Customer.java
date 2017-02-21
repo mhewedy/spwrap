@@ -1,6 +1,7 @@
 package spwrap;
 
 import static java.sql.Types.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,5 +66,22 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+	}
+
+	public static class NotMappedCustomer {
+		private Integer id;
+		private String firstName, lastName;
+
+		public Integer id() {
+			return id;
+		}
+
+		public String firstName() {
+			return firstName;
+		}
+
+		public String lastName() {
+			return lastName;
+		}
 	}
 }

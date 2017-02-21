@@ -34,7 +34,8 @@ public class CustomMappers {
 	public static class CustomParamsMapper implements TypedOutputParamMapper<Customer> {
 
 		public Customer map(Result<?> result) {
-			return new Customer(null, result.getString(1), result.getString(2));
+			return new Customer(null, result.getString(1) + ".CustomParamsMapper",
+					result.getString(2) + ".CustomParamsMapper");
 		}
 
 		public List<Integer> getTypes() {

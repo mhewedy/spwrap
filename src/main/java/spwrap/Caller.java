@@ -246,13 +246,15 @@ public class Caller {
 
 			result = new Tuple<T, U>(list, object);
 
+		} catch (CallException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			log.error("[" + callableStmt + "]", ex.getMessage());
 			throw new CallException(ex.getMessage(), ex);
 		} finally {
 			Util.closeDBObjects(con, call, rs);
 
-			log.info(">call sp: [{}] \nInParams: {}, \nOutParams Types: {}\nResult: {}; \ntook: {}", callableStmt,
+			log.info(">call sp: [{}] \nIN Params: {}, \nOUT Params Types: {}\nResult: {}; \ntook: {}", callableStmt,
 					inParams != null ? Arrays.toString(inParams.toArray()) : "null",
 					outParamsTypes != null ? Arrays.toString(outParamsTypes.toArray()) : "null", result,
 					(System.currentTimeMillis() - startTime) + " ms");
@@ -317,7 +319,7 @@ public class Caller {
 
 		@Override
 		public String toString() {
-			return sqlType + "";
+			return Util.getAsString(sqlType);
 		}
 	}
 
@@ -333,7 +335,7 @@ public class Caller {
 
 		@Override
 		public String toString() {
-			return "[value=" + value + ", sqlType=" + sqlType + "]";
+			return "[value=" + value + ", type=" + Util.getAsString(sqlType) + "]";
 		}
 	}
 

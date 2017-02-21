@@ -1,4 +1,7 @@
 
+DROP PROCEDURE create_customer0
+;;
+
 /* IN */
 DROP PROCEDURE create_customer
 ;;
