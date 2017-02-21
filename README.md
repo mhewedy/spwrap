@@ -1,7 +1,7 @@
 # spwrap
 Stored Procedure caller; simply execute stored procedure from java code.
 
-compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`)
+compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`) [Tested on jdk >= 1.6)
 
 ## Step 0: Create Stored Procedures:
 
