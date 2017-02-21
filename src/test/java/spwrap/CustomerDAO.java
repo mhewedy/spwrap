@@ -82,4 +82,8 @@ public interface CustomerDAO {
 	@Scalar(VARCHAR)
 	@StoredProc("list_tables")
 	List<String> listTables2();
+
+	// missing params annotations
+	@StoredProc("create_customer0")
+	void createCustomer7(@Param(VARCHAR) String firstName, String lastName);
 }

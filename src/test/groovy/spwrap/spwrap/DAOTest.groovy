@@ -266,10 +266,10 @@ class DAOTest extends Specification{
 	def "choose to disable the feature of result code and message, only we care about business related parameters" (){
 		given:
 			def dao = new DAO.Builder(TestUtils.ds).config(new Config().useStatusFields(false)).build()
-			def customerDAO2 = dao.create(CustomerDAO.class)
+			def customerDao2 = dao.create(CustomerDAO.class)
 			
 		when:
-			customerDAO2.getFirstTableNameNoResultFields()
+			customerDao2.getFirstTableNameNoResultFields()
 
 		then:
 			noExceptionThrown()
@@ -279,10 +279,10 @@ class DAOTest extends Specification{
 	def "we can even change the success value in the default result fields" (){
 		given:
 			def dao = new DAO.Builder(TestUtils.ds).config(new Config().successCode((short) 1)).build()
-			def customerDAO2 = dao.create(CustomerDAO.class);
+			def customerDao2 = dao.create(CustomerDAO.class);
 		
 		when:
-			customerDAO2.callStoredProcWithError()
+			customerDao2.callStoredProcWithError()
 			
 		then:
 			noExceptionThrown()
@@ -304,6 +304,14 @@ class DAOTest extends Specification{
 			
 		then:
 			thrown(CallException)
+	}
+	
+	def "when stored procedure have missing @Param annotations on the parameters, IllegalArgumentException will be thrown" (){
+		when:
+			customerDao.createCustomer7("Farida", "Muhammad");
+		
+		then:
+			thrown(IllegalArgumentException)
 	}
 
 }
