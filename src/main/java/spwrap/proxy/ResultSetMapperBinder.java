@@ -20,7 +20,7 @@ class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>, Class<Resul
 	@SuppressWarnings("unchecked")
 	public ResultSetMapper<?> fromAnnotation(Method method) {
 
-		Mapper mapperAnnot = method.getDeclaredAnnotation(Mapper.class);
+		Mapper mapperAnnot = method.getAnnotation(Mapper.class);
 		if (mapperAnnot != null) {
 
 			Class<ResultSetMapper<?>> clazz = null;

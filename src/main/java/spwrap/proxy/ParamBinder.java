@@ -1,7 +1,7 @@
 package spwrap.proxy;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +18,19 @@ class ParamBinder implements Binder<List<Param>> {
 	public List<Param> bind(Method method, Object... args) {
 		List<Param> params = null;
 
-		Parameter[] parameters = method.getParameters();
-		if (parameters.length > 0) {
+		Annotation[][] annotList = method.getParameterAnnotations();
+
+		if (annotList.length > 0) {
 			params = new ArrayList<Caller.Param>();
 		}
 
-		for (int i = 0; i < parameters.length; i++) {
+		for (int i = 0; i < annotList.length; i++) {
+			Annotation[] annot = annotList[i];
 
-			Parameter parameter = parameters[i];
-			spwrap.annotations.Param paramAnnot = parameter.getDeclaredAnnotation(spwrap.annotations.Param.class);
+			spwrap.annotations.Param paramAnnot = findParamAnnotation(annot);
 			if (paramAnnot == null) {
-				throw new IllegalArgumentException("missing @Param annotation on parameter: " + parameter.getName());
+				throw new IllegalArgumentException(
+						"missing @Param annotation on parameters for method: " + method.getName());
 			} else {
 				params.add(Caller.Param.of(args[i], paramAnnot.value()));
 			}
@@ -37,5 +39,14 @@ class ParamBinder implements Binder<List<Param>> {
 		log.debug("inParams are: {} for method: {}", params, method.getName());
 
 		return params;
+	}
+
+	private spwrap.annotations.Param findParamAnnotation(Annotation[] annotations) {
+		for (Annotation annotation : annotations) {
+			if (spwrap.annotations.Param.class.isAssignableFrom(annotation.getClass())) {
+				return (spwrap.annotations.Param) annotation;
+			}
+		}
+		return null;
 	}
 }

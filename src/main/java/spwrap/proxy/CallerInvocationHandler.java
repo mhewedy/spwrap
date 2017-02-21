@@ -50,7 +50,7 @@ public class CallerInvocationHandler implements InvocationHandler {
 
 		MetaData metadata = new MetaData();
 
-		StoredProc storedProcAnnot = method.getDeclaredAnnotation(StoredProc.class);
+		StoredProc storedProcAnnot = method.getAnnotation(StoredProc.class);
 		if (storedProcAnnot != null) {
 
 			String storedProc = storedProcAnnot.value();
@@ -62,7 +62,7 @@ public class CallerInvocationHandler implements InvocationHandler {
 
 			metadata.inParams = new ParamBinder().bind(method, args);
 			metadata.rsMapper = new ResultSetMapperBinder().bind(method, args);
-			
+
 			OutputParam outputParam = new OutputParamBinder().bind(method, args);
 			if (outputParam != null) {
 				metadata.outputParam = outputParam;
@@ -80,9 +80,9 @@ public class CallerInvocationHandler implements InvocationHandler {
 	}
 
 	private void preValidate(Method method) {
-		Mapper mapperAnnot = method.getDeclaredAnnotation(Mapper.class);
+		Mapper mapperAnnot = method.getAnnotation(Mapper.class);
 
-		if (mapperAnnot != null && method.getDeclaredAnnotation(Scalar.class) != null) {
+		if (mapperAnnot != null && method.getAnnotation(Scalar.class) != null) {
 			throw new CallException("either @Scalar or @Mapper could be provided, Not Both!");
 		}
 

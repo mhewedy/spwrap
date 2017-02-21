@@ -20,7 +20,7 @@ class ScalarBinder implements Binder<OutputParam> {
 	public OutputParam bind(Method method, Object... args) {
 		OutputParam outputParam = null;
 
-		Scalar scalarAnnot = method.getDeclaredAnnotation(Scalar.class);
+		Scalar scalarAnnot = method.getAnnotation(Scalar.class);
 		if (scalarAnnot != null) {
 
 			log.debug("Scalar annotation exists, try auto-mapping");
