@@ -5,11 +5,11 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Scanner;
 
-import com.zaxxer.hikari.HikariDataSource;
+import org.hsqldb.jdbc.JDBCPool;
 
 public class TestUtils {
 
-	static HikariDataSource dataSource = new HikariDataSource();
+    static JDBCPool dataSource = new JDBCPool();
 
 	private static final String INSTALL_SQL_PATH = "src/test/resources/install.sql";
 	private static final String ROLLBACK_SQL_PATH = "src/test/resources/rollback.sql";
@@ -52,6 +52,6 @@ public class TestUtils {
 	}
 
 	static {
-		dataSource.setJdbcUrl("jdbc:hsqldb:mem:customers");
+        dataSource.setUrl("jdbc:hsqldb:mem:customers");
 	}
 }
