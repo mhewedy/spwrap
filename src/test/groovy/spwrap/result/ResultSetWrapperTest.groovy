@@ -53,4 +53,18 @@ class ResultSetWrapperTest extends Specification {
         where:
             methodName << METHOD_NAMES
     }
+
+    def "calling #methodName(String) on ResultSetWrapper throws exception when ResultSet method throws exception"() {
+        given:
+        def exceptionMsg = "I throw an exception"
+        when:
+        resultSetMock./get.*/(_) >> { throw new SQLException(exceptionMsg) }
+        resultSetWrapper."$methodName"("some_column_name")
+        then:
+        def e = thrown(CallException)
+        e.cause.class == SQLException
+        e.cause.message == exceptionMsg
+        where:
+        methodName << METHOD_NAMES
+    }
 }

@@ -53,4 +53,18 @@ class CallableStatementWrapperTest extends Specification {
         where:
             methodName << METHOD_NAMES
     }
+
+    def "calling #methodName(String) on CallableStatementWrapper throws exception when CallableStatement method throws exception"() {
+        given:
+        def exceptionMsg = "I throw an exception"
+        when:
+        callableStatementMock./get.*/(_) >> { throw new SQLException(exceptionMsg) }
+        callableStatementWrapper."$methodName"("some_column_name")
+        then:
+        def e = thrown(CallException)
+        e.cause.class == SQLException
+        e.cause.message == exceptionMsg
+        where:
+        methodName << METHOD_NAMES
+    }
 }
