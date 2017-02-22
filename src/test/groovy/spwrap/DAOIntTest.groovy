@@ -9,7 +9,7 @@ import static org.slf4j.impl.SimpleLogger.*
 
 // integration test
 @Unroll
-class DAOTest extends Specification{
+class DAOIntTest extends Specification{
 
 	def customerDao
 	

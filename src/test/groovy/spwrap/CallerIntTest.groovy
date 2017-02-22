@@ -9,7 +9,7 @@ import spock.lang.*
 
 // integration test
 @Unroll
-class CallerTest extends Specification{
+class CallerIntTest extends Specification{
 
 	def caller
 	
