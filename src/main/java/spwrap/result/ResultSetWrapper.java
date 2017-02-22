@@ -1,22 +1,11 @@
 package spwrap.result;
 
-import  static spwrap.result.ExceptionWrapper.*;
-
-import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Date;
-import java.sql.NClob;
-import java.sql.Ref;
-import java.sql.ResultSet;
-import java.sql.RowId;
-import java.sql.SQLException;
-import java.sql.SQLXML;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
+
+import static spwrap.result.ExceptionWrapper.Caller;
+import static spwrap.result.ExceptionWrapper.call;
 
 final class ResultSetWrapper extends Result<ResultSet> {
 
@@ -134,21 +123,12 @@ final class ResultSetWrapper extends Result<ResultSet> {
 
 	@Override
 	public Object getObject(final int columnIndex) {
-		return call(new Caller<Object>() {
+        return call(new Caller<Object>() {
             public Object call() throws SQLException {
                 return wrappedObject.getObject(columnIndex);
             }
         });
-	}
-
-	@Override
-	public Reader getCharacterStream(final int columnIndex) {
-		return call(new Caller<Reader>() {
-            public Reader call() throws SQLException {
-                return wrappedObject.getCharacterStream(columnIndex);
-            }
-        });
-	}
+    }
 
 	@Override
 	public BigDecimal getBigDecimal(final int columnIndex) {
@@ -200,51 +180,6 @@ final class ResultSetWrapper extends Result<ResultSet> {
 		return call(new Caller<URL>() {
             public URL call() throws SQLException {
                 return wrappedObject.getURL(columnIndex);
-            }
-        });
-	}
-
-	@Override
-	public RowId getRowId(final int columnIndex) {
-		return call(new Caller<RowId>() {
-            public RowId call() throws SQLException {
-                return wrappedObject.getRowId(columnIndex);
-            }
-        });
-	}
-
-	@Override
-	public NClob getNClob(final int columnIndex) {
-		return call(new Caller<NClob>() {
-            public NClob call() throws SQLException {
-                return wrappedObject.getNClob(columnIndex);
-            }
-        });
-	}
-
-	@Override
-	public SQLXML getSQLXML(final int columnIndex) {
-		return call(new Caller<SQLXML>() {
-            public SQLXML call() throws SQLException {
-                return wrappedObject.getSQLXML(columnIndex);
-            }
-        });
-	}
-
-	@Override
-	public String getNString(final int columnIndex) {
-		return call(new Caller<String>() {
-            public String call() throws SQLException {
-                return wrappedObject.getNString(columnIndex);
-            }
-        });
-	}
-
-	@Override
-	public Reader getNCharacterStream(final int columnIndex) {
-		return call(new Caller<Reader>() {
-            public Reader call() throws SQLException {
-                return wrappedObject.getNCharacterStream(columnIndex);
             }
         });
 	}
@@ -367,15 +302,6 @@ final class ResultSetWrapper extends Result<ResultSet> {
 	}
 
 	@Override
-	public Reader getCharacterStream(final String columnLabel) {
-		return call(new Caller<Reader>() {
-            public Reader call() throws SQLException {
-                return wrappedObject.getCharacterStream(columnLabel);
-            }
-        });
-	}
-
-	@Override
 	public BigDecimal getBigDecimal(final String columnLabel) {
 		return call(new Caller<BigDecimal>() {
             public BigDecimal call() throws SQLException {
@@ -425,51 +351,6 @@ final class ResultSetWrapper extends Result<ResultSet> {
 		return call(new Caller<URL>() {
             public URL call() throws SQLException {
                 return wrappedObject.getURL(columnLabel);
-            }
-        });
-	}
-
-	@Override
-	public RowId getRowId(final String columnLabel) {
-		return call(new Caller<RowId>() {
-            public RowId call() throws SQLException {
-                return wrappedObject.getRowId(columnLabel);
-            }
-        });
-	}
-
-	@Override
-	public NClob getNClob(final String columnLabel) {
-		return call(new Caller<NClob>() {
-            public NClob call() throws SQLException {
-                return wrappedObject.getNClob(columnLabel);
-            }
-        });
-	}
-
-	@Override
-	public SQLXML getSQLXML(final String columnLabel) {
-		return call(new Caller<SQLXML>() {
-            public SQLXML call() throws SQLException {
-                return wrappedObject.getSQLXML(columnLabel);
-            }
-        });
-	}
-
-	@Override
-	public String getNString(final String columnLabel) {
-		return call(new Caller<String>() {
-            public String call() throws SQLException {
-                return wrappedObject.getNString(columnLabel);
-            }
-        });
-	}
-
-	@Override
-	public Reader getNCharacterStream(final String columnLabel) {
-		return call(new Caller<Reader>() {
-            public Reader call() throws SQLException {
-                return wrappedObject.getNCharacterStream(columnLabel);
             }
         });
 	}

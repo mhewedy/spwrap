@@ -1,22 +1,10 @@
 package spwrap.result;
 
-import java.io.Reader;
+import spwrap.CallException;
+
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Date;
-import java.sql.NClob;
-import java.sql.Ref;
-import java.sql.ResultSet;
-import java.sql.RowId;
-import java.sql.SQLXML;
-import java.sql.Time;
-import java.sql.Timestamp;
-
-import spwrap.CallException;
+import java.sql.*;
 
 /**
  * <b>1-based index </b> container for stored procedure results that either
@@ -111,8 +99,6 @@ public abstract class Result<T> {
 
 	public abstract Object getObject(int columnOrParamIndex);
 
-	public abstract Reader getCharacterStream(int columnOrParamIndex);
-
 	public abstract BigDecimal getBigDecimal(int columnOrParamIndex);
 
 	public abstract Ref getRef(int columnOrParamIndex);
@@ -124,16 +110,6 @@ public abstract class Result<T> {
 	public abstract Array getArray(int columnOrParamIndex);
 
 	public abstract URL getURL(int columnOrParamIndex);
-
-	public abstract RowId getRowId(int columnOrParamIndex);
-
-	public abstract NClob getNClob(int columnOrParamIndex);
-
-	public abstract SQLXML getSQLXML(int columnOrParamIndex);
-
-	public abstract String getNString(int columnOrParamIndex);
-
-	public abstract Reader getNCharacterStream(int columnOrParamIndex);
 
 	public abstract String getString(String columnOrParamName);
 
@@ -161,8 +137,6 @@ public abstract class Result<T> {
 
 	public abstract Object getObject(String columnOrParamName);
 
-	public abstract Reader getCharacterStream(String columnOrParamName);
-
 	public abstract BigDecimal getBigDecimal(String columnOrParamName);
 
 	public abstract Ref getRef(String columnOrParamName);
@@ -174,15 +148,4 @@ public abstract class Result<T> {
 	public abstract Array getArray(String columnOrParamName);
 
 	public abstract URL getURL(String columnOrParamName);
-
-	public abstract RowId getRowId(String columnOrParamName);
-
-	public abstract NClob getNClob(String columnOrParamName);
-
-	public abstract SQLXML getSQLXML(String columnOrParamName);
-
-	public abstract String getNString(String columnOrParamName);
-
-	public abstract Reader getNCharacterStream(String columnOrParamName);
-
 }
