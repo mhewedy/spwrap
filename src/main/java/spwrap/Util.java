@@ -21,7 +21,7 @@ public class Util {
 		
 		if (list != null) {
 			for (Object o : list) {
-				ret.append(o + "\n");
+				ret.append(o).append("\n");
 			}
 		}
 		
@@ -29,7 +29,7 @@ public class Util {
 	}
 
 	static String createCallableString(String procName, int paramsCount) {
-		StringBuffer call = new StringBuffer();
+        StringBuilder call = new StringBuilder();
 
 		call.append("{call ").append(procName).append("(");
 

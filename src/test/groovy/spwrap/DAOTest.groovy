@@ -4,6 +4,9 @@ import java.sql.*
 import spock.lang.*
 import spock.util.mop.ConfineMetaClassChanges
 
+import static org.slf4j.impl.SimpleLogger.*
+
+
 // integration test
 @Unroll
 class DAOTest extends Specification{
@@ -11,7 +14,7 @@ class DAOTest extends Specification{
 	def customerDao
 	
 	def setup() {
-		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE")
+		System.setProperty(DEFAULT_LOG_LEVEL_KEY, "TRACE")
 		TestUtils.install()
 		
 		customerDao = new DAO.Builder(TestUtils.ds).build().create(CustomerDAO.class)

@@ -49,7 +49,7 @@ public class Caller {
 
 	/**
 	 * Use {@link #Caller(DataSource)} when possible
-	 * 
+	 *
 	 * @param jdbcUrl
 	 * @param username
 	 * @param password
@@ -73,7 +73,7 @@ public class Caller {
 	 * @param inParams
 	 * @param rsMapper
 	 * @return
-	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
+     * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
 	 */
 	public final <T> List<T> call(String procName, List<Param> inParams, ResultSetMapper<T> rsMapper) {
 		return call(procName, inParams, null, null, rsMapper).list();
@@ -96,7 +96,7 @@ public class Caller {
 	 * @param procName
 	 * @param inParams
 	 * @return
-	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
+     * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
 	 */
 	public final void call(String procName, List<Param> inParams) {
 		call(procName, inParams, null, null);
@@ -107,7 +107,7 @@ public class Caller {
 	 * 
 	 * @param procName
 	 * @return
-	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
+     * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
 	 */
 	public final void call(String procName) {
 		call(procName, null, null, null);
@@ -119,9 +119,9 @@ public class Caller {
 	 * @param procName
 	 * @param outParamsTypes
 	 *            (don't add types for result code and result message)
-	 * @param outputParamMapper
+	 * @param paramMapper
 	 * @return
-	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
+	 * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
 	 */
 	public final <T> T call(String procName, List<ParamType> outParamsTypes, OutputParamMapper<T> paramMapper) {
 		return call(procName, null, outParamsTypes, paramMapper);
@@ -135,9 +135,9 @@ public class Caller {
 	 * @param inParams
 	 * @param outParamsTypes
 	 *            (don't add types for result code and result message)
-	 * @param outputParamMapper
+	 * @param paramMapper
 	 * @return
-	 * @see {@link #call(String, List, List, Mapper, ResultSetMapper)}
+     * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
 	 */
 	public final <T> T call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<T> paramMapper) {
@@ -162,7 +162,7 @@ public class Caller {
 	 * @param procName
 	 * @param inParams
 	 * @param outParamsTypes
-	 * @param outputParamMapper
+	 * @param paramMapper
 	 * @param rsMapper
 	 * @return
 	 */

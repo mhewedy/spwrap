@@ -1,6 +1,7 @@
 package spwrap
 
-import static java.sql.Types.*;
+import static java.sql.Types.*
+import static org.slf4j.impl.SimpleLogger.*;
 import static spwrap.Caller.*;
 import static spwrap.Caller.Param.*;
 
@@ -13,7 +14,7 @@ class CallerTest extends Specification{
 	def caller
 	
 	def setup() {
-		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE")
+		System.setProperty(DEFAULT_LOG_LEVEL_KEY, "TRACE")
 		TestUtils.install()
 		
 		caller = new Caller(TestUtils.ds)
@@ -29,7 +30,7 @@ class CallerTest extends Specification{
 			def lastName = "Mohammad"
 		
 		when:
-			def custId = caller.call("create_customer", params(of("abdullah", VARCHAR), of("mohammad", VARCHAR)),
+			def custId = caller.call("create_customer", params(of(firstName, VARCHAR), of(lastName, VARCHAR)),
 				paramTypes(INTEGER), {it.getInt(1)});
 							
 		then:
