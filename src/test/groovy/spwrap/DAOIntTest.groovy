@@ -194,15 +194,15 @@ class DAOIntTest extends Specification{
 			customerDao.createCustomer0(firstName2, lastName2)
 			def tuple = customerDao.listCustomersWithDate();
 		then:
-			tuple.object != null
+			tuple.object() != null
 			
-			2 == tuple.list.size()
-			with(tuple.list.get(0)){
+			2 == tuple.list().size()
+			with(tuple.list().get(0)){
 				firstName1 == firstName()
 				lastName1 == lastName()
 			}
 			
-			with(tuple.list.get(1)){
+			with(tuple.list().get(1)){
 				firstName2 == firstName()
 				lastName2 == lastName()
 			}
@@ -219,15 +219,15 @@ class DAOIntTest extends Specification{
 			customerDao.createCustomer0(firstName2, lastName2)
 			def tuple = customerDao.list_customers_with_date();
 		then:
-			tuple.object != null
+			tuple.object() != null
 			
-			2 == tuple.list.size()
-			with(tuple.list.get(0)){
+			2 == tuple.list().size()
+			with(tuple.list().get(0)){
 				firstName1 == firstName()
 				lastName1 == lastName()
 			}
 			
-			with(tuple.list.get(1)){
+			with(tuple.list().get(1)){
 				firstName2 == firstName()
 				lastName2 == lastName()
 			}
