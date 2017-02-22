@@ -60,15 +60,6 @@ class ResultSetWrapperTest extends Specification {
         1 * resultSetMock.getLong(someColumnIndex)
     }
 
-    def "resultSet getNString(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getNString(someColumnIndex)
-        then:
-        1 * resultSetMock.getNString(someColumnIndex)
-    }
-
     def "resultSet getShort(int)"() {
         given:
         def someColumnIndex = 1
@@ -78,27 +69,6 @@ class ResultSetWrapperTest extends Specification {
         1 * resultSetMock.getShort(someColumnIndex)
     }
 
-
-    def "resultSet getNClob(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getNClob(someColumnIndex)
-        then:
-        1 * resultSetMock.getNClob(someColumnIndex)
-    }
-
-
-    def "resultSet getSQLXML(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getSQLXML(someColumnIndex)
-        then:
-        1 * resultSetMock.getSQLXML(someColumnIndex)
-    }
-
-
     def "resultSet getBigDecimal(int)"() {
         given:
         def someColumnIndex = 1
@@ -107,17 +77,6 @@ class ResultSetWrapperTest extends Specification {
         then:
         1 * resultSetMock.getBigDecimal(someColumnIndex)
     }
-
-
-    def "resultSet getCharacterStream(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getCharacterStream(someColumnIndex)
-        then:
-        1 * resultSetMock.getCharacterStream(someColumnIndex)
-    }
-
 
     def "resultSet getTimestamp(int)"() {
         given:

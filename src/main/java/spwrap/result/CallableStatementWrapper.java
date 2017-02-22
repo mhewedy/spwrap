@@ -1,11 +1,10 @@
 package spwrap.result;
 
+import spwrap.CallException;
+
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
-
-import static spwrap.result.ExceptionWrapper.Caller;
-import static spwrap.result.ExceptionWrapper.call;
 
 final class CallableStatementWrapper extends Result<CallableStatement> {
 
@@ -17,344 +16,344 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
 	}
 
 	@Override
-	public String getString(final int parameterIndex) {
-		return call(new Caller<String>() {
-			public String call() throws SQLException {
-				return wrappedObject.getString(outSIndex + parameterIndex);
-			}
-		});
+	public String getString(int columnIndex) {
+		try {
+			return wrappedObject.getString(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public boolean getBoolean(final int parameterIndex) {
-		return call(new Caller<Boolean>() {
-			public Boolean call() throws SQLException {
-				return wrappedObject.getBoolean(outSIndex + parameterIndex);
-			}
-		});
+	public boolean getBoolean(int columnIndex) {
+		try {
+			return wrappedObject.getBoolean(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public byte getByte(final int parameterIndex) {
-		return call(new Caller<Byte>() {
-			public Byte call() throws SQLException {
-				return wrappedObject.getByte(outSIndex + parameterIndex);
-			}
-		});
+	public byte getByte(int columnIndex) {
+		try {
+			return wrappedObject.getByte(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public short getShort(final int parameterIndex) {
-		return call(new Caller<Short>() {
-			public Short call() throws SQLException {
-				return wrappedObject.getShort(outSIndex + parameterIndex);
-			}
-		});
+	public short getShort(int columnIndex) {
+		try {
+			return wrappedObject.getShort(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public int getInt(final int parameterIndex) {
-		return call(new Caller<Integer>() {
-			public Integer call() throws SQLException {
-				return wrappedObject.getInt(outSIndex + parameterIndex);
-			}
-		});
+	public int getInt(int columnIndex) {
+		try {
+			return wrappedObject.getInt(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public long getLong(final int parameterIndex) {
-		return call(new Caller<Long>() {
-			public Long call() throws SQLException {
-				return wrappedObject.getLong(outSIndex + parameterIndex);
-			}
-		});
+	public long getLong(int columnIndex) {
+		try {
+			return wrappedObject.getLong(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public float getFloat(final int parameterIndex) {
-		return call(new Caller<Float>() {
-			public Float call() throws SQLException {
-				return wrappedObject.getFloat(outSIndex + parameterIndex);
-			}
-		});
+	public float getFloat(int columnIndex) {
+		try {
+			return wrappedObject.getFloat(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public double getDouble(final int parameterIndex) {
-		return call(new Caller<Double>() {
-			public Double call() throws SQLException {
-				return wrappedObject.getDouble(outSIndex + parameterIndex);
-			}
-		});
+	public double getDouble(int columnIndex) {
+		try {
+			return wrappedObject.getDouble(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public byte[] getBytes(final int parameterIndex) {
-		return call(new Caller<byte[]>() {
-			public byte[] call() throws SQLException {
-				return wrappedObject.getBytes(outSIndex + parameterIndex);
-			}
-		});
+	public byte[] getBytes(int columnIndex) {
+		try {
+			return wrappedObject.getBytes(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Date getDate(final int parameterIndex) {
-		return call(new Caller<Date>() {
-			public Date call() throws SQLException {
-				return wrappedObject.getDate(outSIndex + parameterIndex);
-			}
-		});
+	public Date getDate(int columnIndex) {
+		try {
+			return wrappedObject.getDate(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Time getTime(final int parameterIndex) {
-		return call(new Caller<Time>() {
-			public Time call() throws SQLException {
-				return wrappedObject.getTime(outSIndex + parameterIndex);
-			}
-		});
+	public Time getTime(int columnIndex) {
+		try {
+			return wrappedObject.getTime(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Timestamp getTimestamp(final int parameterIndex) {
-		return call(new Caller<Timestamp>() {
-			public Timestamp call() throws SQLException {
-				return wrappedObject.getTimestamp(outSIndex + parameterIndex);
-			}
-		});
+	public Timestamp getTimestamp(int columnIndex) {
+		try {
+			return wrappedObject.getTimestamp(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Object getObject(final int parameterIndex) {
-		return call(new Caller<Object>() {
-			public Object call() throws SQLException {
-				return wrappedObject.getObject(outSIndex + parameterIndex);
-			}
-		});
+	public Object getObject(int columnIndex) {
+		try {
+			return wrappedObject.getObject(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public BigDecimal getBigDecimal(final int parameterIndex) {
-		return call(new Caller<BigDecimal>() {
-			public BigDecimal call() throws SQLException {
-				return wrappedObject.getBigDecimal(outSIndex + parameterIndex);
-			}
-		});
+	public BigDecimal getBigDecimal(int columnIndex) {
+		try {
+			return wrappedObject.getBigDecimal(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Ref getRef(final int parameterIndex) {
-		return call(new Caller<Ref>() {
-			public Ref call() throws SQLException {
-				return wrappedObject.getRef(outSIndex + parameterIndex);
-			}
-		});
+	public Ref getRef(int columnIndex) {
+		try {
+			return wrappedObject.getRef(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Blob getBlob(final int parameterIndex) {
-		return call(new Caller<Blob>() {
-			public Blob call() throws SQLException {
-				return wrappedObject.getBlob(outSIndex + parameterIndex);
-			}
-		});
+	public Blob getBlob(int columnIndex) {
+		try {
+			return wrappedObject.getBlob(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Clob getClob(final int parameterIndex) {
-		return call(new Caller<Clob>() {
-			public Clob call() throws SQLException {
-				return wrappedObject.getClob(outSIndex + parameterIndex);
-			}
-		});
+	public Clob getClob(int columnIndex) {
+		try {
+			return wrappedObject.getClob(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Array getArray(final int parameterIndex) {
-		return call(new Caller<Array>() {
-			public Array call() throws SQLException {
-				return wrappedObject.getArray(outSIndex + parameterIndex);
-			}
-		});
+	public Array getArray(int columnIndex) {
+		try {
+			return wrappedObject.getArray(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public URL getURL(final int parameterIndex) {
-		return call(new Caller<URL>() {
-			public URL call() throws SQLException {
-				return wrappedObject.getURL(outSIndex + parameterIndex);
-			}
-		});
+	public URL getURL(int columnIndex) {
+		try {
+			return wrappedObject.getURL(outSIndex + columnIndex);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public String getString(final String parameterName) {
-		return call(new Caller<String>() {
-			public String call() throws SQLException {
-				return wrappedObject.getString(parameterName);
-			}
-		});
+	public String getString(String parameterName) {
+		try {
+			return wrappedObject.getString(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public boolean getBoolean(final String parameterName) {
-		return call(new Caller<Boolean>() {
-			public Boolean call() throws SQLException {
-				return wrappedObject.getBoolean(parameterName);
-			}
-		});
+	public boolean getBoolean(String parameterName) {
+		try {
+			return wrappedObject.getBoolean(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public byte getByte(final String parameterName) {
-		return call(new Caller<Byte>() {
-			public Byte call() throws SQLException {
-				return wrappedObject.getByte(parameterName);
-			}
-		});
+	public byte getByte(String parameterName) {
+		try {
+			return wrappedObject.getByte(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public short getShort(final String parameterName) {
-		return call(new Caller<Short>() {
-			public Short call() throws SQLException {
-				return wrappedObject.getShort(parameterName);
-			}
-		});
+	public short getShort(String parameterName) {
+		try {
+			return wrappedObject.getShort(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public int getInt(final String parameterName) {
-		return call(new Caller<Integer>() {
-			public Integer call() throws SQLException {
-				return wrappedObject.getInt(parameterName);
-			}
-		});
+	public int getInt(String parameterName) {
+		try {
+			return wrappedObject.getInt(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public long getLong(final String parameterName) {
-		return call(new Caller<Long>() {
-			public Long call() throws SQLException {
-				return wrappedObject.getLong(parameterName);
-			}
-		});
+	public long getLong(String parameterName) {
+		try {
+			return wrappedObject.getLong(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public float getFloat(final String parameterName) {
-		return call(new Caller<Float>() {
-			public Float call() throws SQLException {
-				return wrappedObject.getFloat(parameterName);
-			}
-		});
+	public float getFloat(String parameterName) {
+		try {
+			return wrappedObject.getFloat(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public double getDouble(final String parameterName) {
-		return call(new Caller<Double>() {
-			public Double call() throws SQLException {
-				return wrappedObject.getDouble(parameterName);
-			}
-		});
+	public double getDouble(String parameterName) {
+		try {
+			return wrappedObject.getDouble(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public byte[] getBytes(final String parameterName) {
-		return call(new Caller<byte[]>() {
-			public byte[] call() throws SQLException {
-				return wrappedObject.getBytes(parameterName);
-			}
-		});
+	public byte[] getBytes(String parameterName) {
+		try {
+			return wrappedObject.getBytes(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Date getDate(final String parameterName) {
-		return call(new Caller<Date>() {
-			public Date call() throws SQLException {
-				return wrappedObject.getDate(parameterName);
-			}
-		});
+	public Date getDate(String parameterName) {
+		try {
+			return wrappedObject.getDate(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Time getTime(final String parameterName) {
-		return call(new Caller<Time>() {
-			public Time call() throws SQLException {
-				return wrappedObject.getTime(parameterName);
-			}
-		});
+	public Time getTime(String parameterName) {
+		try {
+			return wrappedObject.getTime(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Timestamp getTimestamp(final String parameterName) {
-		return call(new Caller<Timestamp>() {
-			public Timestamp call() throws SQLException {
-				return wrappedObject.getTimestamp(parameterName);
-			}
-		});
+	public Timestamp getTimestamp(String parameterName) {
+		try {
+			return wrappedObject.getTimestamp(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Object getObject(final String parameterName) {
-		return call(new Caller<Object>() {
-			public Object call() throws SQLException {
-				return wrappedObject.getObject(parameterName);
-			}
-		});
+	public Object getObject(String parameterName) {
+		try {
+			return wrappedObject.getObject(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public BigDecimal getBigDecimal(final String parameterName) {
-		return call(new Caller<BigDecimal>() {
-			public BigDecimal call() throws SQLException {
-				return wrappedObject.getBigDecimal(parameterName);
-			}
-		});
+	public BigDecimal getBigDecimal(String parameterName) {
+		try {
+			return wrappedObject.getBigDecimal(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Ref getRef(final String parameterName) {
-		return call(new Caller<Ref>() {
-			public Ref call() throws SQLException {
-				return wrappedObject.getRef(parameterName);
-			}
-		});
+	public Ref getRef(String parameterName) {
+		try {
+			return wrappedObject.getRef(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Blob getBlob(final String parameterName) {
-		return call(new Caller<Blob>() {
-			public Blob call() throws SQLException {
-				return wrappedObject.getBlob(parameterName);
-			}
-		});
+	public Blob getBlob(String parameterName) {
+		try {
+			return wrappedObject.getBlob(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Clob getClob(final String parameterName) {
-		return call(new Caller<Clob>() {
-			public Clob call() throws SQLException {
-				return wrappedObject.getClob(parameterName);
-			}
-		});
+	public Clob getClob(String parameterName) {
+		try {
+			return wrappedObject.getClob(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public Array getArray(final String parameterName) {
-		return call(new Caller<Array>() {
-			public Array call() throws SQLException {
-				return wrappedObject.getArray(parameterName);
-			}
-		});
+	public Array getArray(String parameterName) {
+		try {
+			return wrappedObject.getArray(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 
 	@Override
-	public URL getURL(final String parameterName) {
-		return call(new Caller<URL>() {
-			public URL call() throws SQLException {
-				return wrappedObject.getURL(parameterName);
-			}
-		});
+	public URL getURL(String parameterName) {
+		try {
+			return wrappedObject.getURL(parameterName);
+		} catch (SQLException e) {
+			throw new CallException(e);
+		}
 	}
 }
