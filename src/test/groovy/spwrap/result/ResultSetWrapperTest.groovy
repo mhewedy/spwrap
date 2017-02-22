@@ -33,12 +33,19 @@ class ResultSetWrapperTest extends Specification {
             1 * resultSetMock.getString(_ as Integer)
     }
 
+    def "resultSet getDouble(any integer value)"() {
+        when:
+            resultSetWrapper.getDouble(1)
+        then:
+            1 * resultSetMock.getDouble(_ as Integer)
+    }
 
-    def "resultSet getString(int) throws SQLException"(){
+
+    def "resultSet getXXX(XXX) throws SQLException, then resultSetWapper.getXXX(XXX) should fails"(){
         given:
             def exceptionMsg = "I thrown an exception"
         when:
-            resultSetMock.getString(_) >> {throw new SQLException(exceptionMsg)}
+            resultSetMock./get.*/(_) >> {throw new SQLException(exceptionMsg)}
             resultSetWrapper.getString(1)
         then:
             def e = thrown(CallException)
