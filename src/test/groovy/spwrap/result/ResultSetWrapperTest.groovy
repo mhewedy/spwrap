@@ -33,13 +33,13 @@ class ResultSetWrapperTest extends Specification {
         1 * resultSetMock.getString(_ as Integer)
     }
 
-    def "resultSet getInteger(int)"() {
+    def "resultSet getInt(int)"() {
         given:
         def someColumnIndex = 1
         when:
-        resultSetWrapper.getInteger(someColumnIndex)
+        resultSetWrapper.getInt(someColumnIndex)
         then:
-        1 * resultSetMock.getInteger(someColumnIndex)
+        1 * resultSetMock.getInt(someColumnIndex)
     }
 
     def "resultSet getDouble(int)"() {
@@ -128,13 +128,13 @@ class ResultSetWrapperTest extends Specification {
         1 * resultSetMock.getTimestamp(someColumnIndex)
     }
 
-    def "resultSet getgetBytes(int)"() {
+    def "resultSet getBytes(int)"() {
         given:
         def someColumnIndex = 1
         when:
-        resultSetWrapper.getgetBytes(someColumnIndex)
+        resultSetWrapper.getBytes(someColumnIndex)
         then:
-        1 * resultSetMock.getgetBytes(someColumnIndex)
+        1 * resultSetMock.getBytes(someColumnIndex)
     }
 
     def "resultSet getXXX(XXX) throws SQLException, then resultSetWapper.getXXX(XXX) should fails"() {
