@@ -1,8 +1,9 @@
 package spwrap
 
+import org.hsqldb.jdbc.JDBCCallableStatement
+
 import java.sql.*
 import spock.lang.*
-import spock.util.mop.ConfineMetaClassChanges
 
 import static org.slf4j.impl.SimpleLogger.*
 
@@ -11,13 +12,13 @@ import static org.slf4j.impl.SimpleLogger.*
 @Unroll
 class DAOIntTest extends Specification{
 
-	def customerDao
+	CustomerDAO customerDao
 	
 	def setup() {
 		System.setProperty(DEFAULT_LOG_LEVEL_KEY, "TRACE")
 		TestUtils.install()
 		
-		customerDao = new DAO.Builder(TestUtils.ds).build().create(CustomerDAO.class)
+		customerDao = new DAO.Builder(TestUtils.dataSource).build().create(CustomerDAO.class)
 	}
 	
 	def cleanup() {
@@ -243,7 +244,7 @@ class DAOIntTest extends Specification{
 	
 	def "choose to disable the feature of result code and message, only we care about business related parameters" (){
 		given:
-			def dao = new DAO.Builder(TestUtils.ds).config(new Config().useStatusFields(false)).build()
+			def dao = new DAO.Builder(TestUtils.dataSource).config(new Config().useStatusFields(false)).build()
 			def customerDao2 = dao.create(CustomerDAO.class)
 		when:
 			customerDao2.getFirstTableNameNoResultFields()
@@ -254,7 +255,7 @@ class DAOIntTest extends Specification{
 	
 	def "we can even change the success value in the default result fields" (){
 		given:
-			def dao = new DAO.Builder(TestUtils.ds).config(new Config().successCode((short) 1)).build()
+			def dao = new DAO.Builder(TestUtils.dataSource).config(new Config().successCode((short) 1)).build()
 			def customerDao2 = dao.create(CustomerDAO.class);
 		when:
 			customerDao2.callStoredProcWithError()
@@ -284,20 +285,30 @@ class DAOIntTest extends Specification{
 		then:
 			thrown(IllegalArgumentException)
 	}
-	
-	
-	@Ignore
-	@ConfineMetaClassChanges([CallableStatement])
-	def "Result of output parameter getInt throws SQLException" (){
+
+    @Ignore
+	def "Calling interface methods calling JDBC Driver methods" (){
 		given:
-			def sqlExceptionMsg = "exception happend while tring to call getInt"
-			CallableStatement.metaClass.getObject = { int parameterIndex -> throw new SQLException(sqlExceptionMsg)}
+            CustomerDAO customerDAO2 = new DAO.Builder("jdbc:hsqldb:mem:customers", "sa", "").build().create(CustomerDAO);
+			def callableStatement = GroovyMock(JDBCCallableStatement, global: true)
 		when:
-			customerDao.createCustomer("Abdullah", "Mohammad")
+            customerDAO2.createCustomer("Abdullah", "Mohammad")
 		then:
+            1 * callableStatement.getObject(_ as Integer)
+	}
+
+    @Ignore
+    def "Result of output parameter getObject throws SQLException" (){
+        given:
+            def sqlExceptionMsg = "exception happened while trying to call getInt"
+            def callableStatement = GroovyMock(JDBCCallableStatement, global: true)
+        when:
+            callableStatement./get.*(_)/ >> {throw new SQLException(sqlExceptionMsg)}
+            customerDao.createCustomer("Abdullah", "Mohammad")
+        then:
 			def e = thrown(CallException)
 			e.cause.class == SQLException
 			e.cause.message == sqlExceptionMsg
-	}
+    }
 
 }

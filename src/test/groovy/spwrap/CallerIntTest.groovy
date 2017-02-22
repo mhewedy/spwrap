@@ -17,7 +17,7 @@ class CallerIntTest extends Specification{
 		System.setProperty(DEFAULT_LOG_LEVEL_KEY, "TRACE")
 		TestUtils.install()
 		
-		caller = new Caller(TestUtils.ds)
+		caller = new Caller(TestUtils.dataSource)
 	}
 	
 	def cleanup() {

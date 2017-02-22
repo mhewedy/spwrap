@@ -9,26 +9,26 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class TestUtils {
 
-	static HikariDataSource ds = new HikariDataSource();
+	static HikariDataSource dataSource = new HikariDataSource();
 
 	private static final String INSTALL_SQL_PATH = "src/test/resources/install.sql";
 	private static final String ROLLBACK_SQL_PATH = "src/test/resources/rollback.sql";
 
 	static void install() {
-		exeucteScript(INSTALL_SQL_PATH);
+		executeScript(INSTALL_SQL_PATH);
 	}
 
 	static void rollback() {
-		exeucteScript(ROLLBACK_SQL_PATH);
+		executeScript(ROLLBACK_SQL_PATH);
 	}
 
-	private static void exeucteScript(String scriptPath) {
+	private static void executeScript(String scriptPath) {
 		Connection connection = null;
 		Statement stmt = null;
 		Scanner scanner = null;
 
 		try {
-			connection = ds.getConnection();
+			connection = dataSource.getConnection();
 			stmt = connection.createStatement();
 
 			scanner = new Scanner(new File(scriptPath));
@@ -52,6 +52,6 @@ public class TestUtils {
 	}
 
 	static {
-		ds.setJdbcUrl("jdbc:hsqldb:mem:customers");
+		dataSource.setJdbcUrl("jdbc:hsqldb:mem:customers");
 	}
 }
