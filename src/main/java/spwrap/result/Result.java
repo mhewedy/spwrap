@@ -85,104 +85,104 @@ public abstract class Result<T> {
 		return CallableStatement.class.isAssignableFrom(wrappedObject.getClass());
 	}
 
-	public abstract String getString(int columnIndex);
+	public abstract String getString(int columnOrParamIndex);
 
-	public abstract boolean getBoolean(int columnIndex);
+	public abstract boolean getBoolean(int columnOrParamIndex);
 
-	public abstract byte getByte(int columnIndex);
+	public abstract byte getByte(int columnOrParamIndex);
 
-	public abstract short getShort(int columnIndex);
+	public abstract short getShort(int columnOrParamIndex);
 
-	public abstract int getInt(int columnIndex);
+	public abstract int getInt(int columnOrParamIndex);
 
-	public abstract long getLong(int columnIndex);
+	public abstract long getLong(int columnOrParamIndex);
 
-	public abstract float getFloat(int columnIndex);
+	public abstract float getFloat(int columnOrParamIndex);
 
-	public abstract double getDouble(int columnIndex);
+	public abstract double getDouble(int columnOrParamIndex);
 
-	public abstract byte[] getBytes(int columnIndex);
+	public abstract byte[] getBytes(int columnOrParamIndex);
 
-	public abstract Date getDate(int columnIndex);
+	public abstract Date getDate(int columnOrParamIndex);
 
-	public abstract Time getTime(int columnIndex);
+	public abstract Time getTime(int columnOrParamIndex);
 
-	public abstract Timestamp getTimestamp(int columnIndex);
+	public abstract Timestamp getTimestamp(int columnOrParamIndex);
 
-	public abstract Object getObject(int columnIndex);
+	public abstract Object getObject(int columnOrParamIndex);
 
-	public abstract Reader getCharacterStream(int columnIndex);
+	public abstract Reader getCharacterStream(int columnOrParamIndex);
 
-	public abstract BigDecimal getBigDecimal(int columnIndex);
+	public abstract BigDecimal getBigDecimal(int columnOrParamIndex);
 
-	public abstract Ref getRef(int columnIndex);
+	public abstract Ref getRef(int columnOrParamIndex);
 
-	public abstract Blob getBlob(int columnIndex);
+	public abstract Blob getBlob(int columnOrParamIndex);
 
-	public abstract Clob getClob(int columnIndex);
+	public abstract Clob getClob(int columnOrParamIndex);
 
-	public abstract Array getArray(int columnIndex);
+	public abstract Array getArray(int columnOrParamIndex);
 
-	public abstract URL getURL(int columnIndex);
+	public abstract URL getURL(int columnOrParamIndex);
 
-	public abstract RowId getRowId(int columnIndex);
+	public abstract RowId getRowId(int columnOrParamIndex);
 
-	public abstract NClob getNClob(int columnIndex);
+	public abstract NClob getNClob(int columnOrParamIndex);
 
-	public abstract SQLXML getSQLXML(int columnIndex);
+	public abstract SQLXML getSQLXML(int columnOrParamIndex);
 
-	public abstract String getNString(int columnIndex);
+	public abstract String getNString(int columnOrParamIndex);
 
-	public abstract Reader getNCharacterStream(int columnIndex);
+	public abstract Reader getNCharacterStream(int columnOrParamIndex);
 
-	public abstract String getString(String columnLabelOrParameterName);
+	public abstract String getString(String columnOrParamName);
 
-	public abstract boolean getBoolean(String columnLabelOrParameterName);
+	public abstract boolean getBoolean(String columnOrParamName);
 
-	public abstract byte getByte(String columnLabelOrParameterName);
+	public abstract byte getByte(String columnOrParamName);
 
-	public abstract short getShort(String columnLabelOrParameterName);
+	public abstract short getShort(String columnOrParamName);
 
-	public abstract int getInt(String columnLabelOrParameterName);
+	public abstract int getInt(String columnOrParamName);
 
-	public abstract long getLong(String columnLabelOrParameterName);
+	public abstract long getLong(String columnOrParamName);
 
-	public abstract float getFloat(String columnLabelOrParameterName);
+	public abstract float getFloat(String columnOrParamName);
 
-	public abstract double getDouble(String columnLabelOrParameterName);
+	public abstract double getDouble(String columnOrParamName);
 
-	public abstract byte[] getBytes(String columnLabelOrParameterName);
+	public abstract byte[] getBytes(String columnOrParamName);
 
-	public abstract Date getDate(String columnLabelOrParameterName);
+	public abstract Date getDate(String columnOrParamName);
 
-	public abstract Time getTime(String columnLabelOrParameterName);
+	public abstract Time getTime(String columnOrParamName);
 
-	public abstract Timestamp getTimestamp(String columnLabelOrParameterName);
+	public abstract Timestamp getTimestamp(String columnOrParamName);
 
-	public abstract Object getObject(String columnLabelOrParameterName);
+	public abstract Object getObject(String columnOrParamName);
 
-	public abstract Reader getCharacterStream(String columnLabelOrParameterName);
+	public abstract Reader getCharacterStream(String columnOrParamName);
 
-	public abstract BigDecimal getBigDecimal(String columnLabelOrParameterName);
+	public abstract BigDecimal getBigDecimal(String columnOrParamName);
 
-	public abstract Ref getRef(String columnLabelOrParameterName);
+	public abstract Ref getRef(String columnOrParamName);
 
-	public abstract Blob getBlob(String columnLabelOrParameterName);
+	public abstract Blob getBlob(String columnOrParamName);
 
-	public abstract Clob getClob(String columnLabelOrParameterName);
+	public abstract Clob getClob(String columnOrParamName);
 
-	public abstract Array getArray(String columnLabelOrParameterName);
+	public abstract Array getArray(String columnOrParamName);
 
-	public abstract URL getURL(String columnLabelOrParameterName);
+	public abstract URL getURL(String columnOrParamName);
 
-	public abstract RowId getRowId(String columnLabelOrParameterName);
+	public abstract RowId getRowId(String columnOrParamName);
 
-	public abstract NClob getNClob(String columnLabelOrParameterName);
+	public abstract NClob getNClob(String columnOrParamName);
 
-	public abstract SQLXML getSQLXML(String columnLabelOrParameterName);
+	public abstract SQLXML getSQLXML(String columnOrParamName);
 
-	public abstract String getNString(String columnLabelOrParameterName);
+	public abstract String getNString(String columnOrParamName);
 
-	public abstract Reader getNCharacterStream(String columnLabelOrParameterName);
+	public abstract Reader getNCharacterStream(String columnOrParamName);
 
 }
