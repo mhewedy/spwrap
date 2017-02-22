@@ -1,5 +1,6 @@
 package spwrap.result
 
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 import spwrap.CallException
@@ -10,101 +11,46 @@ import java.sql.SQLException
 @Unroll
 class ResultSetWrapperTest extends Specification {
 
-    ResultSetWrapper resultSetWrapper
-    ResultSet resultSetMock = Mock()
+    def resultSetWrapper
+    def resultSetMock = Mock(ResultSet)
 
+    @Shared METHOD_NAMES = ["getString", "getBoolean", "getByte", "getShort", "getInt",
+                                      "getLong", "getFloat", "getDouble", "getBytes", "getDate", "getTime",
+                                      "getTimestamp", "getObject", "getBigDecimal", "getRef", "getBlob", "getClob",
+                                      "getArray", "getURL"];
     void setup() {
         resultSetWrapper = new ResultSetWrapper(resultSetMock)
     }
 
-    def "resultSet getString(int)"() {
-        given:
-        def someColumnIndex = 1
+    def "calling #methodName(int) on ResultSetWrapper calls the same method name on ResultSet" (String methodName){
         when:
-        resultSetWrapper.getString(someColumnIndex)
+            resultSetWrapper."$methodName"(1)
         then:
-        1 * resultSetMock.getString(someColumnIndex)
+            1 * resultSetMock./get.*/(_)
+        where:
+            methodName << METHOD_NAMES
     }
 
-    def "resultSet getString(columnIndex)"() {
+    def "calling #methodName(String) on ResultSetWrapper calls the same method name on ResultSet" (String methodName){
         when:
-        resultSetWrapper.getString(1)
+            resultSetWrapper."$methodName"("some_column_name")
         then:
-        1 * resultSetMock.getString(_ as Integer)
+            1 * resultSetMock./get.*/(_)
+        where:
+            methodName << METHOD_NAMES
     }
 
-    def "resultSet getInt(int)"() {
+    def "calling #methodName(int) on ResultSetWrapper throws exception when ResultSet method throws exception"() {
         given:
-        def someColumnIndex = 1
+            def exceptionMsg = "I throw an exception"
         when:
-        resultSetWrapper.getInt(someColumnIndex)
+            resultSetMock./get.*/(_) >> { throw new SQLException(exceptionMsg) }
+            resultSetWrapper."$methodName"(1)
         then:
-        1 * resultSetMock.getInt(someColumnIndex)
-    }
-
-    def "resultSet getDouble(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getDouble(someColumnIndex)
-        then:
-        1 * resultSetMock.getDouble(someColumnIndex)
-    }
-
-    def "resultSet getLong(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getLong(someColumnIndex)
-        then:
-        1 * resultSetMock.getLong(someColumnIndex)
-    }
-
-    def "resultSet getShort(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getShort(someColumnIndex)
-        then:
-        1 * resultSetMock.getShort(someColumnIndex)
-    }
-
-    def "resultSet getBigDecimal(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getBigDecimal(someColumnIndex)
-        then:
-        1 * resultSetMock.getBigDecimal(someColumnIndex)
-    }
-
-    def "resultSet getTimestamp(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getTimestamp(someColumnIndex)
-        then:
-        1 * resultSetMock.getTimestamp(someColumnIndex)
-    }
-
-    def "resultSet getBytes(int)"() {
-        given:
-        def someColumnIndex = 1
-        when:
-        resultSetWrapper.getBytes(someColumnIndex)
-        then:
-        1 * resultSetMock.getBytes(someColumnIndex)
-    }
-
-    def "resultSet getXXX(XXX) throws SQLException, then resultSetWapper.getXXX(XXX) should fails"() {
-        given:
-        def exceptionMsg = "I thrown an exception"
-        when:
-        resultSetMock./get.*/(_) >> { throw new SQLException(exceptionMsg) }
-        resultSetWrapper.getString(1)
-        then:
-        def e = thrown(CallException)
-        e.cause.class == SQLException
-        e.cause.message == exceptionMsg
+            def e = thrown(CallException)
+            e.cause.class == SQLException
+            e.cause.message == exceptionMsg
+        where:
+            methodName << METHOD_NAMES
     }
 }
