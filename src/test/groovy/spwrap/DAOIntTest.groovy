@@ -285,30 +285,4 @@ class DAOIntTest extends Specification{
 		then:
 			thrown(IllegalArgumentException)
 	}
-
-    @Ignore
-	def "Calling interface methods calling JDBC Driver methods" (){
-		given:
-            CustomerDAO customerDAO2 = new DAO.Builder("jdbc:hsqldb:mem:customers", "sa", "").build().create(CustomerDAO);
-			def callableStatement = GroovyMock(JDBCCallableStatement, global: true)
-		when:
-            customerDAO2.createCustomer("Abdullah", "Mohammad")
-		then:
-            1 * callableStatement.getObject(_ as Integer)
-	}
-
-    @Ignore
-    def "Result of output parameter getObject throws SQLException" (){
-        given:
-            def sqlExceptionMsg = "exception happened while trying to call getInt"
-            def callableStatement = GroovyMock(JDBCCallableStatement, global: true)
-        when:
-            callableStatement./get.*(_)/ >> {throw new SQLException(sqlExceptionMsg)}
-            customerDao.createCustomer("Abdullah", "Mohammad")
-        then:
-			def e = thrown(CallException)
-			e.cause.class == SQLException
-			e.cause.message == sqlExceptionMsg
-    }
-
 }
