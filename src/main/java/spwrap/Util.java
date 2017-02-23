@@ -71,6 +71,7 @@ public class Util {
 		}
 	}
 
+    // this method should be used in logging only to print the type name instead of its integer value
 	static String getAsString(int sqlType) {
 		return TYPES_STRING_MAP.get(sqlType);
 	}
