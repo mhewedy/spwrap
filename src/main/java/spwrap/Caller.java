@@ -231,9 +231,9 @@ public class Caller {
 			U object = null;
 			if (outParamsTypes != null) {
 				log.debug("reading output parameters");
-				for (int i = 0; i < outParamsTypes.size(); i++) {
-					object = paramMapper.map(Result.of(null, call, startOfOutParamCnt));
-				}
+                for (ParamType ignored : outParamsTypes) {
+                    object = paramMapper.map(Result.of(null, call, startOfOutParamCnt));
+                }
 			}
 
 			if (config.useStatusFields()) {
@@ -252,17 +252,24 @@ public class Caller {
 			log.error("[" + callableStmt + "]", ex.getMessage());
 			throw new CallException(ex.getMessage(), ex);
 		} finally {
-			Util.closeDBObjects(con, call, rs);
-
-			log.info(">call sp: [{}] \nIN Params: {}, \nOUT Params Types: {}\nResult: {}; \ntook: {}", callableStmt,
-					inParams != null ? Arrays.toString(inParams.toArray()) : "null",
-					outParamsTypes != null ? Arrays.toString(outParamsTypes.toArray()) : "null", result,
-					(System.currentTimeMillis() - startTime) + " ms");
-		}
+            logCall(startTime, callableStmt, inParams, outParamsTypes, result);
+            Util.closeDBObjects(con, call, rs);
+        }
 		return result;
 	}
 
-	// --------------
+    private <T, U> void logCall(long startTime, String callableStmt, List<Param> inParams, List<ParamType> outParamsTypes, Tuple<T, U> result) {
+        if (log.isDebugEnabled()){
+            log.debug("\n>call sp: [{}] \n>\tIN Params: {}, \n>\tOUT Params Types: {}\n>\tResult: {}; \n>>\ttook: {} ms", callableStmt,
+                    inParams != null ? Arrays.toString(inParams.toArray()) : "null",
+                    outParamsTypes != null ? Arrays.toString(outParamsTypes.toArray()) : "null", result,
+                    (System.currentTimeMillis() - startTime));
+        }else {
+            log.info(">call sp: [{}] took: {} ms", callableStmt, (System.currentTimeMillis() - startTime));
+        }
+    }
+
+    // --------------
 	
 	public static interface Mapper<T>{
 		T map(Result<?> result);
