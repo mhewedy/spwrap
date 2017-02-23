@@ -45,31 +45,37 @@ public class Util {
 		return call.toString();
 	}
 
-	static void closeDBObjects(Connection conn, Statement stmt, ResultSet rs) {
-		try {
-			if (rs != null) {
-				rs.close();
-			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(), e);
-		}
+    static void closeDBObjects(Connection conn, Statement stmt, ResultSet rs) {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (SQLException e) {
+            log.trace("Could not close ResultSet", e);
+        } catch (Throwable e) {
+            log.trace("Unexpected exception on closing ResultSet", e);
+        }
 
-		try {
-			if (stmt != null) {
-				stmt.close();
-			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(), e);
-		}
+        try {
+            if (stmt != null) {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            log.trace("Could not close Statement", e);
+        } catch (Throwable e) {
+            log.trace("Unexpected exception on closing Statement", e);
+        }
 
-		try {
-			if (conn != null && !conn.isClosed()) {
-				conn.close();
-			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(), e);
-		}
-	}
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            log.debug("Could not close Connection", e);
+        } catch (Throwable e) {
+            log.debug("Unexpected exception on closing Connection", e);
+        }
+    }
 
     // this method should be used in logging only to print the type name instead of its integer value
 	static String getAsString(int sqlType) {
