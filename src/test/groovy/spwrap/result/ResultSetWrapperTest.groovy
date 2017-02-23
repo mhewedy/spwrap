@@ -26,7 +26,7 @@ class ResultSetWrapperTest extends Specification {
         when:
             resultSetWrapper."$methodName"(1)
         then:
-            1 * resultSetMock./get.*/(_)
+            1 * resultSetMock."$methodName"(1)
         where:
             methodName << METHOD_NAMES
     }
@@ -35,7 +35,7 @@ class ResultSetWrapperTest extends Specification {
         when:
             resultSetWrapper."$methodName"("some_column_name")
         then:
-            1 * resultSetMock./get.*/(_)
+            1 * resultSetMock."$methodName"("some_column_name")
         where:
             methodName << METHOD_NAMES
     }

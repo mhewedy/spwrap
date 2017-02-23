@@ -13,20 +13,21 @@ class CallableStatementWrapperTest extends Specification {
 
     def callableStatementWrapper
     def callableStatementMock = Mock(CallableStatement)
+    def outputParamStartIndex = 10
 
     @Shared METHOD_NAMES = ["getString", "getBoolean", "getByte", "getShort", "getInt",
                             "getLong", "getFloat", "getDouble", "getBytes", "getDate", "getTime",
                             "getTimestamp", "getObject", "getBigDecimal", "getRef", "getBlob", "getClob",
                             "getArray", "getURL"];
     void setup() {
-        callableStatementWrapper = new CallableStatementWrapper(callableStatementMock, 1)
+        callableStatementWrapper = new CallableStatementWrapper(callableStatementMock, outputParamStartIndex)
     }
 
     def "calling #methodName(int) on CallableStatementWrapper calls the same method name on CallableStatement" (String methodName){
         when:
             callableStatementWrapper."$methodName"(1)
         then:
-            1 * callableStatementMock./get.*/(_)
+            1 * callableStatementMock."$methodName"(1 + outputParamStartIndex)
         where:
             methodName << METHOD_NAMES
     }
@@ -35,7 +36,7 @@ class CallableStatementWrapperTest extends Specification {
         when:
             callableStatementWrapper."$methodName"("some_column_name")
         then:
-            1 * callableStatementMock./get.*/(_)
+            1 * callableStatementMock."$methodName"("some_column_name")
         where:
             methodName << METHOD_NAMES
     }
