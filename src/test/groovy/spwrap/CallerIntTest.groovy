@@ -36,4 +36,15 @@ class CallerIntTest extends Specification{
 		then:
 			custId == 0
 	}
+
+	def "create customer using the caller interface and Persistable"(){
+		given:
+		def customer  = new Customer2("Abdullah", "Mohammad")
+
+		when:
+		def custId = caller.call("create_customer", customer.toInputParams(), paramTypes(INTEGER), {it.getInt(1)});
+
+		then:
+		custId == 0
+	}
 }
