@@ -6,8 +6,8 @@ import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 
-import spwrap.Caller.ResultSetMapper;
-import spwrap.Caller.TypedOutputParamMapper;
+import spwrap.mappers.ResultSetMapper;
+import spwrap.mappers.TypedOutputParamMapper;
 import spwrap.annotations.Scalar;
 import spwrap.result.Result;
 

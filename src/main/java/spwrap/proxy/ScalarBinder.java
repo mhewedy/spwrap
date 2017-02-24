@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import spwrap.Caller.ParamType;
-import spwrap.Caller.TypedOutputParamMapper;
+import spwrap.mappers.TypedOutputParamMapper;
 import spwrap.annotations.Scalar;
 import spwrap.proxy.MetaData.OutputParam;
 import spwrap.result.Result;

@@ -6,8 +6,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import spwrap.Caller.ResultSetMapper;
-import spwrap.Caller.TypedOutputParamMapper;
+import spwrap.mappers.ResultSetMapper;
+import spwrap.mappers.TypedOutputParamMapper;
 
 @Retention(RUNTIME)
 @Target(METHOD)
@@ -22,5 +22,5 @@ public @interface Mapper {
 	 * 
 	 * @return
 	 */
-	Class<? extends spwrap.Caller.Mapper<?>>[] value();
+	Class<? extends spwrap.mappers.Mapper<?>>[] value();
 }

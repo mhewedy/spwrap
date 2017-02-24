@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import spwrap.db.Database;
 import spwrap.db.GenericDatabase;
+import spwrap.mappers.OutputParamMapper;
+import spwrap.mappers.ResultSetMapper;
 import spwrap.result.Result;
 
 /**
@@ -73,7 +75,7 @@ public class Caller {
 	 * @param inParams
 	 * @param rsMapper
 	 * @return
-     * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
+     * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
 	 */
 	public final <T> List<T> call(String procName, List<Param> inParams, ResultSetMapper<T> rsMapper) {
 		return call(procName, inParams, null, null, rsMapper).list();
@@ -96,7 +98,7 @@ public class Caller {
 	 * @param procName
 	 * @param inParams
 	 * @return
-     * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
+     * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
 	 */
 	public final void call(String procName, List<Param> inParams) {
 		call(procName, inParams, null, null);
@@ -107,7 +109,7 @@ public class Caller {
 	 * 
 	 * @param procName
 	 * @return
-     * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
+     * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
 	 */
 	public final void call(String procName) {
 		call(procName, null, null, null);
@@ -121,7 +123,7 @@ public class Caller {
 	 *            (don't add types for result code and result message)
 	 * @param paramMapper
 	 * @return
-	 * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
+	 * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
 	 */
 	public final <T> T call(String procName, List<ParamType> outParamsTypes, OutputParamMapper<T> paramMapper) {
 		return call(procName, null, outParamsTypes, paramMapper);
@@ -137,7 +139,7 @@ public class Caller {
 	 *            (don't add types for result code and result message)
 	 * @param paramMapper
 	 * @return
-     * @see {@link #call(String, java.util.List, java.util.List, spwrap.Caller.OutputParamMapper, spwrap.Caller.ResultSetMapper)}
+     * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
 	 */
 	public final <T> T call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<T> paramMapper) {
@@ -269,51 +271,7 @@ public class Caller {
         }
     }
 
-    // --------------
-	
-	public static interface Mapper<T>{
-		T map(Result<?> result);
-	}
-
-	public static interface OutputParamMapper<T> extends Mapper<T> {
-		/**
-		 * Use result.getXXX(1) to access the result of the first output
-		 * parameter and result.getXXX(2) to access the second and so on.
-		 * 
-		 * @param result
-		 *            A 1-based container for output parameter values
-		 * @return
-		 * @see Result
-		 */
-		T map(Result<?> result);
-	}
-
-	public static interface ResultSetMapper<T> extends Mapper<T>{
-		/**
-		 * 
-		 * Use result.getXXX(1) to access the result of the first column in the
-		 * result set and result.getXXX(2) to access the second and so on.
-		 * <br />
-		 * <br />
-		 * NOTE: this method should return a new object.
-		 * 
-		 * @param result
-		 *            A 1-based container for output parameter values
-		 * @return
-		 * @see Result
-		 */
-		T map(Result<?> result);
-	}
-
-	public static interface TypedOutputParamMapper<T> extends OutputParamMapper<T> {
-		/**
-		 * 
-		 * @return list of Types as in {@link java.sql.Types}
-		 */
-		List<Integer> getTypes();
-	}
-
-	// -------------
+    // -------------- Classes and factory functions for dealing with Caller
 
 	public static class ParamType {
 		protected int sqlType;

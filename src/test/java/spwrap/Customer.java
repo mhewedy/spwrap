@@ -5,8 +5,8 @@ import static java.sql.Types.*;
 import java.util.Arrays;
 import java.util.List;
 
-import spwrap.Caller.ResultSetMapper;
-import spwrap.Caller.TypedOutputParamMapper;
+import spwrap.mappers.ResultSetMapper;
+import spwrap.mappers.TypedOutputParamMapper;
 import spwrap.result.Result;
 
 public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapper<Customer> {

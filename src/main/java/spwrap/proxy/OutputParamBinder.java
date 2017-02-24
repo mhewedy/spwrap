@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import spwrap.CallException;
 import spwrap.Caller.ParamType;
-import spwrap.Caller.TypedOutputParamMapper;
+import spwrap.mappers.TypedOutputParamMapper;
 import spwrap.Tuple;
 import spwrap.annotations.Mapper;
 import spwrap.proxy.MetaData.OutputParam;

@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import spwrap.CallException;
-import spwrap.Caller.ResultSetMapper;
+import spwrap.mappers.ResultSetMapper;
 import spwrap.Tuple;
 import spwrap.annotations.Mapper;
 

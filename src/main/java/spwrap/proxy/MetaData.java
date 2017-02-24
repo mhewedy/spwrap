@@ -2,10 +2,10 @@ package spwrap.proxy;
 
 import java.util.List;
 
-import spwrap.Caller.OutputParamMapper;
+import spwrap.mappers.OutputParamMapper;
 import spwrap.Caller.Param;
 import spwrap.Caller.ParamType;
-import spwrap.Caller.ResultSetMapper;
+import spwrap.mappers.ResultSetMapper;
 
 class
 /* struct */ MetaData {

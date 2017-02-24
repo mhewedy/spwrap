@@ -34,10 +34,12 @@ import java.sql.*;
  * <br />
  * </i> {@code  result.getString(1);} <br />
  * {@code  result.getString(2);}
- * 
  * </p>
- * 
- * 
+ * <br />
+ * <p>
+ * Still you can use getXXX(String columnOrOutputParamName)
+ * </p>
+ *
  * @author mhewedy
  *
  */
