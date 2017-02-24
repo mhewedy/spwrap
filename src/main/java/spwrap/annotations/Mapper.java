@@ -17,7 +17,7 @@ public @interface Mapper {
 	 * Classes that implement either {@link TypedOutputParamMapper} or
 	 * {@link ResultSetMapper}
 	 * 
-	 * <br />
+	 * <p>
 	 * Maximum 2 classes allowed, one that implements each interface.
 	 * 
 	 * @return

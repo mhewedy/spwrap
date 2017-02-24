@@ -8,38 +8,30 @@ import java.sql.*;
 
 /**
  * <b>1-based index </b> container for stored procedure results that either
- * coming from result set or callable statement. <br />
- * <br />
+ * coming from result set or callable statement.
  * <p>
  * Wrapper class for both {@link java.sql.ResultSet} and
  * {@link java.sql.CallableStatement}
- * </p>
- * <br />
+ *
  * <p>
  * If exposed methods are not enough, use methods {@link #wrappedObject()} to
  * get reference to the wrapped object and then cast it. to make sure you are
  * casting to to correct type use {@link #isResultSet()} or
  * {@link #isCallableStatement()} to check the type of the underlying object
- * first.<br />
- * </p>
- * <br />
+ * first.
  * <p>
  * Use methods getXXX(1), getXXX(2), etc to get access to the first, second, etc
  * results regardless it is result set or callable statement output parameters.
- * <br />
- * <br />
- * <i> For example: if you have an Stored Procedure that have 4 input parameters
- * and 2 output parameters of type VARCHAR, then to get the result of the output
- * parameters use: <br />
- * <br />
- * </i> {@code  result.getString(1);} <br />
- * {@code  result.getString(2);}
- * </p>
- * <br />
  * <p>
+ * For example: if you have an Stored Procedure that have 4 input parameters
+ * and 2 output parameters of type VARCHAR, then to get the result of the output
+ * parameters use:
+ * <pre>
+ * {@code  result.getString(1);}
+ * {@code  result.getString(2);}
+ * </pre>
  * Still you can use getXXX(String columnOrOutputParamName)
- * </p>
- *
+ * <p>
  * @author mhewedy
  *
  */

@@ -23,9 +23,9 @@ import spwrap.result.Result;
 
 /**
  * <p>
- * Execute Stored Procedures. <br /> Read the wiki and github at http://github.com/mhewedy/spwrap README for more
+ * Execute Stored Procedures. <p> Read the wiki and github at http://github.com/mhewedy/spwrap README for more
  * information
- * </p>
+ *
  * @author mhewedy
  *
  */
@@ -54,13 +54,6 @@ public class Caller {
 		this.dataSource = dataSource;
 	}
 
-	/**
-	 * Use {@link #Caller(DataSource)} when possible
-	 *
-	 * @param jdbcUrl
-	 * @param username
-	 * @param password
-	 */
 	Caller(String jdbcUrl, String username, String password) {
 		if (jdbcUrl == null){
 			throw new IllegalArgumentException("jdbcUrl cannot be null");
@@ -70,7 +63,7 @@ public class Caller {
 		this.username = username;
 		this.password = password;
 	}
-	
+
 	void setConfig(Config config) {
 		this.config = config;
 	}
@@ -78,11 +71,15 @@ public class Caller {
 	/**
 	 * execute SP with input parameters and result list of result from result
 	 * 
-	 * @param procName
-	 * @param inParams
-	 * @param rsMapper
-	 * @return
-     * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
+	 * @param procName stored procedure name
+	 * @param inParams a list of input parameters values and types
+	 * @param rsMapper a mapper object that maps result list to type T
+	 *
+	 * @return a list of object T that represents the result set
+	 *
+     * @see #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)
+	 * @see #params(Param...)
+	 * @see ResultSetMapper
 	 */
 	public final <T> List<T> call(String procName, List<Param> inParams, ResultSetMapper<T> rsMapper) {
 		return call(procName, inParams, null, null, rsMapper).list();
@@ -91,9 +88,13 @@ public class Caller {
 	/**
 	 * execute SP without input parameters and with result list
 	 * 
-	 * @param procName
-	 * @param rsMapper
-	 * @return
+	 * @param procName stored procedure name
+	 * @param rsMapper a mapper object that maps result list to type T
+	 *
+	 * @return a list of object T that represents the result set
+	 *
+	 * @see #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)
+	 * @see ResultSetMapper
 	 */
 	public final <T> List<T> call(String procName, ResultSetMapper<T> rsMapper) {
 		return call(procName, null, rsMapper);
@@ -102,10 +103,9 @@ public class Caller {
 	/**
 	 * execute SP with list of input parameters without returning any result
 	 * 
-	 * @param procName
-	 * @param inParams
-	 * @return
-     * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
+	 * @param procName stored procedure name
+	 * @param inParams a list of input parameters values and types
+     * @see #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)
 	 */
 	public final void call(String procName, List<Param> inParams) {
 		call(procName, inParams, null, null);
@@ -114,9 +114,9 @@ public class Caller {
 	/**
 	 * execute SP with no input nor output parameters
 	 * 
-	 * @param procName
-	 * @return
-     * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
+	 * @param procName stored procedure name
+	 *
+     * @see #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)
 	 */
 	public final void call(String procName) {
 		call(procName, null, null, null);
@@ -125,12 +125,15 @@ public class Caller {
 	/**
 	 * execute SP with no input parameters and return output parameters
 	 * 
-	 * @param procName
-	 * @param outParamsTypes
-	 *            (don't add types for result code and result message)
-	 * @param paramMapper
-	 * @return
-	 * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
+	 * @param procName stored procedure name
+	 * @param outParamsTypes a list of output parameter types
+	 * @param paramMapper a mapper object that maps output parameters to type T
+	 *
+	 * @return object of type T that represents the output parameters
+	 *
+	 * @see #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)
+	 * @see #paramTypes(int...)
+	 * @see OutputParamMapper
 	 */
 	public final <T> T call(String procName, List<ParamType> outParamsTypes, OutputParamMapper<T> paramMapper) {
 		return call(procName, null, outParamsTypes, paramMapper);
@@ -140,13 +143,16 @@ public class Caller {
 	 * execute SP with list of input parameters and return list of output
 	 * parameters
 	 * 
-	 * @param procName
-	 * @param inParams
-	 * @param outParamsTypes
-	 *            (don't add types for result code and result message)
-	 * @param paramMapper
-	 * @return
-     * @see {@link #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)}
+	 * @param procName stored procedure name
+	 * @param inParams a list of output parameter types
+	 * @param outParamsTypes a list of output parameter types
+	 * @param paramMapper a mapper object that maps output parameters to type T
+	 *
+	 * @return object of type T that represents the output parameters
+	 *
+     * @see #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)
+	 * @see #paramTypes(int...)
+	 * @see OutputParamMapper
 	 */
 	public final <T> T call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<T> paramMapper) {
@@ -163,17 +169,22 @@ public class Caller {
 	 * if there's a result set and the result set mapping function is not null,
 	 * then it returns a list of results.
 	 * 
-	 * <br />
-	 * <br />
+	 * <p>
 	 * All other execute methods in this class are just a shortcut version of
 	 * this method
 	 * 
-	 * @param procName
-	 * @param inParams
-	 * @param outParamsTypes
-	 * @param paramMapper
-	 * @param rsMapper
-	 * @return
+	 * @param procName stored procedure name
+	 * @param inParams a list of output parameter types
+	 * @param outParamsTypes a list of output parameter types
+	 * @param paramMapper a mapper object that maps output parameters to type T
+	 * @param rsMapper a list of object T that represents the result set
+	 *
+	 * @return object of type T that represents the output parameters
+	 *
+	 * @see #params(Param...)
+	 * @see #paramTypes(int...)
+	 * @see ResultSetMapper
+	 * @see OutputParamMapper
 	 */
 	public final <T, U> Tuple<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
 			OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper) {
@@ -281,7 +292,7 @@ public class Caller {
     // -------------- Classes and factory functions for dealing with Caller
 
 	public static class ParamType {
-		protected int sqlType;
+		int sqlType;
 
 		public static ParamType of(int sqlType) {
 			ParamType p = new ParamType();
