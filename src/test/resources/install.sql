@@ -40,7 +40,7 @@ CREATE PROCEDURE get_customer(IN custId INT, OUT firstname VARCHAR(50), OUT last
 CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
    	READS SQL DATA DYNAMIC RESULT SETS 1
    	BEGIN ATOMIC
-    	DECLARE result CURSOR FOR SELECT * FROM CUSTOMERS;
+    	DECLARE result CURSOR FOR SELECT id, first_name firstname, last_name lastname FROM CUSTOMERS;
      	OPEN result;
      	SET code = 0;
   	END

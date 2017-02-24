@@ -35,7 +35,7 @@ CREATE PROCEDURE get_customer(IN custId INT, OUT firstname VARCHAR(50), OUT last
 CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
    	READS SQL DATA DYNAMIC RESULT SETS 1
    	BEGIN ATOMIC
-    	DECLARE result CURSOR FOR SELECT * FROM CUSTOMERS;
+    	DECLARE result CURSOR FOR SELECT id, first_name firstname, last_name lastname FROM CUSTOMERS;
      	OPEN result;
      	SET code = 0 -- success;
   	END
@@ -98,9 +98,11 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	public Customer map(Result<?> result) {
 		if (result.isResultSet()) {// for ResultSetMapper
 			return new Customer(result.getInt(1), result.getString(2), result.getString(3));
+			//or access by result set column label/name
+            // return new Customer(result.getInt("id"), result.getString("firstname"), result.getString("lastname"));
 		} else { // for TypedOutputParamMapper
 			return new Customer(null, result.getString(1), result.getString(2));
-			// can access the result by the output parameter names as well
+			//or access by output parameter name
 			// return new Customer(null, result.getString("firstname"), result.getString("lastname"));
 		}
 	}
