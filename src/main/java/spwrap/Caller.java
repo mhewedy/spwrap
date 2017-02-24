@@ -214,6 +214,7 @@ public class Caller {
 			int startOfOutParamCnt = inParams != null ? inParams.size() : 0;
 
 			if (inParams != null) {
+				log.debug("setting input parameters");
 				for (int i = 0; i < inParams.size(); i++) {
 					int jdbcParamId = i + JDBC_PARAM_OFFSIT;
 					call.setObject(jdbcParamId, inParams.get(i).value, inParams.get(i).sqlType);
@@ -221,7 +222,7 @@ public class Caller {
 			}
 
 			if (outParamsTypes != null) {
-				log.debug("setting input parameters");
+				log.debug("registering output parameters");
 				for (int i = 0; i < outParamsTypes.size(); i++) {
 					call.registerOutParameter(i + startOfOutParamCnt + JDBC_PARAM_OFFSIT,
 							outParamsTypes.get(i).sqlType);
@@ -231,6 +232,7 @@ public class Caller {
 			int resultCodeIndex = (inParams != null ? inParams.size() : 0)
 					+ (outParamsTypes != null ? outParamsTypes.size() : 0) + 1;
 			if (config.useStatusFields()) {
+				log.debug("registering status parameters");
 				call.registerOutParameter(resultCodeIndex, Types.BOOLEAN); // RESULT_CODE
 				call.registerOutParameter(resultCodeIndex + 1, Types.VARCHAR); // RESULT_MSG
 			}
@@ -257,6 +259,7 @@ public class Caller {
 			}
 
 			if (config.useStatusFields()) {
+				log.debug("reading status parameters");
 				short resultCode = call.getShort(resultCodeIndex);
 				if (resultCode != config.successCode()) {
 					String resultMsg = call.getString(resultCodeIndex + 1);
