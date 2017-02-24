@@ -100,6 +100,8 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 			return new Customer(result.getInt(1), result.getString(2), result.getString(3));
 		} else { // for TypedOutputParamMapper
 			return new Customer(null, result.getString(1), result.getString(2));
+			// can access the result by the output parameter names as well
+			// return new Customer(null, result.getString("firstname"), result.getString("lastname"));
 		}
 	}
 
