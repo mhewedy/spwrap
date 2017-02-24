@@ -82,7 +82,6 @@ class DAOIntTest extends Specification{
 		when:
 			customerDao.createCustomer0(firstName, lastName)
 			def customer = customerDao.getCustomer1(0);
-			
 		then:
 			customer.firstName() == firstName + ".CustomParamsMapper"
 			customer.lastName() == lastName + ".CustomParamsMapper"
@@ -285,4 +284,16 @@ class DAOIntTest extends Specification{
 		then:
 			thrown(IllegalArgumentException)
 	}
+
+    def "using Result.getXXX(String OutputParameterName)"(){
+        given:
+            def firstName = "Abdullah"
+            def lastName = "Mohammad"
+        when:
+            customerDao.createCustomer0(firstName, lastName)
+            def customer = customerDao.getCustomer7(0);
+        then:
+            customer.firstName() == firstName
+            customer.lastName() == lastName
+    }
 }

@@ -51,15 +51,13 @@ public class CustomMappers {
 
 	}
 
-	public static class SingleStringMapper implements TypedOutputParamMapper<String> {
+    public static class CustomParamsMapperByName implements TypedOutputParamMapper<Customer> {
+        public List<Integer> getTypes() {
+            return Arrays.asList(VARCHAR, VARCHAR);
+        }
 
-		public String map(Result<?> result) {
-			return result.getString(1);
-		}
-
-		public List<Integer> getTypes() {
-			return Collections.singletonList(VARCHAR);
-		}
-
-	}
+        public Customer map(Result<?> result) {
+            return new Customer(null, result.getString("firstname"), result.getString("lastname"));
+        }
+    }
 }

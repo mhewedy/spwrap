@@ -86,4 +86,8 @@ public interface CustomerDAO {
 	// missing params annotations
 	@StoredProc("create_customer0")
 	void createCustomer7(@Param(VARCHAR) String firstName, String lastName);
+
+    @Mapper(CustomMappers.CustomParamsMapperByName.class)
+    @StoredProc("get_customer")
+    Customer getCustomer7(@Param(INTEGER) Integer id);
 }
