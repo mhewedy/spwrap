@@ -141,11 +141,11 @@ And in the dependecies section add:
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>0.0.11</version>
+	<version>0.0.12</version>
 </dependency>
 ```
 
-For other build tools : https://jitpack.io/#mhewedy/spwrap/0.0.11
+For other build tools : https://jitpack.io/#mhewedy/spwrap/0.0.12
 
 ## Additional staff:
 
