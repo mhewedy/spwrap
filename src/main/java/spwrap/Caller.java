@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -21,9 +22,10 @@ import spwrap.mappers.ResultSetMapper;
 import spwrap.result.Result;
 
 /**
- * Execute Stored Procedures read the wiki and github README for more
+ * <p>
+ * Execute Stored Procedures. <br /> Read the wiki and github at http://github.com/mhewedy/spwrap README for more
  * information
- * 
+ * </p>
  * @author mhewedy
  *
  */
@@ -43,6 +45,9 @@ public class Caller {
 	private final String password;
 
 	Caller(DataSource dataSource) {
+		if (dataSource == null){
+			throw new IllegalArgumentException("dataSource cannot be null");
+		}
 		this.jdbcUrl = null;
 		this.username = null;
 		this.password = null;
@@ -57,7 +62,9 @@ public class Caller {
 	 * @param password
 	 */
 	Caller(String jdbcUrl, String username, String password) {
-		super();
+		if (jdbcUrl == null){
+			throw new IllegalArgumentException("jdbcUrl cannot be null");
+		}
 		this.dataSource = null;
 		this.jdbcUrl = jdbcUrl;
 		this.username = username;
@@ -316,9 +323,7 @@ public class Caller {
 
 	public static List<Param> params(Param... params) {
 		List<Param> pm = new ArrayList<Param>();
-		for (Param param : params) {
-			pm.add(param);
-		}
+		Collections.addAll(pm, params);
 		return pm;
 	}
 }

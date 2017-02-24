@@ -22,17 +22,17 @@ class ParamBinder implements Binder<List<Param>> {
 
 		if (annotList.length > 0) {
 			params = new ArrayList<Caller.Param>();
-		}
 
-		for (int i = 0; i < annotList.length; i++) {
-			Annotation[] annot = annotList[i];
+			for (int i = 0; i < annotList.length; i++) {
+				Annotation[] annot = annotList[i];
 
-			spwrap.annotations.Param paramAnnot = findParamAnnotation(annot);
-			if (paramAnnot == null) {
-				throw new IllegalArgumentException(
-						"missing @Param annotation on parameters for method: " + method.getName());
-			} else {
-				params.add(Caller.Param.of(args[i], paramAnnot.value()));
+				spwrap.annotations.Param paramAnnot = findParamAnnotation(annot);
+				if (paramAnnot == null) {
+					throw new IllegalArgumentException(
+							"missing @Param annotation on parameters for method: " + method.getName());
+				} else {
+					params.add(Caller.Param.of(args[i], paramAnnot.value()));
+				}
 			}
 		}
 

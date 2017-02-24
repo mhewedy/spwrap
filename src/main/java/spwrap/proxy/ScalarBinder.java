@@ -1,7 +1,7 @@
 package spwrap.proxy;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ class ScalarBinder implements Binder<OutputParam> {
 
 			outputParam = new OutputParam();
 			outputParam.outputParamMapper = new ScalarTypedOutputParamMapper(sqlType);
-			outputParam.outParamTypes = Arrays.asList(ParamType.of(sqlType));
+			outputParam.outParamTypes = Collections.singletonList(ParamType.of(sqlType));
 		}
 
 		return outputParam;
@@ -47,7 +47,7 @@ class ScalarBinder implements Binder<OutputParam> {
 		}
 
 		public List getTypes() {
-			return Arrays.asList(sqlType);
+			return Collections.singletonList(sqlType);
 		}
 	}
 

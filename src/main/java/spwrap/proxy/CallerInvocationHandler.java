@@ -54,7 +54,7 @@ public class CallerInvocationHandler implements InvocationHandler {
 		if (storedProcAnnot != null) {
 
 			String storedProc = storedProcAnnot.value();
-			if (storedProc == null || storedProc.trim().isEmpty()) {
+			if (storedProc.trim().length() == 0) {
 				storedProc = method.getName();
 			}
 			metadata.storedProcName = storedProc;

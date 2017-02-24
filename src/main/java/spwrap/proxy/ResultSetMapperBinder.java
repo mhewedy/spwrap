@@ -35,7 +35,7 @@ class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>, Class<Resul
 			}
 
 			if (clazz != null) {
-				ResultSetMapper<?> instance = fromClazz(method, clazz);
+				ResultSetMapper<?> instance = newInstance(clazz);
 				log.debug("found annotation result set: {} for method: {}", instance.getClass(), method.getName());
 				return instance;
 			}
@@ -53,7 +53,7 @@ class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>, Class<Resul
 			Class<?> clazz = (Class<?>) listType.getActualTypeArguments()[FIRST_GENERIC_TYPE_INDEX];
 
 			if (ResultSetMapper.class.isAssignableFrom(clazz)) {
-				resultSetMapper = fromClazz(method, clazz);
+				resultSetMapper = newInstance(clazz);
 				log.debug("found return type result set: {} for method: {}", resultSetMapper.getClass(),
 						method.getName());
 			}
@@ -61,10 +61,9 @@ class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>, Class<Resul
 		return resultSetMapper;
 	}
 
-	private ResultSetMapper<?> fromClazz(Method method, Class<?> clazz) {
+	private ResultSetMapper<?> newInstance(Class<?> clazz) {
 		try {
-			ResultSetMapper<?> instance = (ResultSetMapper<?>) clazz.newInstance();
-			return instance;
+			return (ResultSetMapper<?>) clazz.newInstance();
 		} catch (Exception e) {
 			throw new CallException("cannot create resultSet Mapper", e);
 		}

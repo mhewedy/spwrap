@@ -4,32 +4,14 @@ import static java.sql.Types.*;
 
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import spwrap.mappers.ResultSetMapper;
 import spwrap.mappers.TypedOutputParamMapper;
-import spwrap.annotations.Scalar;
 import spwrap.result.Result;
 
 public class CustomMappers {
-
-	/**
-	 * Used with any Stored Procedure that returns 1 output parameter of type
-	 * Integer, typically a save new Record Stored Procedure, could be replaced with {@link Scalar}
-	 * 
-	 * @author mhewedy
-	 *
-	 */
-	public static class GenericIdMapper implements TypedOutputParamMapper<Integer> {
-
-		public Integer map(Result<?> result) {
-			return result.getInt(1);
-		}
-
-		public List<Integer> getTypes() {
-			return Arrays.asList(INTEGER);
-		}
-	};
 
 	public static class CustomParamsMapper implements TypedOutputParamMapper<Customer> {
 
@@ -57,7 +39,7 @@ public class CustomMappers {
 		}
 
 		public List<Integer> getTypes() {
-			return Arrays.asList(DATE);
+			return Collections.singletonList(DATE);
 		}
 	}
 
@@ -76,7 +58,7 @@ public class CustomMappers {
 		}
 
 		public List<Integer> getTypes() {
-			return Arrays.asList(VARCHAR);
+			return Collections.singletonList(VARCHAR);
 		}
 
 	}

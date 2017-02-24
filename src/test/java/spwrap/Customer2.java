@@ -3,7 +3,6 @@ package spwrap;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.sql.Types.INTEGER;
 import static java.sql.Types.VARCHAR;
 import static spwrap.Caller.Param.of;
 
