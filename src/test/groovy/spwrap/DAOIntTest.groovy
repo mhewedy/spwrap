@@ -296,4 +296,16 @@ class DAOIntTest extends Specification{
             customer.firstName() == firstName
             customer.lastName() == lastName
     }
+
+    def "using Result.getXXX(String InvalidOutputParameterName)"(){
+        given:
+            def firstName = "Abdullah"
+            def lastName = "Mohammad"
+        when:
+            customerDao.createCustomer0(firstName, lastName)
+            def customer = customerDao.getCustomer8(0);
+        then:
+            def e = thrown(CallException)
+            e.cause.class == SQLException
+    }
 }

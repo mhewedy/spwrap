@@ -60,4 +60,14 @@ public class CustomMappers {
             return new Customer(null, result.getString("firstname"), result.getString("lastname"));
         }
     }
+
+    public static class CustomParamsMapperByInvalidName implements TypedOutputParamMapper<Customer> {
+        public List<Integer> getTypes() {
+            return Arrays.asList(VARCHAR, VARCHAR);
+        }
+
+        public Customer map(Result<?> result) {
+            return new Customer(null, result.getString("invalidParamName"), result.getString("lastname"));
+        }
+    }
 }

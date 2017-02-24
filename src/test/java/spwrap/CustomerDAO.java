@@ -90,4 +90,8 @@ public interface CustomerDAO {
     @Mapper(CustomMappers.CustomParamsMapperByName.class)
     @StoredProc("get_customer")
     Customer getCustomer7(@Param(INTEGER) Integer id);
+
+    @Mapper(CustomMappers.CustomParamsMapperByInvalidName.class)
+    @StoredProc("get_customer")
+    Customer getCustomer8(@Param(INTEGER) Integer id);
 }
