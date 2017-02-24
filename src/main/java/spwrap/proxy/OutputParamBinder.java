@@ -37,7 +37,7 @@ class OutputParamBinder extends MapperBinder<OutputParam, Class<TypedOutputParam
 				}
 			}
 			if (clazz != null) {
-				OutputParam outputParam = fromClazz(method, clazz);
+				OutputParam outputParam = fromClazz(clazz);
 				log.debug("found annotation output param: {} and types: {} for method: {}",
 						outputParam.outputParamMapper.getClass(), outputParam.outParamTypes, method.getName());
 				return outputParam;
@@ -55,7 +55,7 @@ class OutputParamBinder extends MapperBinder<OutputParam, Class<TypedOutputParam
 
 		if (TypedOutputParamMapper.class.isAssignableFrom(returnType)) {
 
-			outputParam = fromClazz(method, (Class<TypedOutputParamMapper<?>>) returnType);
+			outputParam = fromClazz((Class<TypedOutputParamMapper<?>>) returnType);
 
 		} else if (Tuple.class.isAssignableFrom(returnType)) {
 
@@ -63,7 +63,7 @@ class OutputParamBinder extends MapperBinder<OutputParam, Class<TypedOutputParam
 			Class<?> paramClass = (Class<?>) type.getActualTypeArguments()[SECOND_GENERIC_TYPE_INDEX];
 
 			if (TypedOutputParamMapper.class.isAssignableFrom(paramClass)) {
-				outputParam = fromClazz(method, (Class<TypedOutputParamMapper<?>>) paramClass);
+				outputParam = fromClazz((Class<TypedOutputParamMapper<?>>) paramClass);
 			}
 		}
 
@@ -74,7 +74,7 @@ class OutputParamBinder extends MapperBinder<OutputParam, Class<TypedOutputParam
 		return outputParam;
 	}
 
-	private OutputParam fromClazz(Method method, Class<TypedOutputParamMapper<?>> clazz) {
+	private OutputParam fromClazz(Class<TypedOutputParamMapper<?>> clazz) {
 		OutputParam outputParam = new OutputParam();
 		try {
 			TypedOutputParamMapper<?> instance = clazz.newInstance();
