@@ -145,7 +145,8 @@ And in the dependecies section add:
 </dependency>
 ```
 
-For other build tools : https://jitpack.io/#mhewedy/spwrap/0.0.13
+[For other build tools](https://jitpack.io/#mhewedy/spwrap/0.0.13) | 
+[javadoc] (https://jitpack.io/com/github/mhewedy/spwrap/0.0.13/javadoc/)
 
 ## Additional staff:
 
