@@ -18,9 +18,9 @@ import static spwrap.Caller.params
 class CallerIntTest extends Specification{
 
     @Shared def db;
-
-	def caller
     @Shared def testDBs = [TestUtils.TestDB.HSQL, TestUtils.TestDB.MYSQL];
+
+    def caller
 
     def setupSpec() {
         def dbConfig = DBConfigurationBuilder.newBuilder()
@@ -34,10 +34,8 @@ class CallerIntTest extends Specification{
     }
 
 	def "#testDB : create customer using the caller interface"(){
-		given:
-            TestUtils.install(testDB)
-            caller = new Caller(testDB.dbInterface.dataSource())
-
+		setup:
+            _setup(testDB)
 			def firstName = "Abdullah"
 			def lastName = "Mohammad"
 		when:
@@ -46,7 +44,7 @@ class CallerIntTest extends Specification{
 		then:
 			custId == custIdFromDb
         cleanup:
-            TestUtils.rollback(testDB)
+            _cleanup(testDB)
         where:
             testDB << testDBs
             custIdFromDb << [0, 1]
@@ -54,20 +52,26 @@ class CallerIntTest extends Specification{
 
 	def "#testDB : create customer using the caller interface and Persistable"(){
 		given:
-            TestUtils.install(testDB)
-            caller = new Caller(testDB.dbInterface.dataSource())
-
+            _setup(testDB)
 		    def customer  = new Customer2("Abdullah", "Mohammad")
-
 		when:
 		    def custId = caller.call("create_customer", customer.toInputParams(), paramTypes(INTEGER), {it.getInt(1)});
 
 		then:
 		    custId == custIdFromDb
         cleanup:
-            TestUtils.rollback(testDB)
+            _cleanup(testDB)
         where:
             testDB << testDBs
             custIdFromDb << [0, 1]
 	}
+
+    def _setup(db){
+        TestUtils.install(db)
+        caller = new Caller(db.dbInterface.dataSource())
+    }
+
+    def _cleanup(db){
+        TestUtils.rollback(db)
+    }
 }
