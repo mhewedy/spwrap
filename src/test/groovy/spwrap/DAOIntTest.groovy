@@ -1,7 +1,5 @@
 package spwrap
 
-import org.hsqldb.jdbc.JDBCCallableStatement
-
 import java.sql.*
 import spock.lang.*
 
@@ -13,16 +11,19 @@ import static org.slf4j.impl.SimpleLogger.*
 class DAOIntTest extends Specification{
 
 	CustomerDAO customerDao
+
+    TestUtils.TestDB testDB = TestUtils.TestDB.HSQL;
 	
 	def setup() {
 		System.setProperty(DEFAULT_LOG_LEVEL_KEY, "TRACE")
-		TestUtils.install()
+
+		TestUtils.install(testDB)
 		
-		customerDao = new DAO.Builder(TestUtils.dataSource).build().create(CustomerDAO.class)
+		customerDao = new DAO.Builder(testDB.dbInterface.dataSource()).build().create(CustomerDAO.class)
 	}
 	
 	def cleanup() {
-		TestUtils.rollback()
+		TestUtils.rollback(testDB)
 	}
 	
 	def "using the @Param to pass input parameters"(){
@@ -243,7 +244,7 @@ class DAOIntTest extends Specification{
 	
 	def "choose to disable the feature of result code and message, only we care about business related parameters" (){
 		given:
-			def dao = new DAO.Builder(TestUtils.dataSource).config(new Config().useStatusFields(false)).build()
+			def dao = new DAO.Builder(testDB.dbInterface.dataSource()).config(new Config().useStatusFields(false)).build()
 			def customerDao2 = dao.create(CustomerDAO.class)
 		when:
 			customerDao2.getFirstTableNameNoResultFields()
@@ -254,7 +255,7 @@ class DAOIntTest extends Specification{
 	
 	def "we can even change the success value in the default result fields" (){
 		given:
-			def dao = new DAO.Builder(TestUtils.dataSource).config(new Config().successCode((short) 1)).build()
+			def dao = new DAO.Builder(testDB.dbInterface.dataSource()).config(new Config().successCode((short) 1)).build()
 			def customerDao2 = dao.create(CustomerDAO.class);
 		when:
 			customerDao2.callStoredProcWithError()

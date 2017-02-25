@@ -5,30 +5,38 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Scanner;
 
-import org.hsqldb.jdbc.JDBCPool;
+import spwrap.db.DBInterface;
+import spwrap.db.HSQLInterface;
+import spwrap.db.MySQLInterface;
 
 public class TestUtils {
 
-    static JDBCPool dataSource = new JDBCPool();
+    public enum TestDB {
+        HSQL(new HSQLInterface()),
+        MYSQL(new MySQLInterface());
 
-	private static final String INSTALL_SQL_PATH = "src/test/resources/install.sql";
-	private static final String ROLLBACK_SQL_PATH = "src/test/resources/rollback.sql";
+        DBInterface dbInterface;
 
-	static void install() {
-		executeScript(INSTALL_SQL_PATH);
+        TestDB(DBInterface dbInterface) {
+            this.dbInterface = dbInterface;
+        }
+    }
+
+	static void install(TestDB testDb) {
+		executeScript(testDb, testDb.dbInterface.installScript());
 	}
 
-	static void rollback() {
-		executeScript(ROLLBACK_SQL_PATH);
+	static void rollback(TestDB testDb) {
+		executeScript(testDb, testDb.dbInterface.rollbackScript());
 	}
 
-	private static void executeScript(String scriptPath) {
+	private static void executeScript(TestDB testDb, String scriptPath) {
 		Connection connection = null;
 		Statement stmt = null;
 		Scanner scanner = null;
 
 		try {
-			connection = dataSource.getConnection();
+			connection = testDb.dbInterface.dataSource().getConnection();
 			stmt = connection.createStatement();
 
 			scanner = new Scanner(new File(scriptPath));
@@ -49,9 +57,5 @@ public class TestUtils {
 			}
 			Util.closeDBObjects(connection, stmt, null);
 		}
-	}
-
-	static {
-        dataSource.setUrl("jdbc:hsqldb:mem:customers");
 	}
 }
