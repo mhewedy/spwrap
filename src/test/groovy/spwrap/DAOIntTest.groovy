@@ -440,4 +440,22 @@ class DAOIntTest extends Specification{
             TestDB.HSQL  | 0
             TestDB.MYSQL | 1
     }
+
+    def "#testDB : using @Scalar annotation to map single output parameter - connection using jdbc URL"(){
+        given:
+            TestUtils.install(testDB)
+            def customerDAOJdbc = new DAO.Builder(jdbcUrl, username, "").build().create(CustomerDAO)
+            def firstName = "Abdullah"
+            def lastName = "Mohammad"
+        when:
+            def custId = customerDAOJdbc.createCustomer(firstName, lastName)
+        then:
+            custId == expectedCustId
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | jdbcUrl                              | username      | expectedCustId
+            TestDB.HSQL  | "jdbc:hsqldb:mem:customers"          | "sa"          | 0
+            TestDB.MYSQL | "jdbc:mysql://localhost:3307/test"   | "root"        | 1
+    }
 }
