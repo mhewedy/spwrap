@@ -5,24 +5,9 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Scanner;
 
-import spwrap.db.DBInterface;
-import spwrap.db.HSQLInterface;
-import spwrap.db.MySQLInterface;
-
 public class TestUtils {
 
-    public enum TestDB {
-        HSQL(new HSQLInterface()),
-        MYSQL(new MySQLInterface());
-
-        DBInterface dbInterface;
-
-        TestDB(DBInterface dbInterface) {
-            this.dbInterface = dbInterface;
-        }
-    }
-
-	static void install(TestDB testDb) {
+    static void install(TestDB testDb) {
 		executeScript(testDb, testDb.dbInterface.installScript());
 	}
 

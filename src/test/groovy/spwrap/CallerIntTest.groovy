@@ -8,7 +8,6 @@ import spock.lang.Unroll
 
 import static java.sql.Types.INTEGER
 import static java.sql.Types.VARCHAR
-import static org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY
 import static spwrap.Caller.Param.of
 import static spwrap.Caller.paramTypes
 import static spwrap.Caller.params
@@ -17,20 +16,28 @@ import static spwrap.Caller.params
 @Unroll
 class CallerIntTest extends Specification{
 
-    @Shared def db;
-    @Shared def testDBs = [TestUtils.TestDB.HSQL, TestUtils.TestDB.MYSQL];
+    @Shared def mysqlDbRef;
 
-    def caller
+    Caller caller
 
     def setupSpec() {
         def dbConfig = DBConfigurationBuilder.newBuilder()
         dbConfig.setPort(3307)
-        db = DB.newEmbeddedDB(dbConfig.build())
-        db.start();
+        mysqlDbRef = DB.newEmbeddedDB(dbConfig.build())
+        mysqlDbRef.start();
     }
 
     def cleanupSpec() {
-        db.stop()
+        mysqlDbRef.stop()
+    }
+
+    def _setup(db){
+        TestUtils.install(db)
+        caller = new Caller(db.dbInterface.dataSource())
+    }
+
+    def _cleanup(db){
+        TestUtils.rollback(db)
     }
 
 	def "#testDB : create customer using the caller interface"(){
@@ -42,12 +49,13 @@ class CallerIntTest extends Specification{
 			def custId = caller.call("create_customer", params(of(firstName, VARCHAR), of(lastName, VARCHAR)),
 				paramTypes(INTEGER), {it.getInt(1)});
 		then:
-			custId == custIdFromDb
+			custId == expectedCustId
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << testDBs
-            custIdFromDb << [0, 1]
+            testDB       | expectedCustId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
 	}
 
 	def "#testDB : create customer using the caller interface and Persistable"(){
@@ -58,20 +66,12 @@ class CallerIntTest extends Specification{
 		    def custId = caller.call("create_customer", customer.toInputParams(), paramTypes(INTEGER), {it.getInt(1)});
 
 		then:
-		    custId == custIdFromDb
+		    custId == expectedCustId
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << testDBs
-            custIdFromDb << [0, 1]
+            testDB       | expectedCustId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
 	}
-
-    def _setup(db){
-        TestUtils.install(db)
-        caller = new Caller(db.dbInterface.dataSource())
-    }
-
-    def _cleanup(db){
-        TestUtils.rollback(db)
-    }
 }

@@ -1,143 +1,212 @@
 package spwrap
 
+import ch.vorburger.mariadb4j.DB
+import ch.vorburger.mariadb4j.DBConfigurationBuilder
+
 import java.sql.*
 import spock.lang.*
-
-import static org.slf4j.impl.SimpleLogger.*
-
 
 // integration test
 @Unroll
 class DAOIntTest extends Specification{
 
+    @Shared def mysqlDbRef;
+
 	CustomerDAO customerDao
 
-    TestUtils.TestDB testDB = TestUtils.TestDB.HSQL;
-	
-	def setup() {
-		System.setProperty(DEFAULT_LOG_LEVEL_KEY, "TRACE")
+    def setupSpec() {
+        def dbConfig = DBConfigurationBuilder.newBuilder()
+        dbConfig.setPort(3307)
+        mysqlDbRef = DB.newEmbeddedDB(dbConfig.build())
+        mysqlDbRef.start();
+    }
 
-		TestUtils.install(testDB)
-		
-		customerDao = new DAO.Builder(testDB.dbInterface.dataSource()).build().create(CustomerDAO.class)
+    def cleanupSpec() {
+        mysqlDbRef.stop()
+    }
+
+	def _setup(db) {
+		TestUtils.install(db)
+		customerDao = new DAO.Builder(db.dbInterface.dataSource()).build().create(CustomerDAO.class)
 	}
 	
-	def cleanup() {
-		TestUtils.rollback(testDB)
+	def _cleanup(db) {
+		TestUtils.rollback(db)
 	}
 	
-	def "using the @Param to pass input parameters"(){
+	def "#testDB : using the @Param to pass input parameters"(){
 		given:
+            _setup(testDB)
 			def firstName = "Abdullah"
 			def lastName = "Mohammad"
 		when:
 			customerDao.createCustomer0(firstName, lastName)
 		then:
 			noExceptionThrown()
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 
-	def "using @Scalar annotation to map single output parameter"(){
+	def "#testDB : using @Scalar annotation to map single output parameter"(){
 		given:
+            _setup(testDB)
 			def firstName = "Abdullah"
 			def lastName = "Mohammad"
 		when:
 			def custId = customerDao.createCustomer(firstName, lastName)		
 		then:
-			custId == 0
+			custId == expectedCustId
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | expectedCustId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
 	}
 	
-	def "using @Scalar annotation to map single output parameter - invoking the Stored Proc multiple times"(){
+	def "#testDB : using @Scalar annotation to map single output parameter - invoking the Stored Proc multiple times"(){
 		given:
+            _setup(testDB)
 			def firstName = "Abdullah"
 			def lastName = "Mohammad"
 		when:
-			def custId0 = customerDao.createCustomer(firstName, lastName)		
-			def custId1 = customerDao.createCustomer(firstName, lastName)		
-			def custId2 = customerDao.createCustomer(firstName, lastName)		
-			def custId3 = customerDao.createCustomer(firstName, lastName)		
+			def custId0 = customerDao.createCustomer(firstName, lastName)
+			def custId1 = customerDao.createCustomer(firstName, lastName)
+			def custId2 = customerDao.createCustomer(firstName, lastName)
+			def custId3 = customerDao.createCustomer(firstName, lastName)
 		then:
-			custId0 == 0
-			custId1 == 1
-			custId2 == 2
-			custId3 == 3
+			custId0 == expectedCustId0
+			custId1 == expectedCustId1
+			custId2 == expectedCustId2
+			custId3 == expectedCustId3
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | expectedCustId0  | expectedCustId1 | expectedCustId2 | expectedCustId3
+            TestDB.HSQL  |      0           |       1         |      2          |       3
+            TestDB.MYSQL |      1           |       2         |      3          |       4
 	}
 	
-	def "using return type as a mapper for output parameters"(){
+	def "#testDB : using return type as a mapper for output parameters"(){
 		given:
+            _setup(testDB)
 			def firstName = "Abdullah"
 			def lastName = "Mohammad"
 		when:
 			customerDao.createCustomer0(firstName, lastName)
-			def customer = customerDao.getCustomer2(0);
-			
+			def customer = customerDao.getCustomer2(custId);
 		then:
 			customer.firstName() == firstName
 			customer.lastName() == lastName
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | custId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
 	}
 	
 	
-	def "override the return type Mapper using a custom mapping through the annotation @Mapper"(){
+	def "#testDB : override the return type Mapper using a custom mapping through the annotation @Mapper"(){
 		given:
+            _setup(testDB)
 			def firstName = "Abdullah"
 			def lastName = "Mohammad"
 		when:
 			customerDao.createCustomer0(firstName, lastName)
-			def customer = customerDao.getCustomer1(0);
+			def customer = customerDao.getCustomer1(custId);
 		then:
 			customer.firstName() == firstName + ".CustomParamsMapper"
 			customer.lastName() == lastName + ".CustomParamsMapper"
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | custId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
 	}
 	
 	
-	def "Mappers (through return type -implicit- or @Mapper - explicit- ) will override @Scalar annotation"(){
+	def "#testDB : Mappers (through return type -implicit- or @Mapper - explicit- ) will override @Scalar annotation"(){
 		given:
+            _setup(testDB)
 			def firstName = "Farida"
 			def lastName = "Mohammad"
 		when:
 			customerDao.createCustomer0(firstName, lastName)
-			def customer = customerDao.getCustomer3(0);
+			def customer = customerDao.getCustomer3(custId);
 		then:
 			customer.firstName() == firstName
 			customer.lastName() == lastName
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | custId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
 	}
 	
 	
-	def "@Scalar annotation will cause CallException if no mappers, and the stored proc return more than 1 out params"(){
+	def "#testDB : @Scalar annotation will cause CallException if no mappers, and the stored proc return more than 1 out params"(){
 		given:
+            _setup(testDB)
 			def firstName = "Farida"
 			def lastName = "Mohammad"
 		when:
 			customerDao.createCustomer0(firstName, lastName)
-			customerDao.getCustomer4(0);
+			customerDao.getCustomer4(custId);
 		then:
 			thrown(CallException)
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | custId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
 	}
 	
-	def "only 2 explicit Mappers are allowed"(){
+	def "#testDB : only 2 explicit Mappers are allowed"(){
 		given:
+            _setup(testDB)
 			def firstName = "Farida"
 			def lastName = "Mohammad"
 		when:
 			customerDao.createCustomer0(firstName, lastName)
-			customerDao.getCustomer5(0);
+			customerDao.getCustomer5(custId);
 		then:
 			thrown(CallException)
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | custId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
 	}
 	
 	
-	def "only 2 explicit Mappers are allowed, one of each type (ResultSetMapper and TypedOutputParamMapper)"(){
+	def "#testDB : only 2 explicit Mappers are allowed, one of each type (ResultSetMapper and TypedOutputParamMapper)"(){
 		given:
+            _setup(testDB)
 			def firstName = "Farida"
 			def lastName = "Mohammad"
 		when:
 			customerDao.createCustomer0(firstName, lastName)
-			customerDao.getCustomer6(0);
+			customerDao.getCustomer6(custId);
 		then:
 			thrown(CallException)
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | custId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
 	}
 	
-	def "using implicit ResultSet Mapper to map result set"(){
+	def "#testDB : using implicit ResultSet Mapper to map result set"(){
 		given:
+            _setup(testDB)
 			def firstName1 = "Farida"
 			def lastName1 = "Mohammad"
 			def firstName2 = "Abdullah"
@@ -157,10 +226,15 @@ class DAOIntTest extends Specification{
 				firstName2 == firstName()
 				lastName2 == lastName()
 			}
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 	
-	def "using explicit ResultSet Mapper to map result set"(){
+	def "#testDB : using explicit ResultSet Mapper to map result set"(){
 		given:
+            _setup(testDB)
 			def firstName1 = "Farida"
 			def lastName1 = "Mohammad"
 			def firstName2 = "Abdullah"
@@ -180,11 +254,16 @@ class DAOIntTest extends Specification{
 				firstName2 == firstName()
 				lastName2 == lastName()
 			}
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 	
 	
-	def "returning a Tuple as a result of stored proc return both result set and output parameters" (){
+	def "#testDB : returning a Tuple as a result of stored proc return both result set and output parameters" (){
 		given:
+            _setup(testDB)
 			def firstName1 = "Farida"
 			def lastName1 = "Mohammad"
 			def firstName2 = "Abdullah"
@@ -206,10 +285,15 @@ class DAOIntTest extends Specification{
 				firstName2 == firstName()
 				lastName2 == lastName()
 			}
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 	
-	def "StoredProc annotation will use method name as stored procedure name if no one is specified" (){
+	def "#testDB : StoredProc annotation will use method name as stored procedure name if no one is specified" (){
 		given:
+            _setup(testDB)
 			def firstName1 = "Farida"
 			def lastName1 = "Mohammad"
 			def firstName2 = "Abdullah"
@@ -231,82 +315,129 @@ class DAOIntTest extends Specification{
 				firstName2 == firstName()
 				lastName2 == lastName()
 			}
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 	
-	def "stored procedure will return error code from database" (){
+	def "#testDB : stored procedure will return error code from database" (){
 		when:
+            _setup(testDB)
 			customerDao.callStoredProcWithError();
 		then:
 			def e = thrown(CallException)
 			e.message.startsWith("Stored Procedure returns error code 1")
 			e.errorCode == (short)1
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 	
-	def "choose to disable the feature of result code and message, only we care about business related parameters" (){
+	def "#testDB : choose to disable the feature of result code and message, only we care about business related parameters" (){
 		given:
+            _setup(testDB)
 			def dao = new DAO.Builder(testDB.dbInterface.dataSource()).config(new Config().useStatusFields(false)).build()
 			def customerDao2 = dao.create(CustomerDAO.class)
 		when:
 			customerDao2.getFirstTableNameNoResultFields()
 		then:
 			noExceptionThrown()
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 		
 	}
 	
-	def "we can even change the success value in the default result fields" (){
+	def "#testDB : we can even change the success value in the default result fields" (){
 		given:
+            _setup(testDB)
 			def dao = new DAO.Builder(testDB.dbInterface.dataSource()).config(new Config().successCode((short) 1)).build()
 			def customerDao2 = dao.create(CustomerDAO.class);
 		when:
 			customerDao2.callStoredProcWithError()
 		then:
 			noExceptionThrown()
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 	
-	def "yet another test case for result set mapper" (){
+	def "#testDB : yet another test case for result set mapper" (){
 		when:
-			def listTables = customerDao.listTables();
+            _setup(testDB)
+			def listTables = customerDao.listTables()
 		then:
-			listTables.size() > 2
-			listTables.contains("ROUTINES")
-			listTables.contains("CUSTOMERS")
+			listTables.size() > 1
+			listTables*.toLowerCase().contains("customers")
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 	
-	def "you can use @Scalar with Output parameters only mapper" (){
+	def "#testDB : you can use @Scalar with Output parameters only mapper" (){
 		when:
+            _setup(testDB)
 			customerDao.listTables2();
 		then:
 			thrown(CallException)
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 	
-	def "when stored procedure have missing @Param annotations on the parameters, IllegalArgumentException will be thrown" (){
+	def "#testDB : when stored procedure have missing @Param annotations on the parameters, IllegalArgumentException will be thrown" (){
 		when:
+            _setup(testDB)
 			customerDao.createCustomer7("Farida", "Muhammad");
 		then:
 			thrown(IllegalArgumentException)
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
 	}
 
-    def "using Result.getXXX(String OutputParameterName)"(){
+    def "#testDB : using Result.getXXX(String OutputParameterName)"(){
         given:
+            _setup(testDB)
             def firstName = "Abdullah"
             def lastName = "Mohammad"
         when:
             customerDao.createCustomer0(firstName, lastName)
-            def customer = customerDao.getCustomer7(0);
+            def customer = customerDao.getCustomer7(custId);
         then:
             customer.firstName() == firstName
             customer.lastName() == lastName
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | custId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
     }
 
-    def "using Result.getXXX(String InvalidOutputParameterName)"(){
+    def "#testDB : using Result.getXXX(String InvalidOutputParameterName)"(){
         given:
+            _setup(testDB)
             def firstName = "Abdullah"
             def lastName = "Mohammad"
         when:
             customerDao.createCustomer0(firstName, lastName)
-            def customer = customerDao.getCustomer8(0);
+            def customer = customerDao.getCustomer8(custId);
         then:
             def e = thrown(CallException)
             e.cause.class == SQLException
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB       | custId
+            TestDB.HSQL  | 0
+            TestDB.MYSQL | 1
     }
 }
