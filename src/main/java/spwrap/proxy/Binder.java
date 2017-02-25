@@ -1,7 +1,16 @@
 package spwrap.proxy;
 
-import java.lang.reflect.Method;
+import spwrap.mappers.OutputParamMapper;
+import spwrap.mappers.ResultSetMapper;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
+/**
+ * <p>
+ * Bind the information arround the DAO methods into {@link MetaData} to be used when calling the {@link spwrap.Caller#call(String, List, List, OutputParamMapper, ResultSetMapper)}
+ * @param <T> parts of {@link MetaData} object
+ */
 interface Binder<T> {
 
 	/**

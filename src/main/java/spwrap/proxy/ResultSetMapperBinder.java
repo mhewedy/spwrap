@@ -12,7 +12,7 @@ import spwrap.mappers.ResultSetMapper;
 import spwrap.Tuple;
 import spwrap.annotations.Mapper;
 
-class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>, Class<ResultSetMapper<?>>> {
+class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>> {
 
 	private static final int FIRST_GENERIC_TYPE_INDEX = 0;
 	private static Logger log = LoggerFactory.getLogger(ResultSetMapperBinder.class);
@@ -20,15 +20,15 @@ class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>, Class<Resul
 	@SuppressWarnings("unchecked")
 	public ResultSetMapper<?> fromAnnotation(Method method) {
 
-		Mapper mapperAnnot = method.getAnnotation(Mapper.class);
-		if (mapperAnnot != null) {
+		Mapper mapperAnnotation = method.getAnnotation(Mapper.class);
+		if (mapperAnnotation != null) {
 
 			Class<ResultSetMapper<?>> clazz = null;
 
-			for (Class<?> c : mapperAnnot.value()) {
+			for (Class<?> c : mapperAnnotation.value()) {
 				if (ResultSetMapper.class.isAssignableFrom(c)) {
 					if (clazz != null) {
-						throw new CallException("ResultSetMapper is already registred");
+						throw new CallException("ResultSetMapper is already registered");
 					}
 					clazz = (Class<ResultSetMapper<?>>) c;
 				}

@@ -15,7 +15,7 @@ import spwrap.Tuple;
 import spwrap.annotations.Mapper;
 import spwrap.proxy.MetaData.OutputParam;
 
-class OutputParamBinder extends MapperBinder<OutputParam, Class<TypedOutputParamMapper<?>>> {
+class OutputParamBinder extends MapperBinder<OutputParam> {
 
 	private static final int SECOND_GENERIC_TYPE_INDEX = 1;
 	private static Logger log = LoggerFactory.getLogger(OutputParamBinder.class);
@@ -23,15 +23,15 @@ class OutputParamBinder extends MapperBinder<OutputParam, Class<TypedOutputParam
 	@SuppressWarnings("unchecked")
 	public OutputParam fromAnnotation(Method method) {
 
-		Mapper mapperAnnot = method.getAnnotation(Mapper.class);
-		if (mapperAnnot != null) {
+		Mapper mapperAnnotation = method.getAnnotation(Mapper.class);
+		if (mapperAnnotation != null) {
 
 			Class<TypedOutputParamMapper<?>> clazz = null;
 
-			for (Class<?> c : mapperAnnot.value()) {
+			for (Class<?> c : mapperAnnotation.value()) {
 				if (TypedOutputParamMapper.class.isAssignableFrom(c)) {
 					if (clazz != null) {
-						throw new CallException("TypedOutputParamMapper is already registred");
+						throw new CallException("TypedOutputParamMapper is already registered");
 					}
 					clazz = (Class<TypedOutputParamMapper<?>>) c;
 				}

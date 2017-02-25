@@ -2,7 +2,7 @@ package spwrap.proxy;
 
 import java.lang.reflect.Method;
 
-abstract class MapperBinder<T, C> implements Binder<T> {
+abstract class MapperBinder<T> implements Binder<T> {
 
 	public final T bind(Method method, Object... args) {
 
