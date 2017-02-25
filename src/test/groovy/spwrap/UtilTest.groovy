@@ -1,6 +1,7 @@
 package spwrap
 
 import spock.lang.Specification
+import uk.org.lidalia.slf4jext.Level
 import uk.org.lidalia.slf4jtest.TestLogger
 import uk.org.lidalia.slf4jtest.TestLoggerFactory
 
@@ -42,8 +43,11 @@ class UtilTest extends Specification {
             resultSetMock.close() >> { throw new SQLException("xxxx") }
             Util.closeDBObjects(null, null, resultSetMock)
         then:
-            logger.loggingEvents.get(0).getMessage() == "Could not close ResultSet"
-            logger.loggingEvents.get(0).throwable.get().class == SQLException
+            with(logger.loggingEvents.get(0)){
+                level == Level.TRACE
+                message == "Could not close ResultSet"
+                throwable.get().class == SQLException
+            }
     }
 
     def "closeDBObjects when result set throws RuntimeException"() {
@@ -53,8 +57,11 @@ class UtilTest extends Specification {
             resultSetMock.close() >> { throw new RuntimeException("xxxx") }
             Util.closeDBObjects(null, null, resultSetMock)
         then:
-            logger.loggingEvents.get(0).getMessage() == "Unexpected exception on closing ResultSet"
-            logger.loggingEvents.get(0).throwable.get().class == RuntimeException
+            with(logger.loggingEvents.get(0)){
+                level == Level.TRACE
+                message == "Unexpected exception on closing ResultSet"
+                throwable.get().class == RuntimeException
+            }
     }
 
     def "closeDBObjects when statement throws SQLException"() {
@@ -64,8 +71,11 @@ class UtilTest extends Specification {
             statementMock.close() >> { throw new SQLException("xxxx") }
             Util.closeDBObjects(null, statementMock, null)
         then:
-            logger.loggingEvents.get(0).getMessage() == "Could not close Statement"
-            logger.loggingEvents.get(0).throwable.get().class == SQLException
+            with(logger.loggingEvents.get(0)){
+                level == Level.TRACE
+                message == "Could not close Statement"
+                throwable.get().class == SQLException
+            }
     }
 
     def "closeDBObjects when statement throws RuntimeException"() {
@@ -75,8 +85,11 @@ class UtilTest extends Specification {
             statementMock.close() >> { throw new RuntimeException("xxxx") }
             Util.closeDBObjects(null, statementMock, null)
         then:
-            logger.loggingEvents.get(0).getMessage() == "Unexpected exception on closing Statement"
-            logger.loggingEvents.get(0).throwable.get().class == RuntimeException
+            with(logger.loggingEvents.get(0)){
+                level == Level.TRACE
+                message == "Unexpected exception on closing Statement"
+                throwable.get().class == RuntimeException
+            }
     }
 
     def "closeDBObjects when connection throws SQLException"() {
@@ -86,8 +99,11 @@ class UtilTest extends Specification {
             connectionMock.close() >> { throw new SQLException("xxxx") }
             Util.closeDBObjects(connectionMock, null, null)
         then:
-            logger.loggingEvents.get(0).getMessage() == "Could not close Connection"
-            logger.loggingEvents.get(0).throwable.get().class == SQLException
+            with(logger.loggingEvents.get(0)){
+                level == Level.DEBUG
+                message == "Could not close Connection"
+                throwable.get().class == SQLException
+            }
     }
 
     def "closeDBObjects when connection throws RuntimeException"() {
@@ -97,8 +113,11 @@ class UtilTest extends Specification {
             connectionMock.close() >> { throw new RuntimeException("xxxx") }
             Util.closeDBObjects(connectionMock, null, null)
         then:
-            logger.loggingEvents.get(0).getMessage() == "Unexpected exception on closing Connection"
-            logger.loggingEvents.get(0).throwable.get().class == RuntimeException
+            with(logger.loggingEvents.get(0)){
+                level == Level.DEBUG
+                message == "Unexpected exception on closing Connection"
+                throwable.get().class == RuntimeException
+            }
     }
 
     def "getAsString returns the correct value"(){
