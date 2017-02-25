@@ -10,6 +10,8 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
+import static uk.org.lidalia.slf4jext.Level.*
+
 class UtilTest extends Specification {
 
     TestLogger logger = TestLoggerFactory.getTestLogger(Util)
@@ -44,7 +46,7 @@ class UtilTest extends Specification {
             Util.closeDBObjects(null, null, resultSetMock)
         then:
             with(logger.loggingEvents.get(0)){
-                level == Level.TRACE
+                level == TRACE
                 message == "Could not close ResultSet"
                 throwable.get().class == SQLException
             }
@@ -58,7 +60,7 @@ class UtilTest extends Specification {
             Util.closeDBObjects(null, null, resultSetMock)
         then:
             with(logger.loggingEvents.get(0)){
-                level == Level.TRACE
+                level == TRACE
                 message == "Unexpected exception on closing ResultSet"
                 throwable.get().class == RuntimeException
             }
@@ -72,7 +74,7 @@ class UtilTest extends Specification {
             Util.closeDBObjects(null, statementMock, null)
         then:
             with(logger.loggingEvents.get(0)){
-                level == Level.TRACE
+                level == TRACE
                 message == "Could not close Statement"
                 throwable.get().class == SQLException
             }
@@ -86,7 +88,7 @@ class UtilTest extends Specification {
             Util.closeDBObjects(null, statementMock, null)
         then:
             with(logger.loggingEvents.get(0)){
-                level == Level.TRACE
+                level == TRACE
                 message == "Unexpected exception on closing Statement"
                 throwable.get().class == RuntimeException
             }
@@ -100,7 +102,7 @@ class UtilTest extends Specification {
             Util.closeDBObjects(connectionMock, null, null)
         then:
             with(logger.loggingEvents.get(0)){
-                level == Level.DEBUG
+                level == DEBUG
                 message == "Could not close Connection"
                 throwable.get().class == SQLException
             }
@@ -114,7 +116,7 @@ class UtilTest extends Specification {
             Util.closeDBObjects(connectionMock, null, null)
         then:
             with(logger.loggingEvents.get(0)){
-                level == Level.DEBUG
+                level == DEBUG
                 message == "Unexpected exception on closing Connection"
                 throwable.get().class == RuntimeException
             }
