@@ -4,7 +4,7 @@ import java.lang.reflect.Proxy;
 
 import javax.sql.DataSource;
 
-import spwrap.proxy.CallerInvocationHandler;
+import spwrap.proxy.DAOInvocationHandler;
 
 public class DAO {
 
@@ -17,7 +17,7 @@ public class DAO {
 	@SuppressWarnings("unchecked")
 	public <T> T create(Class<T> dao) {
 		return (T) Proxy.newProxyInstance(dao.getClassLoader(), new Class<?>[] { dao },
-				new CallerInvocationHandler(caller));
+				new DAOInvocationHandler(caller));
 	}
 
 	public static class Builder {
