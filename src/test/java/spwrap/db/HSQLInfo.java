@@ -4,7 +4,7 @@ import org.hsqldb.jdbc.JDBCPool;
 
 import javax.sql.DataSource;
 
-public class HSQLInterface implements DBInterface {
+public class HSQLInfo implements DBInfo {
 
     public DataSource dataSource(){
         JDBCPool jdbcPool = new JDBCPool();

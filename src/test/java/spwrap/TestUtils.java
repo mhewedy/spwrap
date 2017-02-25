@@ -8,11 +8,11 @@ import java.util.Scanner;
 public class TestUtils {
 
     static void install(TestDB testDb) {
-		executeScript(testDb, testDb.dbInterface.installScript());
+		executeScript(testDb, testDb.dbInfo.installScript());
 	}
 
 	static void rollback(TestDB testDb) {
-		executeScript(testDb, testDb.dbInterface.rollbackScript());
+		executeScript(testDb, testDb.dbInfo.rollbackScript());
 	}
 
 	private static void executeScript(TestDB testDb, String scriptPath) {
@@ -21,7 +21,7 @@ public class TestUtils {
 		Scanner scanner = null;
 
 		try {
-			connection = testDb.dbInterface.dataSource().getConnection();
+			connection = testDb.dbInfo.dataSource().getConnection();
 			stmt = connection.createStatement();
 
 			scanner = new Scanner(new File(scriptPath));

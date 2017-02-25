@@ -4,7 +4,7 @@ import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 
 import javax.sql.DataSource;
 
-public class MySQLInterface implements DBInterface {
+public class MySQLInfo implements DBInfo {
 
     public DataSource dataSource() {
         MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();

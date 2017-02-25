@@ -21,15 +21,15 @@ class DAOIntTest extends Specification{
         mysqlDbRef.start();
     }
 
+    def _setup(db) {
+        TestUtils.install(db)
+        customerDao = new DAO.Builder(db.dbInfo.dataSource()).build().create(CustomerDAO.class)
+    }
+
     def cleanupSpec() {
         mysqlDbRef.stop()
     }
 
-	def _setup(db) {
-		TestUtils.install(db)
-		customerDao = new DAO.Builder(db.dbInterface.dataSource()).build().create(CustomerDAO.class)
-	}
-	
 	def _cleanup(db) {
 		TestUtils.rollback(db)
 	}
@@ -338,7 +338,7 @@ class DAOIntTest extends Specification{
 	def "#testDB : choose to disable the feature of result code and message, only we care about business related parameters" (){
 		given:
             _setup(testDB)
-			def dao = new DAO.Builder(testDB.dbInterface.dataSource()).config(new Config().useStatusFields(false)).build()
+			def dao = new DAO.Builder(testDB.dbInfo.dataSource()).config(new Config().useStatusFields(false)).build()
 			def customerDao2 = dao.create(CustomerDAO.class)
 		when:
 			customerDao2.getFirstTableNameNoResultFields()
@@ -354,7 +354,7 @@ class DAOIntTest extends Specification{
 	def "#testDB : we can even change the success value in the default result fields" (){
 		given:
             _setup(testDB)
-			def dao = new DAO.Builder(testDB.dbInterface.dataSource()).config(new Config().successCode((short) 1)).build()
+			def dao = new DAO.Builder(testDB.dbInfo.dataSource()).config(new Config().successCode((short) 1)).build()
 			def customerDao2 = dao.create(CustomerDAO.class);
 		when:
 			customerDao2.callStoredProcWithError()

@@ -2,7 +2,7 @@ package spwrap.db;
 
 import javax.sql.DataSource;
 
-public interface DBInterface {
+public interface DBInfo {
 
     /**
      * fully configured dataSource

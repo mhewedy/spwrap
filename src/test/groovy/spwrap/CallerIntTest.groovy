@@ -27,17 +27,17 @@ class CallerIntTest extends Specification{
         mysqlDbRef.start();
     }
 
-    def cleanupSpec() {
-        mysqlDbRef.stop()
-    }
-
     def _setup(db){
         TestUtils.install(db)
-        caller = new Caller(db.dbInterface.dataSource())
+        caller = new Caller(db.dbInfo.dataSource())
     }
 
     def _cleanup(db){
         TestUtils.rollback(db)
+    }
+
+    def cleanupSpec() {
+        mysqlDbRef.stop()
     }
 
 	def "#testDB : create customer using the caller interface"(){

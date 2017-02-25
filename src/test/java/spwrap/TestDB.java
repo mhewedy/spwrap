@@ -1,16 +1,16 @@
 package spwrap;
 
-import spwrap.db.DBInterface;
-import spwrap.db.HSQLInterface;
-import spwrap.db.MySQLInterface;
+import spwrap.db.DBInfo;
+import spwrap.db.HSQLInfo;
+import spwrap.db.MySQLInfo;
 
 public enum TestDB {
-    HSQL(new HSQLInterface()),
-    MYSQL(new MySQLInterface());
+    HSQL(new HSQLInfo()),
+    MYSQL(new MySQLInfo());
 
-    DBInterface dbInterface;
+    DBInfo dbInfo;
 
-    TestDB(DBInterface dbInterface) {
-        this.dbInterface = dbInterface;
+    TestDB(DBInfo dbInfo) {
+        this.dbInfo = dbInfo;
     }
 }
