@@ -16,13 +16,13 @@ import spwrap.annotations.Scalar;
 import spwrap.annotations.StoredProc;
 import spwrap.proxy.MetaData.OutputParam;
 
-public class CallerInvocationHandler implements InvocationHandler {
+public class DAOInvocationHandler implements InvocationHandler {
 
-	private static Logger log = LoggerFactory.getLogger(CallerInvocationHandler.class);
+	private static Logger log = LoggerFactory.getLogger(DAOInvocationHandler.class);
 
 	private final Caller caller;
 
-	public CallerInvocationHandler(Caller caller) {
+	public DAOInvocationHandler(Caller caller) {
 		this.caller = caller;
 	}
 
