@@ -24,7 +24,7 @@ class CallerIntTest extends Specification{
 
     def setupSpec() {
         def dbConfig = DBConfigurationBuilder.newBuilder()
-        dbConfig.setPort(3306)
+        dbConfig.setPort(3307)
         db = DB.newEmbeddedDB(dbConfig.build())
         db.start();
     }
