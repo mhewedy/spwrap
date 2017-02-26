@@ -71,9 +71,9 @@ public class Util {
                 conn.close();
             }
         } catch (SQLException e) {
-            log.debug("Could not close Connection", e);
+            log.error("Could not close Connection", e);
         } catch (Throwable e) {
-            log.debug("Unexpected exception on closing Connection", e);
+            log.error("Unexpected exception on closing Connection", e);
         }
     }
 

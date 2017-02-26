@@ -1,7 +1,6 @@
 package spwrap
 
 import spock.lang.Specification
-import uk.org.lidalia.slf4jext.Level
 import uk.org.lidalia.slf4jtest.TestLogger
 import uk.org.lidalia.slf4jtest.TestLoggerFactory
 
