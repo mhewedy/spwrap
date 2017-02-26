@@ -63,3 +63,25 @@ CREATE PROCEDURE get_first_table_name_no_resultfields(OUT tableName VARCHAR(50))
   		SELECT TABLE_NAME INTO tableName FROM INFORMATION_SCHEMA.TABLES LIMIT 1;
    	END
 ;;
+
+CREATE TABLE component (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    field0 VARCHAR(50), field1 VARCHAR(50), field2 VARCHAR(50), field3 VARCHAR(50), field4 VARCHAR(50),
+    field5 VARCHAR(50), field6 VARCHAR(50), field7 VARCHAR(50), field8 VARCHAR(50), field9 VARCHAR(50))
+;;
+
+CREATE PROCEDURE fill_component()
+    BEGIN
+         DECLARE i int DEFAULT 1;
+            WHILE i <= 500 DO
+                INSERT INTO component VALUES (DEFAULT, MD5(i), MD5(i), MD5(i), MD5(i), MD5(i), MD5(i), MD5(i), MD5(i), MD5(i), MD5(i));
+                SET i = i + 1;
+            END WHILE;
+    END
+;;
+
+CREATE PROCEDURE list_components()
+    BEGIN
+        SELECT field0, field1, field2, field3, field4, field5, field6, field7, field8, field9 FROM component;
+    END
+;;

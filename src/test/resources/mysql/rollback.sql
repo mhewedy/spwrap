@@ -1,3 +1,11 @@
+DROP PROCEDURE list_components
+;;
+
+DROP PROCEDURE fill_component
+;;
+
+DROP TABLE component
+;;
 
 DROP PROCEDURE create_customer0
 ;;
