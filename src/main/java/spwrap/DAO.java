@@ -23,6 +23,12 @@ public class DAO {
 	public static class Builder {
 		private final Caller caller;
 
+        /**
+         * <p>
+         * This is the preferred way to  create instance of the DAO interface
+         * <p>Try to use Pooled DataSources in production for achieve better performance.
+         * @param dataSource dataSource to get connections from
+         */
 		public Builder(DataSource dataSource) {
 			this.caller = new Caller(dataSource);
 		}
