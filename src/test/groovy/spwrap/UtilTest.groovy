@@ -46,7 +46,6 @@ class UtilTest extends Specification {
         then:
             with(logger.loggingEvents.get(0)){
                 level == TRACE
-                message == "Could not close ResultSet"
                 throwable.get().class == SQLException
             }
     }
@@ -60,7 +59,6 @@ class UtilTest extends Specification {
         then:
             with(logger.loggingEvents.get(0)){
                 level == TRACE
-                message == "Unexpected exception on closing ResultSet"
                 throwable.get().class == RuntimeException
             }
     }
@@ -74,7 +72,6 @@ class UtilTest extends Specification {
         then:
             with(logger.loggingEvents.get(0)){
                 level == TRACE
-                message == "Could not close Statement"
                 throwable.get().class == SQLException
             }
     }
@@ -88,7 +85,6 @@ class UtilTest extends Specification {
         then:
             with(logger.loggingEvents.get(0)){
                 level == TRACE
-                message == "Unexpected exception on closing Statement"
                 throwable.get().class == RuntimeException
             }
     }
@@ -102,7 +98,6 @@ class UtilTest extends Specification {
         then:
             with(logger.loggingEvents.get(0)){
                 level == ERROR
-                message == "Could not close Connection"
                 throwable.get().class == SQLException
             }
     }
@@ -116,7 +111,6 @@ class UtilTest extends Specification {
         then:
             with(logger.loggingEvents.get(0)){
                 level == ERROR
-                message == "Unexpected exception on closing Connection"
                 throwable.get().class == RuntimeException
             }
     }
