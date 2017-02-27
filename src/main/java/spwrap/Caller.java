@@ -160,17 +160,19 @@ public class Caller {
 	}
 
 	/**
-	 * Method that takes SP call string {call SP(?, ...)} and additional -
+     * <p>
+	 * Method that takes Stored Proc call string {call SP(?, ...)} and additional -
 	 * optional - parameters (input parameters, output parameters, output
 	 * parameters mapping function and result set mapping function), and execute
-	 * the SP with input parameters (if not null) and return the output
+	 * the Stored Proc with input parameters (if not null) and return the output
 	 * parameters through the output parameters mapping function (if both output
-	 * parameter types and output parameter mapping functions are not null) and
-	 * if there's a result set and the result set mapping function is not null,
+	 * parameter types and output parameter mapping functions are not null)
+     * <p>
+	 * If there's a result set and the result set mapping function is not null,
 	 * then it returns a list of results.
 	 * 
 	 * <p>
-	 * All other execute methods in this class are just a shortcut version of
+	 * All other call methods in this class are just a overloaded version of
 	 * this method
 	 * 
 	 * @param procName stored procedure name
