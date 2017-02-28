@@ -40,8 +40,8 @@ class UtilTest extends Specification {
     def "closeDBObjects when result set throws SQLException"() {
         given:
             def resultSetMock = Mock(ResultSet)
-        when:
             resultSetMock.close() >> { throw new SQLException("xxxx") }
+        when:
             Util.closeDBObjects(null, null, resultSetMock)
         then:
             with(logger.loggingEvents.get(0)){
@@ -53,8 +53,8 @@ class UtilTest extends Specification {
     def "closeDBObjects when result set throws RuntimeException"() {
         given:
             def resultSetMock = Mock(ResultSet)
-        when:
             resultSetMock.close() >> { throw new RuntimeException("xxxx") }
+        when:
             Util.closeDBObjects(null, null, resultSetMock)
         then:
             with(logger.loggingEvents.get(0)){
@@ -66,8 +66,8 @@ class UtilTest extends Specification {
     def "closeDBObjects when statement throws SQLException"() {
         given:
             def statementMock = Mock(Statement)
-        when:
             statementMock.close() >> { throw new SQLException("xxxx") }
+        when:
             Util.closeDBObjects(null, statementMock, null)
         then:
             with(logger.loggingEvents.get(0)){
@@ -79,8 +79,8 @@ class UtilTest extends Specification {
     def "closeDBObjects when statement throws RuntimeException"() {
         given:
             def statementMock = Mock(Statement)
-        when:
             statementMock.close() >> { throw new RuntimeException("xxxx") }
+        when:
             Util.closeDBObjects(null, statementMock, null)
         then:
             with(logger.loggingEvents.get(0)){
@@ -92,8 +92,8 @@ class UtilTest extends Specification {
     def "closeDBObjects when connection throws SQLException"() {
         given:
             def connectionMock = Mock(Connection)
-        when:
             connectionMock.close() >> { throw new SQLException("xxxx") }
+        when:
             Util.closeDBObjects(connectionMock, null, null)
         then:
             with(logger.loggingEvents.get(0)){
@@ -105,8 +105,8 @@ class UtilTest extends Specification {
     def "closeDBObjects when connection throws RuntimeException"() {
         given:
             def connectionMock = Mock(Connection)
-        when:
             connectionMock.close() >> { throw new RuntimeException("xxxx") }
+        when:
             Util.closeDBObjects(connectionMock, null, null)
         then:
             with(logger.loggingEvents.get(0)){
