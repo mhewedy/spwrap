@@ -2,9 +2,15 @@ package spwrap
 
 import ch.vorburger.mariadb4j.DB
 import ch.vorburger.mariadb4j.DBConfigurationBuilder
+import spwrap.proxy.DAOInvocationHandler
+import uk.org.lidalia.slf4jtest.TestLogger
+import uk.org.lidalia.slf4jtest.TestLoggerFactory
 
 import java.sql.*
 import spock.lang.*
+
+import static uk.org.lidalia.slf4jext.Level.TRACE
+import static uk.org.lidalia.slf4jext.Level.WARN
 
 // integration test
 @Unroll
@@ -429,7 +435,7 @@ class DAOIntTest extends Specification{
             def lastName = "Mohammad"
         when:
             customerDao.createCustomer0(firstName, lastName)
-            def customer = customerDao.getCustomer8(custId);
+            customerDao.getCustomer8(custId);
         then:
             def e = thrown(CallException)
             e.cause.class == SQLException
@@ -457,5 +463,22 @@ class DAOIntTest extends Specification{
             testDB       | jdbcUrl                              | username      | expectedCustId
             TestDB.HSQL  | "jdbc:hsqldb:mem:customers"          | "sa"          | 0
             TestDB.MYSQL | "jdbc:mysql://localhost:3307/test"   | "root"        | 1
+    }
+
+    def "test methodWithNoAnnotation"(){
+        given:
+            def logger = TestLoggerFactory.getTestLogger(DAOInvocationHandler)
+        when:
+            new DAO.Builder(TestDB.HSQL.dbInfo.dataSource()).build().create(CustomerDAO).methodWithNoAnnotation();
+        then:
+            noExceptionThrown();
+        then:
+            System.out.println(logger.loggingEvents)
+            with(logger.loggingEvents.get(logger.loggingEvents.size() -  1)){
+                level == WARN
+                message.contains("doesn't declare @StoredProc annotation, skipping.")
+            }
+        cleanup:
+            TestLoggerFactory.clear()
     }
 }

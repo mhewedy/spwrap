@@ -30,53 +30,56 @@ public class DAOInvocationHandler implements InvocationHandler {
 
 		MetaData metadata = getMetaData(method, args);
 
-		Tuple<?, ?> call = caller.call(metadata.storedProcName, metadata.inParams, metadata.outputParam.outParamTypes,
-				metadata.outputParam.outputParamMapper, metadata.rsMapper);
+        if (metadata != null){
+            Tuple<?, ?> call = caller.call(metadata.storedProcName, metadata.inParams, metadata.outputParam.outParamTypes,
+                    metadata.outputParam.outputParamMapper, metadata.rsMapper);
 
-		if (metadata.outputParam.outputParamMapper == null) {
-			return call.list();
-		}
+            if (metadata.outputParam.outputParamMapper == null) {
+                return call.list();
+            }
 
-		if (metadata.rsMapper == null) {
-			return call.object();
-		}
-
-		return call;
+            if (metadata.rsMapper == null) {
+                return call.object();
+            }
+            return call;
+        }else{
+            return null;
+        }
 	}
 
 	private MetaData getMetaData(Method method, Object[] args) {
 
-		preValidate(method);
+        StoredProc storedProcAnnot = method.getAnnotation(StoredProc.class);
+        if (storedProcAnnot != null) {
 
-		MetaData metadata = new MetaData();
+            MetaData metaData = new MetaData();
 
-		StoredProc storedProcAnnot = method.getAnnotation(StoredProc.class);
-		if (storedProcAnnot != null) {
+            preValidate(method);
 
-			String storedProc = storedProcAnnot.value();
-			if (storedProc.trim().length() == 0) {
-				storedProc = method.getName();
-			}
-			metadata.storedProcName = storedProc;
-			log.debug("storedProcName name is: {} for method: {}", storedProc, method.getName());
+            String storedProc = storedProcAnnot.value();
+            if (storedProc.trim().length() == 0) {
+                storedProc = method.getName();
+            }
+            metaData.storedProcName = storedProc;
+            log.debug("storedProcName name is: {} for method: {}", storedProc, method.getName());
 
-			metadata.inParams = new ParamBinder().bind(method, args);
-			metadata.rsMapper = new ResultSetMapperBinder().bind(method, args);
+            metaData.inParams = new ParamBinder().bind(method, args);
+            metaData.rsMapper = new ResultSetMapperBinder().bind(method, args);
 
-			OutputParam outputParam = new OutputParamBinder().bind(method, args);
-			if (outputParam != null) {
-				metadata.outputParam = outputParam;
-			} else if ((outputParam = new ScalarBinder().bind(method, args)) != null) {
-				metadata.outputParam = outputParam;
-			}
+            OutputParam outputParam = new OutputParamBinder().bind(method, args);
+            if (outputParam != null) {
+                metaData.outputParam = outputParam;
+            } else if ((outputParam = new ScalarBinder().bind(method, args)) != null) {
+                metaData.outputParam = outputParam;
+            }
 
-			postValidate(method, metadata);
+            postValidate(method, metaData);
 
-		} else {
-			log.warn("method {} doesn't declare @StoredProc annotation, skipping.", method.getName());
-		}
-
-		return metadata;
+            return metaData;
+        } else {
+            log.warn("method {} doesn't declare @StoredProc annotation, skipping.", method.getName());
+            return null;
+        }
 	}
 
 	private void preValidate(Method method) {
