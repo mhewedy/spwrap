@@ -64,13 +64,13 @@ class DAOConcurrentIntTest extends Specification{
 
             futureVoidList.collect { it.get() } // join
 
-            def futureCustomerList = pool.invokeAll(Arrays.asList(
+            def futureCustomersList = pool.invokeAll(Arrays.asList(
                     getCallableForListCustomers(customerDao),
                     getCallableForListCustomers(customerDao),
                     getCallableForListCustomers(customerDao)
             ));
 
-            def customersLists = futureCustomerList.collect{it.get()} // join
+            List<List<Customer>> customersLists = futureCustomersList.collect{it.get()} // join
 
         then:
             customersLists.each {
