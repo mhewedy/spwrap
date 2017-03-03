@@ -482,7 +482,8 @@ class DAOIntTest extends Specification{
             TestLoggerFactory.clear()
     }
 
-    def "#testDB : Multithreading: using implicit ResultSet Mapper to map result set"(){
+    def "#testDB : Multithreading: multipe calls from different threads doesn't intersect \
+                and returned objects are unique per each thread "(){
         given:
         _setup(testDB)
             def firstName = "Farida"
@@ -490,7 +491,7 @@ class DAOIntTest extends Specification{
             def pool = Executors.newFixedThreadPool(5)
         when:
 
-            def futureList = pool.invokeAll(Arrays.asList(
+            def futureVoidList = pool.invokeAll(Arrays.asList(
                     getCallableForCreateCustomer(customerDao, firstName, lastName),
                     getCallableForCreateCustomer(customerDao, firstName, lastName),
                     getCallableForCreateCustomer(customerDao, firstName, lastName),
@@ -501,27 +502,49 @@ class DAOIntTest extends Specification{
                     getCallableForCreateCustomer(customerDao, firstName, lastName)
             ));
 
-            futureList.collect { it.get() } // join
-            def list = customerDao.listCustomers2()
+            futureVoidList.collect { it.get() } // join
+
+            def futureCustomerList = pool.invokeAll(Arrays.asList(
+                    getCallableForListCustomers(customerDao),
+                    getCallableForListCustomers(customerDao),
+                    getCallableForListCustomers(customerDao)
+            ));
+
+            def customersLists = futureCustomerList.collect{it.get()} // join
 
         then:
-            list.collect {it.id()}.sort().max() == maxId
+            customersLists.each {
+                it.collect {it.id()}.sort().max() == maxId
+            }
+
+            customersLists.collect { it.get(0) }.unique().size() == 3
+            customersLists.collect { it.get(0) }.unique{a, b -> a.id() <=> b.id()}.size() == 1
+
             noExceptionThrown();
         cleanup:
             pool.shutdown()
             _cleanup(testDB)
         where:
-        testDB       | maxId
-        TestDB.HSQL  | 7
-        TestDB.MYSQL | 8
+            testDB       | maxId
+            TestDB.HSQL  | 7
+            TestDB.MYSQL | 8
     }
 
     private static def getCallableForCreateCustomer(customerDao, firstName, lastName){
-        return new Callable<List<Customer>>(){
-            List<Customer> call() throws Exception {
-                println Thread.currentThread()
+        return new Callable<List<Void>>(){
+            List<Void> call() throws Exception {
+//                println "getCallableForCreateCustomer: ${Thread.currentThread()}"
                 customerDao.createCustomer0(firstName, lastName)
                 return null;
+            }
+        }
+    }
+
+    private static def getCallableForListCustomers(customerDao){
+        return new Callable<List<Customer>>(){
+            List<Customer> call() throws Exception {
+//                println "getCallableForListCustomers: ${Thread.currentThread()}"
+                return customerDao.listCustomers2()
             }
         }
     }
