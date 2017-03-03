@@ -12,6 +12,14 @@
 		<maven.compiler.target>1.5</maven.compiler.target>
 	</properties>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
