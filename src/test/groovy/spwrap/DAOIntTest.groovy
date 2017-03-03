@@ -473,7 +473,6 @@ class DAOIntTest extends Specification{
         then:
             noExceptionThrown();
         then:
-            System.out.println(logger.loggingEvents)
             with(logger.loggingEvents.get(logger.loggingEvents.size() -  1)){
                 level == WARN
                 message.contains("doesn't declare @StoredProc annotation, skipping.")
