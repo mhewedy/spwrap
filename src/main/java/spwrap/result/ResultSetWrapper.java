@@ -8,9 +8,9 @@ import java.sql.*;
 
 final class ResultSetWrapper extends Result<ResultSet> {
 
-	ResultSetWrapper(ResultSet wrappedObject) {
-		super(wrappedObject);
-	}
+    ResultSetWrapper(ResultSet wrappedObject) {
+        super(wrappedObject);
+    }
 
     @Override
     public String getString(int columnIndex) {

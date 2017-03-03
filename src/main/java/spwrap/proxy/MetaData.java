@@ -10,16 +10,16 @@ import spwrap.mappers.ResultSetMapper;
 class
 /* struct */ MetaData {
 
-	String storedProcName;
+    String storedProcName;
 
-	List<Param> inParams;
-	ResultSetMapper<?> rsMapper;
+    List<Param> inParams;
+    ResultSetMapper<?> rsMapper;
 
-	OutputParam outputParam = new OutputParam();
+    OutputParam outputParam = new OutputParam();
 
-	static class
-	/* struct */ OutputParam {
-		List<ParamType> outParamTypes;
-		OutputParamMapper<?> outputParamMapper;
-	}
+    static class
+    /* struct */ OutputParam {
+        List<ParamType> outParamTypes;
+        OutputParamMapper<?> outputParamMapper;
+    }
 }

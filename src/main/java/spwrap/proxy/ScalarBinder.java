@@ -15,40 +15,40 @@ import spwrap.result.Result;
 
 class ScalarBinder implements Binder<OutputParam> {
 
-	private static Logger log = LoggerFactory.getLogger(ScalarBinder.class);
+    private static Logger log = LoggerFactory.getLogger(ScalarBinder.class);
 
-	public OutputParam bind(Method method, Object... args) {
-		OutputParam outputParam = null;
+    public OutputParam bind(Method method, Object... args) {
+        OutputParam outputParam = null;
 
-		Scalar scalarAnnot = method.getAnnotation(Scalar.class);
-		if (scalarAnnot != null) {
+        Scalar scalarAnnot = method.getAnnotation(Scalar.class);
+        if (scalarAnnot != null) {
 
-			log.debug("Scalar annotation exists, try auto-mapping");
-			int sqlType = scalarAnnot.value();
+            log.debug("Scalar annotation exists, try auto-mapping");
+            int sqlType = scalarAnnot.value();
 
-			outputParam = new OutputParam();
-			outputParam.outputParamMapper = new ScalarTypedOutputParamMapper(sqlType);
-			outputParam.outParamTypes = Collections.singletonList(ParamType.of(sqlType));
-		}
+            outputParam = new OutputParam();
+            outputParam.outputParamMapper = new ScalarTypedOutputParamMapper(sqlType);
+            outputParam.outParamTypes = Collections.singletonList(ParamType.of(sqlType));
+        }
 
-		return outputParam;
-	}
+        return outputParam;
+    }
 
-	@SuppressWarnings("rawtypes")
-	private static class ScalarTypedOutputParamMapper implements TypedOutputParamMapper {
-		private int sqlType;
+    @SuppressWarnings("rawtypes")
+    private static class ScalarTypedOutputParamMapper implements TypedOutputParamMapper {
+        private int sqlType;
 
-		public ScalarTypedOutputParamMapper(int sqlType) {
-			this.sqlType = sqlType;
-		}
+        public ScalarTypedOutputParamMapper(int sqlType) {
+            this.sqlType = sqlType;
+        }
 
-		public Object map(Result result) {
-			return result.getObject(1);
-		}
+        public Object map(Result result) {
+            return result.getObject(1);
+        }
 
-		public List getTypes() {
-			return Collections.singletonList(sqlType);
-		}
-	}
+        public List getTypes() {
+            return Collections.singletonList(sqlType);
+        }
+    }
 
 }

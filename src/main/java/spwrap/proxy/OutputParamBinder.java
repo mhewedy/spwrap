@@ -17,84 +17,84 @@ import spwrap.proxy.MetaData.OutputParam;
 
 class OutputParamBinder extends MapperBinder<OutputParam> {
 
-	private static final int SECOND_GENERIC_TYPE_INDEX = 1;
-	private static Logger log = LoggerFactory.getLogger(OutputParamBinder.class);
+    private static final int SECOND_GENERIC_TYPE_INDEX = 1;
+    private static Logger log = LoggerFactory.getLogger(OutputParamBinder.class);
 
-	@SuppressWarnings("unchecked")
-	public OutputParam fromAnnotation(Method method) {
+    @SuppressWarnings("unchecked")
+    public OutputParam fromAnnotation(Method method) {
 
-		Mapper mapperAnnotation = method.getAnnotation(Mapper.class);
-		if (mapperAnnotation != null) {
+        Mapper mapperAnnotation = method.getAnnotation(Mapper.class);
+        if (mapperAnnotation != null) {
 
-			Class<TypedOutputParamMapper<?>> clazz = null;
+            Class<TypedOutputParamMapper<?>> clazz = null;
 
-			for (Class<?> c : mapperAnnotation.value()) {
-				if (TypedOutputParamMapper.class.isAssignableFrom(c)) {
-					if (clazz != null) {
-						throw new CallException("TypedOutputParamMapper is already registered");
-					}
-					clazz = (Class<TypedOutputParamMapper<?>>) c;
-				}
-			}
-			if (clazz != null) {
-				OutputParam outputParam = fromClazz(clazz);
-				log.debug("found annotation output param: {} and types: {} for method: {}",
-						outputParam.outputParamMapper.getClass(), outputParam.outParamTypes, method.getName());
-				return outputParam;
-			}
-		}
-		return null;
-	}
+            for (Class<?> c : mapperAnnotation.value()) {
+                if (TypedOutputParamMapper.class.isAssignableFrom(c)) {
+                    if (clazz != null) {
+                        throw new CallException("TypedOutputParamMapper is already registered");
+                    }
+                    clazz = (Class<TypedOutputParamMapper<?>>) c;
+                }
+            }
+            if (clazz != null) {
+                OutputParam outputParam = fromClazz(clazz);
+                log.debug("found annotation output param: {} and types: {} for method: {}",
+                        outputParam.outputParamMapper.getClass(), outputParam.outParamTypes, method.getName());
+                return outputParam;
+            }
+        }
+        return null;
+    }
 
-	@SuppressWarnings("unchecked")
-	public OutputParam fromReturnType(Method method) {
+    @SuppressWarnings("unchecked")
+    public OutputParam fromReturnType(Method method) {
 
-		OutputParam outputParam = null;
+        OutputParam outputParam = null;
 
-		Class<?> returnType = method.getReturnType();
+        Class<?> returnType = method.getReturnType();
 
-		if (TypedOutputParamMapper.class.isAssignableFrom(returnType)) {
+        if (TypedOutputParamMapper.class.isAssignableFrom(returnType)) {
 
-			outputParam = fromClazz((Class<TypedOutputParamMapper<?>>) returnType);
+            outputParam = fromClazz((Class<TypedOutputParamMapper<?>>) returnType);
 
-		} else if (Tuple.class.isAssignableFrom(returnType)) {
+        } else if (Tuple.class.isAssignableFrom(returnType)) {
 
-			ParameterizedType type = (ParameterizedType) method.getGenericReturnType();
-			Class<?> paramClass = (Class<?>) type.getActualTypeArguments()[SECOND_GENERIC_TYPE_INDEX];
+            ParameterizedType type = (ParameterizedType) method.getGenericReturnType();
+            Class<?> paramClass = (Class<?>) type.getActualTypeArguments()[SECOND_GENERIC_TYPE_INDEX];
 
-			if (TypedOutputParamMapper.class.isAssignableFrom(paramClass)) {
-				outputParam = fromClazz((Class<TypedOutputParamMapper<?>>) paramClass);
-			}
-		}
+            if (TypedOutputParamMapper.class.isAssignableFrom(paramClass)) {
+                outputParam = fromClazz((Class<TypedOutputParamMapper<?>>) paramClass);
+            }
+        }
 
-		if (outputParam != null) {
-			log.debug("found return type output param: {} and types: {} for method: {}",
-					outputParam.outputParamMapper.getClass(), outputParam.outParamTypes, method.getName());
-		}
-		return outputParam;
-	}
+        if (outputParam != null) {
+            log.debug("found return type output param: {} and types: {} for method: {}",
+                    outputParam.outputParamMapper.getClass(), outputParam.outParamTypes, method.getName());
+        }
+        return outputParam;
+    }
 
-	private OutputParam fromClazz(Class<TypedOutputParamMapper<?>> clazz) {
-		OutputParam outputParam = new OutputParam();
-		try {
-			TypedOutputParamMapper<?> instance = clazz.newInstance();
-			outputParam.outputParamMapper = clazz.newInstance();
-			outputParam.outParamTypes = getOutParamTypes(instance);
-		} catch (Exception e) {
-			throw new CallException("cannot create outParams Mapper", e);
-		}
-		return outputParam;
-	}
+    private OutputParam fromClazz(Class<TypedOutputParamMapper<?>> clazz) {
+        OutputParam outputParam = new OutputParam();
+        try {
+            TypedOutputParamMapper<?> instance = clazz.newInstance();
+            outputParam.outputParamMapper = clazz.newInstance();
+            outputParam.outParamTypes = getOutParamTypes(instance);
+        } catch (Exception e) {
+            throw new CallException("cannot create outParams Mapper", e);
+        }
+        return outputParam;
+    }
 
-	private List<ParamType> getOutParamTypes(TypedOutputParamMapper<?> outParamsInstance) {
+    private List<ParamType> getOutParamTypes(TypedOutputParamMapper<?> outParamsInstance) {
 
-		List<ParamType> paramTypes = new ArrayList<ParamType>();
-		List<Integer> types = outParamsInstance.getTypes();
+        List<ParamType> paramTypes = new ArrayList<ParamType>();
+        List<Integer> types = outParamsInstance.getTypes();
 
-		for (Integer type : types) {
-			paramTypes.add(ParamType.of(type));
-		}
+        for (Integer type : types) {
+            paramTypes.add(ParamType.of(type));
+        }
 
-		return paramTypes;
-	}
+        return paramTypes;
+    }
 }

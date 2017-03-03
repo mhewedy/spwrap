@@ -9,19 +9,18 @@ import java.lang.annotation.Target;
 /**
  * Special case of {@link Mapper} that map single output parameter automatically
  * to the method return type.
- * 
- * @author mhewedy
  *
+ * @author mhewedy
  */
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface Scalar {
 
-	/**
-	 * {@link java.sql.Types} static fields to represent the type of the only
-	 * output parameter of the stored procedure
-	 * 
-	 * @return
-	 */
-	int value();
+    /**
+     * {@link java.sql.Types} static fields to represent the type of the only
+     * output parameter of the stored procedure
+     *
+     * @return
+     */
+    int value();
 }

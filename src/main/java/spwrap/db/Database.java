@@ -5,6 +5,6 @@ import java.sql.SQLException;
 
 public interface Database {
 
-	boolean executeCall(CallableStatement call) throws SQLException;
+    boolean executeCall(CallableStatement call) throws SQLException;
 
 }

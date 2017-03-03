@@ -10,9 +10,10 @@ import java.lang.annotation.Target;
 @Target(PARAMETER)
 public @interface Param {
 
-	/**
-	 * {@link java.sql.Types} static fields
-	 * @return
-	 */
-	int value();
+    /**
+     * {@link java.sql.Types} static fields
+     *
+     * @return
+     */
+    int value();
 }

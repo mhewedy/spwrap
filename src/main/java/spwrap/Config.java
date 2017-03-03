@@ -2,29 +2,29 @@ package spwrap;
 
 public class Config {
 
-	// default values
-	private boolean useStatusFields = true;
-	private short successCode = 0;
+    // default values
+    private boolean useStatusFields = true;
+    private short successCode = 0;
 
-	// setter methods -------------------------
+    // setter methods -------------------------
 
-	public Config useStatusFields(boolean useStatusFields) {
-		this.useStatusFields = useStatusFields;
-		return this;
-	}
+    public Config useStatusFields(boolean useStatusFields) {
+        this.useStatusFields = useStatusFields;
+        return this;
+    }
 
-	public Config successCode(short successCode) {
-		this.successCode = successCode;
-		return this;
-	}
+    public Config successCode(short successCode) {
+        this.successCode = successCode;
+        return this;
+    }
 
-	// query method -------------------------
+    // query method -------------------------
 
-	short successCode() {
-		return this.successCode;
-	}
+    short successCode() {
+        return this.successCode;
+    }
 
-	boolean useStatusFields() {
-		return this.useStatusFields;
-	}
+    boolean useStatusFields() {
+        return this.useStatusFields;
+    }
 }

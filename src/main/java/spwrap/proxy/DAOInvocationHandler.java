@@ -18,19 +18,19 @@ import spwrap.proxy.MetaData.OutputParam;
 
 public class DAOInvocationHandler implements InvocationHandler {
 
-	private static Logger log = LoggerFactory.getLogger(DAOInvocationHandler.class);
+    private static Logger log = LoggerFactory.getLogger(DAOInvocationHandler.class);
 
-	private final Caller caller;
+    private final Caller caller;
 
-	public DAOInvocationHandler(Caller caller) {
-		this.caller = caller;
-	}
+    public DAOInvocationHandler(Caller caller) {
+        this.caller = caller;
+    }
 
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-		MetaData metadata = getMetaData(method, args);
+        MetaData metadata = getMetaData(method, args);
 
-        if (metadata != null){
+        if (metadata != null) {
             Tuple<?, ?> call = caller.call(metadata.storedProcName, metadata.inParams, metadata.outputParam.outParamTypes,
                     metadata.outputParam.outputParamMapper, metadata.rsMapper);
 
@@ -42,12 +42,12 @@ public class DAOInvocationHandler implements InvocationHandler {
                 return call.object();
             }
             return call;
-        }else{
+        } else {
             return null;
         }
-	}
+    }
 
-	private MetaData getMetaData(Method method, Object[] args) {
+    private MetaData getMetaData(Method method, Object[] args) {
 
         StoredProc storedProcAnnot = method.getAnnotation(StoredProc.class);
         if (storedProcAnnot != null) {
@@ -80,37 +80,37 @@ public class DAOInvocationHandler implements InvocationHandler {
             log.warn("method {} doesn't declare @StoredProc annotation, skipping.", method.getName());
             return null;
         }
-	}
+    }
 
-	private void preValidate(Method method) {
-		Mapper mapperAnnot = method.getAnnotation(Mapper.class);
+    private void preValidate(Method method) {
+        Mapper mapperAnnot = method.getAnnotation(Mapper.class);
 
-		if (mapperAnnot != null && method.getAnnotation(Scalar.class) != null) {
-			throw new CallException("either @Scalar or @Mapper could be provided, Not Both!");
-		}
+        if (mapperAnnot != null && method.getAnnotation(Scalar.class) != null) {
+            throw new CallException("either @Scalar or @Mapper could be provided, Not Both!");
+        }
 
-		if (mapperAnnot != null) {
-			Class<?>[] mapperClasses = mapperAnnot.value();
+        if (mapperAnnot != null) {
+            Class<?>[] mapperClasses = mapperAnnot.value();
 
-			if (mapperClasses.length > 2) {
-				throw new CallException("only two mapper classes are allowed");
-			}
+            if (mapperClasses.length > 2) {
+                throw new CallException("only two mapper classes are allowed");
+            }
 
-			for (Class<?> clazz : mapperClasses) {
-				if (!ResultSetMapper.class.isAssignableFrom(clazz)
-						&& !TypedOutputParamMapper.class.isAssignableFrom(clazz)) {
-					throw new CallException(
-							"Mapper classes should implement either ResultSetMapper or TypedOutputParamMapper");
-				}
-			}
-		}
-	}
+            for (Class<?> clazz : mapperClasses) {
+                if (!ResultSetMapper.class.isAssignableFrom(clazz)
+                        && !TypedOutputParamMapper.class.isAssignableFrom(clazz)) {
+                    throw new CallException(
+                            "Mapper classes should implement either ResultSetMapper or TypedOutputParamMapper");
+                }
+            }
+        }
+    }
 
-	private void postValidate(Method method, MetaData metadata) {
-		if (metadata.rsMapper == null && metadata.outputParam.outputParamMapper == null
-				&& method.getReturnType() != void.class) {
-			throw new CallException(
-					String.format("method %s return type is not void however no mapping provided!", method.getName()));
-		}
-	}
+    private void postValidate(Method method, MetaData metadata) {
+        if (metadata.rsMapper == null && metadata.outputParam.outputParamMapper == null
+                && method.getReturnType() != void.class) {
+            throw new CallException(
+                    String.format("method %s return type is not void however no mapping provided!", method.getName()));
+        }
+    }
 }
