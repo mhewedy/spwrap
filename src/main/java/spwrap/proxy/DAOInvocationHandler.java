@@ -48,6 +48,7 @@ public class DAOInvocationHandler implements InvocationHandler {
     }
 
     private MetaData getMetaData(Method method, Object[] args) {
+        long start = System.currentTimeMillis();
 
         StoredProc storedProcAnnot = method.getAnnotation(StoredProc.class);
         if (storedProcAnnot != null) {
@@ -74,6 +75,8 @@ public class DAOInvocationHandler implements InvocationHandler {
             }
 
             postValidate(method, metaData);
+
+            log.debug("getMetaData on method: {} took: {} ms", method.getName(), (System.currentTimeMillis() - start));
 
             return metaData;
         } else {
