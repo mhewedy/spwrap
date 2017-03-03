@@ -506,7 +506,6 @@ class DAOIntTest extends Specification{
 
         then:
             list.collect {it.id()}.sort().max() == maxId
-            println(list)
             noExceptionThrown();
         cleanup:
             pool.shutdown()
