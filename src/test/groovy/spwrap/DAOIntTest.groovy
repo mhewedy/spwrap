@@ -3,13 +3,14 @@ package spwrap
 import ch.vorburger.mariadb4j.DB
 import ch.vorburger.mariadb4j.DBConfigurationBuilder
 import spwrap.proxy.DAOInvocationHandler
-import uk.org.lidalia.slf4jtest.TestLogger
 import uk.org.lidalia.slf4jtest.TestLoggerFactory
 
 import java.sql.*
 import spock.lang.*
 
-import static uk.org.lidalia.slf4jext.Level.TRACE
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
+
 import static uk.org.lidalia.slf4jext.Level.WARN
 
 // integration test
@@ -479,5 +480,50 @@ class DAOIntTest extends Specification{
             }
         cleanup:
             TestLoggerFactory.clear()
+    }
+
+    def "#testDB : Multithreading: using implicit ResultSet Mapper to map result set"(){
+        given:
+        _setup(testDB)
+            def firstName = "Farida"
+            def lastName = "Mohammad"
+            def pool = Executors.newFixedThreadPool(5)
+        when:
+
+            def futureList = pool.invokeAll(Arrays.asList(
+                    getCallableForCreateCustomer(customerDao, firstName, lastName),
+                    getCallableForCreateCustomer(customerDao, firstName, lastName),
+                    getCallableForCreateCustomer(customerDao, firstName, lastName),
+                    getCallableForCreateCustomer(customerDao, firstName, lastName),
+                    getCallableForCreateCustomer(customerDao, firstName, lastName),
+                    getCallableForCreateCustomer(customerDao, firstName, lastName),
+                    getCallableForCreateCustomer(customerDao, firstName, lastName),
+                    getCallableForCreateCustomer(customerDao, firstName, lastName)
+            ));
+
+            futureList.collect { it.get() } // join
+            def list = customerDao.listCustomers2()
+
+        then:
+            list.collect {it.id()}.sort().max() == maxId
+            println(list)
+            noExceptionThrown();
+        cleanup:
+            pool.shutdown()
+            _cleanup(testDB)
+        where:
+        testDB       | maxId
+        TestDB.HSQL  | 7
+        TestDB.MYSQL | 8
+    }
+
+    private static def getCallableForCreateCustomer(customerDao, firstName, lastName){
+        return new Callable<List<Customer>>(){
+            List<Customer> call() throws Exception {
+                println Thread.currentThread()
+                customerDao.createCustomer0(firstName, lastName)
+                return null;
+            }
+        }
     }
 }
