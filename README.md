@@ -147,12 +147,12 @@ And in the dependecies section add:
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>0.0.14</version>
+	<version>0.0.15</version>
 </dependency>
 ```
 
 [For other build tools](https://jitpack.io/v/mhewedy/spwrap) |
-[javadoc] (https://jitpack.io/com/github/mhewedy/spwrap/0.0.14/javadoc/)
+[javadoc] (https://jitpack.io/com/github/mhewedy/spwrap/0.0.15/javadoc/)
 
 ## Additional staff:
 
