@@ -1,16 +1,16 @@
 package spwrap.proxy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import spwrap.CallException;
+import spwrap.Tuple;
+import spwrap.annotations.Mapper;
+import spwrap.mappers.ResultSetMapper;
+import spwrap.optional.automappers.ResultSetAutoMapper;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import spwrap.CallException;
-import spwrap.mappers.ResultSetMapper;
-import spwrap.Tuple;
-import spwrap.annotations.Mapper;
 
 class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>> {
 
@@ -18,7 +18,7 @@ class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>> {
     private static Logger log = LoggerFactory.getLogger(ResultSetMapperBinder.class);
 
     @SuppressWarnings("unchecked")
-    public ResultSetMapper<?> fromAnnotation(Method method) {
+    ResultSetMapper<?> fromAnnotation(Method method) {
 
         Mapper mapperAnnotation = method.getAnnotation(Mapper.class);
         if (mapperAnnotation != null) {
@@ -43,14 +43,13 @@ class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>> {
         return null;
     }
 
-    public ResultSetMapper<?> fromReturnType(Method method) {
+    ResultSetMapper<?> fromReturnType(Method method) {
         ResultSetMapper<?> resultSetMapper = null;
 
         if (List.class.isAssignableFrom(method.getReturnType())
                 || Tuple.class.isAssignableFrom(method.getReturnType())) {
 
-            ParameterizedType listType = (ParameterizedType) method.getGenericReturnType();
-            Class<?> clazz = (Class<?>) listType.getActualTypeArguments()[FIRST_GENERIC_TYPE_INDEX];
+            Class<?> clazz = getReturnType(method);
 
             if (ResultSetMapper.class.isAssignableFrom(clazz)) {
                 resultSetMapper = newInstance(clazz);
@@ -61,11 +60,20 @@ class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>> {
         return resultSetMapper;
     }
 
+    ResultSetMapper<?> fromAutoMapper(Method method) {
+        return ResultSetAutoMapper.newInstance(getReturnType(method));
+    }
+
     private ResultSetMapper<?> newInstance(Class<?> clazz) {
         try {
             return (ResultSetMapper<?>) clazz.newInstance();
         } catch (Exception e) {
             throw new CallException("cannot create resultSet Mapper", e);
         }
+    }
+
+    private Class<?> getReturnType(Method method) {
+        ParameterizedType listType = (ParameterizedType) method.getGenericReturnType();
+        return (Class<?>) listType.getActualTypeArguments()[FIRST_GENERIC_TYPE_INDEX];
     }
 }

@@ -10,10 +10,7 @@ import spwrap.CustomMappers.CustomResultSetMapper;
 import spwrap.CustomMappers.DateMapper;
 import spwrap.CustomMappers.TableNamesMapper;
 import spwrap.Customer.NotMappedCustomer;
-import spwrap.annotations.Mapper;
-import spwrap.annotations.Param;
-import spwrap.annotations.Scalar;
-import spwrap.annotations.StoredProc;
+import spwrap.annotations.*;
 
 public interface CustomerDAO {
 
@@ -56,7 +53,10 @@ public interface CustomerDAO {
 	
 	@StoredProc("list_customers")
 	List<Customer> listCustomers2();
-	
+
+    @AutoMapper
+    @StoredProc("list_customers")
+    List<AutoCustomer> listCustomers3();
 	
 	@Mapper(DateMapper.class)
 	@StoredProc
@@ -82,6 +82,10 @@ public interface CustomerDAO {
 	@Scalar(VARCHAR)
 	@StoredProc("list_tables")
 	List<String> listTables2(); // Invalid will throw exception @scalar supported with output parameters only
+
+    @AutoMapper
+    @StoredProc("list_tables")
+    List<String> listTables3();
 
 	// missing params annotations
 	@StoredProc("create_customer0")

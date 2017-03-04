@@ -8,8 +8,11 @@ import java.sql.*;
 
 final class ResultSetWrapper extends Result<ResultSet> {
 
-    ResultSetWrapper(ResultSet wrappedObject) {
+    private int rowIndex;
+
+    ResultSetWrapper(ResultSet wrappedObject, int rowIndex) {
         super(wrappedObject);
+        this.rowIndex = rowIndex;
     }
 
     @Override

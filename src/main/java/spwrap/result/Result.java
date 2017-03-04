@@ -47,11 +47,11 @@ public abstract class Result<T> {
         return this.wrappedObject;
     }
 
-    public static <U> Result<?> of(ResultSet rs, CallableStatement cstmt, int outParamStartIndex) {
+    public static <U> Result<?> of(ResultSet rs, CallableStatement cstmt, int outParamStartIndex, int rowIndex) {
         if (rs != null && cstmt != null) {
             throw new CallException("rs and cstmt both cannot be non-null");
         } else if (rs != null) {
-            return new ResultSetWrapper(rs);
+            return new ResultSetWrapper(rs, rowIndex);
         } else if (cstmt != null) {
             return new CallableStatementWrapper(cstmt, outParamStartIndex);
         } else {

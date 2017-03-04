@@ -481,4 +481,45 @@ class DAOIntTest extends Specification{
         cleanup:
             TestLoggerFactory.clear()
     }
+
+    def "#testDB : using optional-automappers to map result set"(){
+        given:
+            _setup(testDB)
+            def firstName1 = "Farida"
+            def lastName1 = "Mohammad"
+            def firstName2 = "Abdullah"
+            def lastName2 = "Mohammad"
+        when:
+            customerDao.createCustomer0(firstName1, lastName1)
+            customerDao.createCustomer0(firstName2, lastName2)
+            def list = customerDao.listCustomers3();
+        then:
+            2 == list.size()
+            with(list.get(0)){
+                firstName1 == getFirstname()
+                lastName1 == getLastname()
+            }
+
+            with(list.get(1)){
+                firstName2 == getFirstname()
+                lastName2 == getLastname()
+            }
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
+    }
+
+    def "#testDB : using optional-automappers - yet another test case for result set mapper" (){
+        when:
+            _setup(testDB)
+            def listTables = customerDao.listTables3()
+        then:
+            listTables.size() > 1
+            listTables*.toLowerCase().contains("customers")
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
+    }
 }

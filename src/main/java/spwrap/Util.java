@@ -77,6 +77,17 @@ public class Util {
         }
     }
 
+    public static boolean isPresent(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        }
+        catch (Throwable ex) {
+            return false;
+        }
+    }
+
+
     // this method should be used in logging only to print the type name instead of its integer value
     static String getAsString(int sqlType) {
         return TYPES_STRING_MAP.get(sqlType);

@@ -19,7 +19,7 @@ class ResultSetWrapperTest extends Specification {
                                       "getTimestamp", "getObject", "getBigDecimal", "getRef", "getBlob", "getClob",
                                       "getArray", "getURL"];
     void setup() {
-        resultSetWrapper = new ResultSetWrapper(resultSetMock)
+        resultSetWrapper = new ResultSetWrapper(resultSetMock, -1)
     }
 
     def "calling #methodName(int) on ResultSetWrapper calls the same method name on ResultSet" (String methodName){

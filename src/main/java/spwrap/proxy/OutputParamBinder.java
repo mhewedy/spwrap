@@ -1,19 +1,18 @@
 package spwrap.proxy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import spwrap.CallException;
+import spwrap.Caller.ParamType;
+import spwrap.Tuple;
+import spwrap.annotations.Mapper;
+import spwrap.mappers.TypedOutputParamMapper;
+import spwrap.proxy.MetaData.OutputParam;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import spwrap.CallException;
-import spwrap.Caller.ParamType;
-import spwrap.mappers.TypedOutputParamMapper;
-import spwrap.Tuple;
-import spwrap.annotations.Mapper;
-import spwrap.proxy.MetaData.OutputParam;
 
 class OutputParamBinder extends MapperBinder<OutputParam> {
 
@@ -21,7 +20,7 @@ class OutputParamBinder extends MapperBinder<OutputParam> {
     private static Logger log = LoggerFactory.getLogger(OutputParamBinder.class);
 
     @SuppressWarnings("unchecked")
-    public OutputParam fromAnnotation(Method method) {
+    OutputParam fromAnnotation(Method method) {
 
         Mapper mapperAnnotation = method.getAnnotation(Mapper.class);
         if (mapperAnnotation != null) {
@@ -47,31 +46,24 @@ class OutputParamBinder extends MapperBinder<OutputParam> {
     }
 
     @SuppressWarnings("unchecked")
-    public OutputParam fromReturnType(Method method) {
+    OutputParam fromReturnType(Method method) {
 
         OutputParam outputParam = null;
 
-        Class<?> returnType = method.getReturnType();
+        Class<?> fromClazz = getReturnType(method);
 
-        if (TypedOutputParamMapper.class.isAssignableFrom(returnType)) {
+        if (TypedOutputParamMapper.class.isAssignableFrom(fromClazz)) {
 
-            outputParam = fromClazz((Class<TypedOutputParamMapper<?>>) returnType);
-
-        } else if (Tuple.class.isAssignableFrom(returnType)) {
-
-            ParameterizedType type = (ParameterizedType) method.getGenericReturnType();
-            Class<?> paramClass = (Class<?>) type.getActualTypeArguments()[SECOND_GENERIC_TYPE_INDEX];
-
-            if (TypedOutputParamMapper.class.isAssignableFrom(paramClass)) {
-                outputParam = fromClazz((Class<TypedOutputParamMapper<?>>) paramClass);
-            }
-        }
-
-        if (outputParam != null) {
+            outputParam = fromClazz((Class<TypedOutputParamMapper<?>>) fromClazz);
             log.debug("found return type output param: {} and types: {} for method: {}",
                     outputParam.outputParamMapper.getClass(), outputParam.outParamTypes, method.getName());
         }
         return outputParam;
+    }
+
+    OutputParam fromAutoMapper(Method method) {
+        log.debug("ResultSetAutoMapper annotation found but outputParams are not supported");
+        return null;
     }
 
     private OutputParam fromClazz(Class<TypedOutputParamMapper<?>> clazz) {
@@ -96,5 +88,14 @@ class OutputParamBinder extends MapperBinder<OutputParam> {
         }
 
         return paramTypes;
+    }
+
+    private Class<?> getReturnType(Method method) {
+        if (Tuple.class.isAssignableFrom(method.getReturnType())) {
+            ParameterizedType type = (ParameterizedType) method.getGenericReturnType();
+            return (Class<?>) type.getActualTypeArguments()[SECOND_GENERIC_TYPE_INDEX];
+        }else{
+            return method.getReturnType();
+        }
     }
 }

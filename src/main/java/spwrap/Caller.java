@@ -235,8 +235,9 @@ public class Caller {
                 list = new ArrayList<T>();
                 log.debug("reading result set");
                 rs = call.getResultSet();
+                int rowIndex = 0;
                 while (rs.next()) {
-                    list.add(rsMapper.map(Result.of(rs, null, -1)));
+                    list.add(rsMapper.map(Result.of(rs, null, -1, rowIndex++)));
                 }
             }
 
@@ -244,7 +245,7 @@ public class Caller {
             if (outParamsTypes != null) {
                 log.debug("reading output parameters");
                 for (ParamType ignored : outParamsTypes) {
-                    object = paramMapper.map(Result.of(null, call, startOfOutParamCnt));
+                    object = paramMapper.map(Result.of(null, call, startOfOutParamCnt, -1));
                 }
             }
 
