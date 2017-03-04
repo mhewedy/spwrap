@@ -78,10 +78,10 @@ public interface CustomerDAO {
 	@Mapper(TableNamesMapper.class)
 	@StoredProc("list_tables")
 	List<String> listTables();
-	
+
 	@Scalar(VARCHAR)
 	@StoredProc("list_tables")
-	List<String> listTables2();
+	List<String> listTables2(); // Invalid will throw exception @scalar supported with output parameters only
 
 	// missing params annotations
 	@StoredProc("create_customer0")
