@@ -7,8 +7,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Special case of {@link Mapper} that map single output parameter automatically
- * to the method return type.
+ * <p>
+ *     Special case of {@link Mapper} that map single output parameter automatically
+ *     to the method return type.
+ *
+ * <p>
+ *     The mapping done using {@link java.sql.CallableStatement#getObject(int)} method, meaning that
+ *     if the result wasNull and the DAO method returns a primitive value, then NullPointerException will thrown
+ *     by java trying to cast null into primitive.
+ *
+ * <p>
+ *     So, always when using this annotation, make the return type of the DAO method as
+ *     Java Wrapper object (Integer, Short ,etc..) instead of  (int, short, etc... primitive).
  *
  * @author mhewedy
  */

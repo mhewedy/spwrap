@@ -38,7 +38,7 @@ class ScalarBinder implements Binder<OutputParam> {
     private static class ScalarTypedOutputParamMapper implements TypedOutputParamMapper {
         private int sqlType;
 
-        public ScalarTypedOutputParamMapper(int sqlType) {
+        ScalarTypedOutputParamMapper(int sqlType) {
             this.sqlType = sqlType;
         }
 
