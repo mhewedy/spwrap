@@ -62,7 +62,7 @@ class OutputParamBinder extends MapperBinder<OutputParam> {
     }
 
     OutputParam fromAutoMapper(Method method) {
-        log.debug("ResultSetAutoMapper annotation found but outputParams are not supported");
+        log.trace("ResultSetAutoMapper annotation found but outputParams are not supported");
         return null;
     }
 
