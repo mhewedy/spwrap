@@ -118,6 +118,8 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 
 >**NOTE**: If your stored procedure returns a single **output parameter** with no result set, then you can use the `@Scalar` annotation and you will not need to provide a Mapper class yourself, the mapping will done for you. [see wiki page about scalars for more](https://github.com/mhewedy/spwrap/wiki/Scalar)
 
+>**NOTE**: You can use [`@AutoMapper`s](https://github.com/mhewedy/spwrap/wiki/AutoMappers) to do the mapping for you instead of Mapping the Result object into your domain object yourself.
+
 ## Step 3: Using the DAO interface:
 
 Now you can start using the interface to call the stored procedures:
