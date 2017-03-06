@@ -183,8 +183,4 @@ And in the dependecies section add:
 
 * Tested on MySQL, SQL Server and HSQL (so far).
 
-##FAQs:
-Q: Can `spwrap` do auto map for me for all fields?    
-A: `spwrap` will not map the result from database into java domain objects for your, you have to deal with it via Mappers (`TypedOutputParamMapper` and `ResultSetMapper`). I did so because I intented to make this simple library as simple as possible, without going into `SQL-to-Java` types mapping details.
-
 See [wiki page] (https://github.com/mhewedy/spwrap/wiki) for more info and test cases for more usage scenarios.
