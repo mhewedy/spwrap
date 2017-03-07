@@ -1,6 +1,10 @@
 package spwrap;
 
 import static java.sql.Types.*;
+import static spwrap.annotations.Props.*;
+import static spwrap.annotations.Props.FetchDirection.FETCH_REVERSE;
+import static spwrap.annotations.Props.ResultSetHoldability.DEFAULT_HOLDABILITY;
+import static spwrap.annotations.Props.TransactionIsolation.DEFAULT_ISOLATION;
 
 import java.sql.Date;
 import java.util.List;
@@ -100,4 +104,8 @@ public interface CustomerDAO {
     Customer getCustomer8(@Param(INTEGER) Integer id);
 
     void methodWithNoAnnotation();
+
+    @Props(connection = @Connection(readOnly = true))
+    @StoredProc
+    void testProps();
 }
