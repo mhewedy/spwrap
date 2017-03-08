@@ -106,6 +106,11 @@ public interface CustomerDAO {
     void methodWithNoAnnotation();
 
     @Props(connection = @Connection(readOnly = true))
+    @Connection(readOnly = true)
     @StoredProc
-    void testProps();
+    void testProps1();  // throws exception @Connection is already defined
+
+    @Connection(readOnly = true)
+    @StoredProc("list_customers")
+    List<Customer> testProps2();
 }

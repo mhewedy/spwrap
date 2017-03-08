@@ -1,25 +1,20 @@
 package spwrap;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import spwrap.db.Database;
 import spwrap.db.GenericDatabase;
 import spwrap.mappers.OutputParamMapper;
 import spwrap.mappers.ResultSetMapper;
+import spwrap.proxy.Props;
 import spwrap.result.Result;
+
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>
@@ -170,14 +165,16 @@ public class Caller {
      * @param outParamsTypes a list of output parameter types
      * @param paramMapper    a mapper object that maps output parameters to type T
      * @param rsMapper       a list of object T that represents the result set
+     * @param props          JDBC objects properties
      * @return object of type T that represents the output parameters
      * @see #params(Param...)
      * @see #paramTypes(int...)
      * @see ResultSetMapper
      * @see OutputParamMapper
+     * @see spwrap.annotations.Props
      */
     public final <T, U> Tuple<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
-                                         OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper) {
+                                         OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper, Props props) {
 
         final long startTime = System.currentTimeMillis();
 
@@ -195,8 +192,10 @@ public class Caller {
 
             if (dataSource != null) {
                 con = dataSource.getConnection();
-            } else {
+            } else if (jdbcUrl != null) {
                 con = DriverManager.getConnection(jdbcUrl, username, password);
+            } else {
+                throw new CallException("both dataSource and jdbcUrl are nulls");
             }
 
             call = con.prepareCall(callableStmt);
@@ -270,6 +269,11 @@ public class Caller {
             Util.closeDBObjects(con, call, rs);
         }
         return result;
+    }
+
+    public final <T, U> Tuple<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
+                                         OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper) {
+        return call(procName, inParams, outParamsTypes, paramMapper, rsMapper, null);
     }
 
     private <T, U> void logCall(long startTime, String callableStmt, List<Param> inParams, List<ParamType> outParamsTypes, Tuple<T, U> result) {

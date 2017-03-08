@@ -26,7 +26,7 @@ public class DAOInvocationHandler implements InvocationHandler {
 
         if (metadata != null) {
             Tuple<?, ?> call = caller.call(metadata.storedProcName, metadata.inParams, metadata.outputParam.outParamTypes,
-                    metadata.outputParam.outputParamMapper, metadata.rsMapper);
+                    metadata.outputParam.outputParamMapper, metadata.rsMapper, metadata.props);
 
             if (metadata.outputParam.outputParamMapper == null) {
                 return call.list();
@@ -59,14 +59,16 @@ public class DAOInvocationHandler implements InvocationHandler {
             log.debug("storedProcName name is: {} for method: {}", storedProc, method.getName());
 
             metaData.inParams = new ParamBinder().bind(method, args);
-            metaData.rsMapper = new ResultSetMapperBinder().bind(method, args);
+            metaData.rsMapper = new ResultSetMapperBinder().bind(method);
 
-            OutputParam outputParam = new OutputParamBinder().bind(method, args);
+            OutputParam outputParam = new OutputParamBinder().bind(method);
             if (outputParam != null) {
                 metaData.outputParam = outputParam;
-            } else if ((outputParam = new ScalarBinder().bind(method, args)) != null) {
+            } else if ((outputParam = new ScalarBinder().bind(method)) != null) {
                 metaData.outputParam = outputParam;
             }
+
+            metaData.props = new PropsBinder().bind(method);
 
             Validator.postValidate(method, metaData);
 

@@ -522,4 +522,30 @@ class DAOIntTest extends Specification{
         where:
             testDB << [TestDB.HSQL, TestDB.MYSQL]
     }
+
+    def "#testDB : test @Props1" (){
+        when:
+            _setup(testDB)
+            customerDao.testProps1();
+        then:
+            def ex = thrown(CallException)
+            ex.message.contains('@Connection')
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
+    }
+
+    def "#testDB : test @Props2" (){
+        when:
+            _setup(testDB)
+            customerDao.testProps2();
+        then:
+            noExceptionThrown();
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
+    }
+
 }

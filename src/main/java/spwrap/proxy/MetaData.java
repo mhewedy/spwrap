@@ -1,11 +1,11 @@
 package spwrap.proxy;
 
-import java.util.List;
-
-import spwrap.mappers.OutputParamMapper;
 import spwrap.Caller.Param;
 import spwrap.Caller.ParamType;
+import spwrap.mappers.OutputParamMapper;
 import spwrap.mappers.ResultSetMapper;
+
+import java.util.List;
 
 class
 /* struct */ MetaData {
@@ -16,6 +16,7 @@ class
     ResultSetMapper<?> rsMapper;
 
     OutputParam outputParam = new OutputParam();
+    Props props = new Props();
 
     static class
     /* struct */ OutputParam {
