@@ -40,7 +40,7 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
      	SET code = 0 -- success;
   	END
 ```
->**NOTE**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [see the configuration wiki page](https://github.com/mhewedy/spwrap/wiki/spwrap-configurations).
+>**NOTE**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [see the configuration wiki page](https://github.com/mhewedy/spwrap/wiki/Configurations).
 
 ## Step 1: Create The DAO interface:
 ```java
