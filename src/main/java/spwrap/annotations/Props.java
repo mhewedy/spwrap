@@ -6,7 +6,9 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static spwrap.annotations.Props.FetchDirection.FETCH_FORWARD;
+import static spwrap.annotations.Props.ResultSetConcurrency.CONCUR_READ_ONLY;
 import static spwrap.annotations.Props.ResultSetHoldability.DEFAULT_HOLDABILITY;
+import static spwrap.annotations.Props.ResultSetType.TYPE_FORWARD_ONLY;
 import static spwrap.annotations.Props.TransactionIsolation.DEFAULT_ISOLATION;
 
 @Retention(RUNTIME)
@@ -177,23 +179,14 @@ public @interface Props {
     @Retention(RUNTIME)
     @Target(METHOD)
     @interface Connection {
-        ResultSetHoldability holdability() default DEFAULT_HOLDABILITY;
-
         boolean readOnly() default false;
 
         TransactionIsolation transactionIsolation() default DEFAULT_ISOLATION;
-
-        ResultSetType resultSetType() default ResultSetType.TYPE_FORWARD_ONLY;
-
-        ResultSetConcurrency resultSetConcurrency() default ResultSetConcurrency.CONCUR_READ_ONLY;
-
-        ResultSetHoldability resultSetHoldability() default DEFAULT_HOLDABILITY;
     }
 
     @Retention(RUNTIME)
     @Target(METHOD)
     @interface Statement {
-        String cursorName() default "";
 
         FetchDirection fetchDirection() default FETCH_FORWARD;
 
@@ -209,8 +202,10 @@ public @interface Props {
     @Retention(RUNTIME)
     @Target(METHOD)
     @interface ResultSet {
-        FetchDirection fetchDirection() default FETCH_FORWARD;
+        ResultSetType type() default TYPE_FORWARD_ONLY;
 
-        int fetchSize() default 0;
+        ResultSetConcurrency concurrency() default CONCUR_READ_ONLY;
+
+        ResultSetHoldability holdability() default DEFAULT_HOLDABILITY;
     }
 }

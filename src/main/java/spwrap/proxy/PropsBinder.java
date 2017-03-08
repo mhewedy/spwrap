@@ -56,17 +56,13 @@ class PropsBinder implements Binder<Props> {
 
     private ConnectionProps bind(spwrap.annotations.Props.Connection annot) {
         ConnectionProps props = new ConnectionProps();
-        props.holdability = annot.holdability();
         props.readOnly = annot.readOnly();
-        props.resultSetConcurrency = annot.resultSetConcurrency();
-        props.resultSetHoldability = annot.resultSetHoldability();
-        props.resultSetType = annot.resultSetType();
+        props.transactionIsolation = annot.transactionIsolation();
         return props;
     }
 
     private Props.StatementProps bind(spwrap.annotations.Props.Statement annot) {
         Props.StatementProps props = new Props.StatementProps();
-        props.cursorName = annot.cursorName();
         props.fetchDirection = annot.fetchDirection();
         props.fetchSize = annot.fetchSize();
         props.maxFieldSize = annot.maxFieldSize();
@@ -77,8 +73,9 @@ class PropsBinder implements Binder<Props> {
 
     private ResultSetProps bind(spwrap.annotations.Props.ResultSet annot) {
         ResultSetProps props = new ResultSetProps();
-        props.fetchDirection = annot.fetchDirection();
-        props.fetchSize = annot.fetchSize();
+        props.type = annot.type();
+        props.concurrency = annot.concurrency();
+        props.holdability = annot.holdability();
         return props;
     }
 }
