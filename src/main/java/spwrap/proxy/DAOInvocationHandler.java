@@ -25,8 +25,14 @@ public class DAOInvocationHandler implements InvocationHandler {
         MetaData metadata = getMetaData(method, args);
 
         if (metadata != null) {
-            Tuple<?, ?> call = caller.call(metadata.storedProcName, metadata.inParams, metadata.outputParam.outParamTypes,
-                    metadata.outputParam.outputParamMapper, metadata.rsMapper, metadata.props);
+            Tuple<?, ?> call = caller.call(metadata.storedProcName
+                    , metadata.inParams
+                    , metadata.outputParam.outParamTypes
+                    , metadata.outputParam.outputParamMapper
+                    , metadata.rsMapper
+                    , metadata.propsWrapper.connectionProps
+                    , metadata.propsWrapper.statementProps
+                    , metadata.propsWrapper.resultSetProps);
 
             if (metadata.outputParam.outputParamMapper == null) {
                 return call.list();
@@ -68,7 +74,7 @@ public class DAOInvocationHandler implements InvocationHandler {
                 metaData.outputParam = outputParam;
             }
 
-            metaData.props = new PropsBinder().bind(method);
+            metaData.propsWrapper = new PropsBinder().bind(method);
 
             Validator.postValidate(method, metaData);
 

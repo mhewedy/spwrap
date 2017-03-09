@@ -3,16 +3,19 @@ package spwrap.proxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spwrap.CallException;
-import spwrap.proxy.Props.ConnectionProps;
-import spwrap.proxy.Props.ResultSetProps;
+import spwrap.props.ConnectionProps;
+import spwrap.props.ResultSetProps;
+import spwrap.props.StatementProps;
 
 import java.lang.reflect.Method;
 
-class PropsBinder implements Binder<Props> {
+import static spwrap.proxy.MetaData.*;
+
+class PropsBinder implements Binder<PropsWrapper> {
 
     private static Logger log = LoggerFactory.getLogger(PropsBinder.class);
 
-    public Props bind(Method method, Object... args) {
+    public PropsWrapper bind(Method method, Object... args) {
 
         spwrap.annotations.Props.Connection connectionAnnot = null;
         spwrap.annotations.Props.Statement statementAnnot = null;
@@ -45,37 +48,23 @@ class PropsBinder implements Binder<Props> {
             resultSetAnnot = method.getAnnotation(spwrap.annotations.Props.ResultSet.class);
         }
 
-        Props props = new Props();
-        props.connectionProps = connectionAnnot != null ? bind(connectionAnnot) : null;
-        props.statementProps = statementAnnot != null ? bind(statementAnnot) : null;
-        props.resultSetProps = resultSetAnnot != null ? bind(resultSetAnnot) : null;
-
-        return props;
-
+        PropsWrapper propsWrapper = new PropsWrapper();
+        if (connectionAnnot != null) propsWrapper.connectionProps = bind(connectionAnnot);
+        if (statementAnnot != null) propsWrapper.statementProps = bind(statementAnnot);
+        if (resultSetAnnot != null) propsWrapper.resultSetProps = bind(resultSetAnnot);
+        return propsWrapper;
     }
 
     private ConnectionProps bind(spwrap.annotations.Props.Connection annot) {
-        ConnectionProps props = new ConnectionProps();
-        props.readOnly = annot.readOnly();
-        props.transactionIsolation = annot.transactionIsolation();
-        return props;
+        return new ConnectionProps(annot.readOnly(), annot.transactionIsolation());
     }
 
-    private Props.StatementProps bind(spwrap.annotations.Props.Statement annot) {
-        Props.StatementProps props = new Props.StatementProps();
-        props.fetchDirection = annot.fetchDirection();
-        props.fetchSize = annot.fetchSize();
-        props.maxFieldSize = annot.maxFieldSize();
-        props.maxRows = annot.maxRows();
-        props.queryTimeout = annot.queryTimeout();
-        return props;
+    private StatementProps bind(spwrap.annotations.Props.Statement annot) {
+        return new StatementProps(annot.fetchDirection(), annot.fetchSize(), annot.maxFieldSize(), annot.maxRows(),
+                annot.queryTimeout());
     }
 
     private ResultSetProps bind(spwrap.annotations.Props.ResultSet annot) {
-        ResultSetProps props = new ResultSetProps();
-        props.type = annot.type();
-        props.concurrency = annot.concurrency();
-        props.holdability = annot.holdability();
-        return props;
+        return new ResultSetProps(annot.type(), annot.concurrency(), annot.holdability());
     }
 }

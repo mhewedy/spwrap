@@ -6,7 +6,9 @@ import spwrap.db.Database;
 import spwrap.db.GenericDatabase;
 import spwrap.mappers.OutputParamMapper;
 import spwrap.mappers.ResultSetMapper;
-import spwrap.proxy.Props;
+import spwrap.props.ConnectionProps;
+import spwrap.props.ResultSetProps;
+import spwrap.props.StatementProps;
 import spwrap.result.Result;
 
 import javax.sql.DataSource;
@@ -126,23 +128,6 @@ public class Caller {
         return call(procName, null, outParamsTypes, paramMapper);
     }
 
-    /**
-     * execute SP with list of input parameters and return list of output
-     * parameters
-     *
-     * @param procName       stored procedure name
-     * @param inParams       a list of output parameter types
-     * @param outParamsTypes a list of output parameter types
-     * @param paramMapper    a mapper object that maps output parameters to type T
-     * @return object of type T that represents the output parameters
-     * @see #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)
-     * @see #paramTypes(int...)
-     * @see OutputParamMapper
-     */
-    public final <T> T call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
-                            OutputParamMapper<T> paramMapper) {
-        return call(procName, inParams, outParamsTypes, paramMapper, null).object();
-    }
 
     /**
      * <p>
@@ -165,7 +150,6 @@ public class Caller {
      * @param outParamsTypes a list of output parameter types
      * @param paramMapper    a mapper object that maps output parameters to type T
      * @param rsMapper       a list of object T that represents the result set
-     * @param props          JDBC objects properties
      * @return object of type T that represents the output parameters
      * @see #params(Param...)
      * @see #paramTypes(int...)
@@ -174,20 +158,48 @@ public class Caller {
      * @see spwrap.annotations.Props
      */
     public final <T, U> Tuple<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
-                                         OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper, Props props) {
+                                         OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper) {
+        return call(procName, inParams, outParamsTypes, paramMapper, rsMapper, new ConnectionProps(), new StatementProps(), new ResultSetProps());
+    }
+
+    /**
+     * execute SP with list of input parameters and return list of output
+     * parameters
+     *
+     * @param procName       stored procedure name
+     * @param inParams       a list of output parameter types
+     * @param outParamsTypes a list of output parameter types
+     * @param paramMapper    a mapper object that maps output parameters to type T
+     * @return object of type T that represents the output parameters
+     * @see #call(String, java.util.List, java.util.List, OutputParamMapper, ResultSetMapper)
+     * @see #paramTypes(int...)
+     * @see OutputParamMapper
+     */
+    public final <T> T call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
+                            OutputParamMapper<T> paramMapper) {
+        return call(procName, inParams, outParamsTypes, paramMapper, null).object();
+    }
+
+
+    public final <T, U> Tuple<T, U> call(String procName
+            , List<Param> inParams
+            , List<ParamType> outParamsTypes
+            , OutputParamMapper<U> paramMapper
+            , ResultSetMapper<T> rsMapper
+            , ConnectionProps connectionProps
+            , StatementProps statementProps
+            , ResultSetProps resultSetProps) {
 
         final long startTime = System.currentTimeMillis();
 
         Connection con = null;
         CallableStatement call = null;
         ResultSet rs = null;
-
-        final String callableStmt = Util.createCallableString(procName,
-                (config.useStatusFields() ? NUM_OF_STATUS_FIELDS : 0)
-                        + (inParams != null ? inParams.size() : 0)
-                        + (outParamsTypes != null ? outParamsTypes.size() : 0));
-
         Tuple<T, U> result = null;
+        ConnectionProps backupConProps = null;
+
+        final String callableStmt = Util.createCallableString(procName, (config.useStatusFields() ? NUM_OF_STATUS_FIELDS : 0)
+                        + (inParams != null ? inParams.size() : 0) + (outParamsTypes != null ? outParamsTypes.size() : 0));
         try {
 
             if (dataSource != null) {
@@ -198,7 +210,9 @@ public class Caller {
                 throw new CallException("both dataSource and jdbcUrl are nulls");
             }
 
-            call = con.prepareCall(callableStmt);
+            backupConProps = ConnectionProps.from(con);
+            connectionProps.apply(con);
+            call = statementProps.apply(con.prepareCall(callableStmt));
 
             int startOfOutParamCnt = inParams != null ? inParams.size() : 0;
 
@@ -233,7 +247,7 @@ public class Caller {
             if (hasResult && rsMapper != null) {
                 list = new ArrayList<T>();
                 log.debug("reading result set");
-                rs = call.getResultSet();
+                rs = resultSetProps.apply(call.getResultSet());
                 int rowIndex = 0;
                 while (rs.next()) {
                     list.add(rsMapper.map(Result.of(rs, null, -1, rowIndex++)));
@@ -266,14 +280,10 @@ public class Caller {
             throw new CallException(ex.getMessage(), ex);
         } finally {
             logCall(startTime, callableStmt, inParams, outParamsTypes, result);
+            if (backupConProps != null ) backupConProps.apply(con);
             Util.closeDBObjects(con, call, rs);
         }
         return result;
-    }
-
-    public final <T, U> Tuple<T, U> call(String procName, List<Param> inParams, List<ParamType> outParamsTypes,
-                                         OutputParamMapper<U> paramMapper, ResultSetMapper<T> rsMapper) {
-        return call(procName, inParams, outParamsTypes, paramMapper, rsMapper, null);
     }
 
     private <T, U> void logCall(long startTime, String callableStmt, List<Param> inParams, List<ParamType> outParamsTypes, Tuple<T, U> result) {
