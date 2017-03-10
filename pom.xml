@@ -5,6 +5,25 @@
 	<artifactId>spwrap</artifactId>
 	<version>0.0.16</version>
 
+    <name>spwrap</name>
+    <description>Simple Stored Procedure call wrapper</description>
+    <url>https://github.com/mhewedy/spwrap</url>
+
+    <developers>
+        <developer>
+            <name>Muhammad Hewedy(mhewedy)</name>
+            <email>mhewedy@gmail.com</email>
+            <organization>mhewedy</organization>
+            <organizationUrl>https://github.com/mhewedy</organizationUrl>
+        </developer>
+    </developers>
+
+    <!--<scm>-->
+        <!--<connection></connection>-->
+        <!--<developerConnection></developerConnection>-->
+        <!--<url></url>-->
+    <!--</scm>-->
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.5</java.version>
