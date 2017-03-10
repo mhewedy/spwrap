@@ -60,11 +60,11 @@ class PropsBinder implements Binder<PropsWrapper> {
     }
 
     private StatementProps bind(spwrap.annotations.Props.Statement annot) {
-        return new StatementProps(annot.fetchDirection(), annot.fetchSize(), annot.maxFieldSize(), annot.maxRows(),
-                annot.queryTimeout());
+        return new StatementProps(annot.queryTimeout());
     }
 
     private ResultSetProps bind(spwrap.annotations.Props.ResultSet annot) {
-        return new ResultSetProps(annot.type(), annot.concurrency(), annot.holdability());
+        return new ResultSetProps(annot.fetchDirection(), annot.fetchSize(), annot.maxFieldSize(), annot.maxRows()
+                , annot.type(), annot.concurrency(), annot.holdability());
     }
 }

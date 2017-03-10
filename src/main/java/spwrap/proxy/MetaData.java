@@ -27,7 +27,7 @@ class
         OutputParamMapper<?> outputParamMapper;
     }
 
-    public static class
+    static class
     /* struct */ PropsWrapper {
         ConnectionProps connectionProps = new ConnectionProps();
         StatementProps statementProps = new StatementProps();

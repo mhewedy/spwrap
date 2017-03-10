@@ -1,5 +1,7 @@
 package spwrap.props;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spwrap.CallException;
 
 import java.sql.Connection;
@@ -7,7 +9,9 @@ import java.sql.SQLException;
 
 import static spwrap.annotations.Props.TransactionIsolation;
 
-public class ConnectionProps implements Props<Connection> {
+public class ConnectionProps implements Props<Connection, Void> {
+
+    private static Logger log = LoggerFactory.getLogger(ConnectionProps.class);
 
     private boolean skip = false;
 
@@ -23,13 +27,19 @@ public class ConnectionProps implements Props<Connection> {
         this.transactionIsolation = transactionIsolation;
     }
 
-    public Connection apply(Connection input) {
-        if (skip){
-            return input;
-        }else{
-            // TODO apply here before return
-            return input;
+    public Void apply(Connection input, Object ... args) {
+        if (!skip){
+            log.debug("applying {} on input Connection", this);
+            try {
+                input.setReadOnly(this.readOnly);
+                if (this.transactionIsolation != TransactionIsolation.DEFAULT){
+                    input.setTransactionIsolation(this.transactionIsolation.getValue());
+                }
+            } catch (SQLException e) {
+                throw new CallException(e);
+            }
         }
+        return null;
     }
 
     public static ConnectionProps from(Connection connection) {
@@ -38,5 +48,14 @@ public class ConnectionProps implements Props<Connection> {
         } catch (SQLException e) {
             throw new CallException(e);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ConnectionProps{" +
+                "skip=" + skip +
+                ", readOnly=" + readOnly +
+                ", transactionIsolation=" + transactionIsolation +
+                '}';
     }
 }

@@ -1,39 +1,48 @@
 package spwrap.props;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import spwrap.CallException;
+
 import java.sql.CallableStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import static spwrap.annotations.Props.FetchDirection;
 
-public class StatementProps implements Props<CallableStatement> {
+public class StatementProps implements Props<CallableStatement, Void> {
+
+    private static Logger log = LoggerFactory.getLogger(StatementProps.class);
 
     private boolean skip = false;
 
-    private FetchDirection fetchDirection;
-    private int fetchSize;
-    private int maxFieldSize;
-    private int maxRows;
     private int queryTimeout;
 
     public StatementProps() {
         skip = true;
     }
 
-    public StatementProps(FetchDirection fetchDirection, int fetchSize, int maxFieldSize, int maxRows, int queryTimeout) {
-        this.fetchDirection = fetchDirection;
-        this.fetchSize = fetchSize;
-        this.maxFieldSize = maxFieldSize;
-        this.maxRows = maxRows;
+    public StatementProps(int queryTimeout) {
         this.queryTimeout = queryTimeout;
-
     }
 
-    public CallableStatement apply(CallableStatement input) {
-        if (skip){
-            return input;
-        }else{
-            // TODO apply here before return
-            return input;
+    public Void apply(CallableStatement input, Object ... args) {
+        if (!skip){
+            log.debug("applying {} on input ResultSet", this);
+            try {
+                input.setQueryTimeout(this.queryTimeout);
+            } catch (SQLException e) {
+                throw new CallException(e);
+            }
         }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "StatementProps{" +
+                "skip=" + skip +
+                ", queryTimeout=" + queryTimeout +
+                '}';
     }
 }

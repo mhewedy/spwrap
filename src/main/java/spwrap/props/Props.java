@@ -1,10 +1,6 @@
 package spwrap.props;
 
-public interface Props<T> {
+public interface Props<T, U> {
 
-    /**
-     * @param input Object to apply props on
-     * @return same input object, the return value here supplied for convenience
-     */
-    T apply(T input);
+    U apply(T input, Object ... args);
 }

@@ -1,20 +1,19 @@
 package spwrap;
 
-import static java.sql.Types.*;
-import static spwrap.annotations.Props.*;
-import static spwrap.annotations.Props.FetchDirection.FETCH_REVERSE;
-import static spwrap.annotations.Props.ResultSetHoldability.DEFAULT_HOLDABILITY;
-import static spwrap.annotations.Props.TransactionIsolation.DEFAULT_ISOLATION;
-
-import java.sql.Date;
-import java.util.List;
-
 import spwrap.CustomMappers.CustomParamsMapper;
 import spwrap.CustomMappers.CustomResultSetMapper;
 import spwrap.CustomMappers.DateMapper;
 import spwrap.CustomMappers.TableNamesMapper;
 import spwrap.Customer.NotMappedCustomer;
 import spwrap.annotations.*;
+
+import java.sql.Date;
+import java.util.List;
+
+import static java.sql.Types.INTEGER;
+import static java.sql.Types.VARCHAR;
+import static spwrap.annotations.Props.Connection;
+import static spwrap.annotations.Props.TransactionIsolation.READ_COMMITTED;
 
 public interface CustomerDAO {
 
@@ -110,7 +109,7 @@ public interface CustomerDAO {
     @StoredProc
     void testProps1();  // throws exception @Connection is already defined
 
-    @Connection(readOnly = true)
+    @Connection(transactionIsolation = READ_COMMITTED)
     @StoredProc("list_customers")
     List<Customer> testProps2();
 }

@@ -212,7 +212,8 @@ public class Caller {
 
             backupConProps = ConnectionProps.from(con);
             connectionProps.apply(con);
-            call = statementProps.apply(con.prepareCall(callableStmt));
+            call = resultSetProps.apply(con, callableStmt);
+            statementProps.apply(call);
 
             int startOfOutParamCnt = inParams != null ? inParams.size() : 0;
 
@@ -247,7 +248,7 @@ public class Caller {
             if (hasResult && rsMapper != null) {
                 list = new ArrayList<T>();
                 log.debug("reading result set");
-                rs = resultSetProps.apply(call.getResultSet());
+                rs = call.getResultSet();
                 int rowIndex = 0;
                 while (rs.next()) {
                     list.add(rsMapper.map(Result.of(rs, null, -1, rowIndex++)));
