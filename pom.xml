@@ -9,6 +9,13 @@
     <description>Simple Stored Procedure call wrapper</description>
     <url>https://github.com/mhewedy/spwrap</url>
 
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <developers>
         <developer>
             <name>Muhammad Hewedy(mhewedy)</name>
@@ -18,11 +25,11 @@
         </developer>
     </developers>
 
-    <!--<scm>-->
-        <!--<connection></connection>-->
-        <!--<developerConnection></developerConnection>-->
-        <!--<url></url>-->
-    <!--</scm>-->
+    <scm>
+        <connection>scm:git:git@github.com:mhewedy/spwrap.git</connection>
+        <developerConnection>scm:git:git@github.com:mhewedy/spwrap.git</developerConnection>
+        <url>git@github.com:mhewedy/spwrap.git</url>
+    </scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,14 +37,6 @@
 		<maven.compiler.source>1.5</maven.compiler.source>
 		<maven.compiler.target>1.5</maven.compiler.target>
 	</properties>
-
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
 	<dependencies>
 		<dependency>
@@ -174,6 +173,32 @@
 					</execution>
 				</executions>
 			</plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
 
 		</plugins>
 	</build>
