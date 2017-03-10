@@ -5,6 +5,8 @@ compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`) [Teste
 
 [![Build Status](https://travis-ci.org/mhewedy/spwrap.svg?branch=master)](https://travis-ci.org/mhewedy/spwrap)
 [![Coverage Status](https://codecov.io/github/mhewedy/spwrap/coverage.svg?branch=master)](https://codecov.io/github/mhewedy/spwrap?branch=master)
+[![Jitpack Status](https://jitpack.io/v/mhewedy/spwrap.svg)](https://jitpack.io/v/mhewedy/spwrap)
+(https://jitpack.io/v/mhewedy/spwrap.svg)
 
 ## Step 0: Create Stored Procedures:
 
