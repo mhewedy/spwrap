@@ -31,19 +31,19 @@ class PropsBinder implements Binder<PropsWrapper> {
         }
 
         if (connectionAnnot != null && method.isAnnotationPresent(spwrap.annotations.Props.Connection.class)) {
-            throw new CallException("@Connection is already defined");
+            throw new CallException("Connection Props is already supplied");
         } else {
             connectionAnnot = method.getAnnotation(spwrap.annotations.Props.Connection.class);
         }
 
         if (statementAnnot != null && method.isAnnotationPresent(spwrap.annotations.Props.Statement.class)) {
-            throw new CallException("@Statement is already defined");
+            throw new CallException("@Statement Props is already supplied");
         } else {
             statementAnnot = method.getAnnotation(spwrap.annotations.Props.Statement.class);
         }
 
         if (resultSetAnnot != null && method.isAnnotationPresent(spwrap.annotations.Props.ResultSet.class)) {
-            throw new CallException("@ResultSet is already defined");
+            throw new CallException("ResultSet Props is already supplied");
         } else {
             resultSetAnnot = method.getAnnotation(spwrap.annotations.Props.ResultSet.class);
         }
