@@ -529,7 +529,7 @@ class DAOIntTest extends Specification{
             customerDao.testProps1();
         then:
             def ex = thrown(CallException)
-            ex.message.contains('@Connection')
+            ex.message.contains('Connection')
         cleanup:
             _cleanup(testDB)
         where:
