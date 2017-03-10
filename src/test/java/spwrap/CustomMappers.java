@@ -43,6 +43,7 @@ public class CustomMappers {
 		}
 	}
 
+	// Use @AutoMapper instead when you have a result set of 1 column
 	public static class TableNamesMapper implements ResultSetMapper<String> {
 
 		public String map(Result<?> result) {

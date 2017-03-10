@@ -12,6 +12,7 @@ import java.util.List;
 
 import static java.sql.Types.INTEGER;
 import static java.sql.Types.VARCHAR;
+import static spwrap.annotations.Props.*;
 import static spwrap.annotations.Props.Connection;
 import static spwrap.annotations.Props.TransactionIsolation.READ_COMMITTED;
 
@@ -84,7 +85,7 @@ public interface CustomerDAO {
 
 	@Scalar(VARCHAR)
 	@StoredProc("list_tables")
-	List<String> listTables2(); // Invalid will throw exception @scalar supported with output parameters only
+	List<String> listTables2(); // Invalid will throw exception; @scalar supported with output parameters only
 
     @AutoMapper
     @StoredProc("list_tables")
@@ -112,4 +113,10 @@ public interface CustomerDAO {
     @Connection(transactionIsolation = READ_COMMITTED)
     @StoredProc("list_customers")
     List<Customer> testProps2();
+
+
+    @ResultSet(maxRows = 3)
+    @AutoMapper
+    @StoredProc("list_tables")
+    List<String> listFirst3Tables();
 }

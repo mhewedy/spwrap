@@ -548,4 +548,16 @@ class DAOIntTest extends Specification{
             testDB << [TestDB.HSQL, TestDB.MYSQL]
     }
 
+    def "#testDB : Fetch only 3 rows" (){
+        when:
+            _setup(testDB)
+            def listTables = customerDao.listFirst3Tables()
+        then:
+            listTables.size() == 3
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.MYSQL] // TestDB.HSQL ignores the fetchSize
+    }
+
 }
