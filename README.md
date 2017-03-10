@@ -139,13 +139,10 @@ Maven:
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>0.0.16</version>
+	<version>{Get latest version from maven repo [here](https://repo1.maven.org/maven2/com/github/mhewedy/spwrap/)}</version>
 </dependency>
 ```
-Gradle:
-```gradle
-compile 'com.github.mhewedy:spwrap:0.0.16'
-```
+[Javadoc](http://www.javadoc.io/doc/com.github.mhewedy/spwrap/)
 
 ## Additional staff:
 
