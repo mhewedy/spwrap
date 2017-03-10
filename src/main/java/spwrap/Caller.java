@@ -29,8 +29,7 @@ public class Caller {
 
     private static Logger log = LoggerFactory.getLogger(Caller.class);
 
-    private static final int JDBC_PARAM_OFFSIT = 1;
-    private static final int NUM_OF_STATUS_FIELDS = 2;
+    private static final int JDBC_PARAM_OFFSIT = 1; // JDBC starts at index 1
 
     private Config config = new Config();
 
@@ -198,8 +197,7 @@ public class Caller {
         Tuple<T, U> result = null;
         ConnectionProps backupConProps = null;
 
-        final String callableStmt = Util.createCallableString(procName, (config.useStatusFields() ? NUM_OF_STATUS_FIELDS : 0)
-                        + (inParams != null ? inParams.size() : 0) + (outParamsTypes != null ? outParamsTypes.size() : 0));
+        final String callString = Util.createCallableString(procName, config, inParams, outParamsTypes);
         try {
 
             if (dataSource != null) {
@@ -212,10 +210,11 @@ public class Caller {
 
             backupConProps = ConnectionProps.from(con);
             connectionProps.apply(con);
-            call = resultSetProps.apply(con, callableStmt);
+            call = resultSetProps.apply(con, callString);
             statementProps.apply(call);
 
-            int startOfOutParamCnt = inParams != null ? inParams.size() : 0;
+            int outParamIndex = inParams != null ? inParams.size() : 0;
+            int resultCodeIndex = (inParams != null ? inParams.size() : 0) + (outParamsTypes != null ? outParamsTypes.size() : 0) + JDBC_PARAM_OFFSIT;
 
             if (inParams != null) {
                 log.debug("setting input parameters");
@@ -228,13 +227,11 @@ public class Caller {
             if (outParamsTypes != null) {
                 log.debug("registering output parameters");
                 for (int i = 0; i < outParamsTypes.size(); i++) {
-                    call.registerOutParameter(i + startOfOutParamCnt + JDBC_PARAM_OFFSIT,
+                    call.registerOutParameter(i + outParamIndex + JDBC_PARAM_OFFSIT,
                             outParamsTypes.get(i).sqlType);
                 }
             }
 
-            int resultCodeIndex = (inParams != null ? inParams.size() : 0)
-                    + (outParamsTypes != null ? outParamsTypes.size() : 0) + 1;
             if (config.useStatusFields()) {
                 log.debug("registering status parameters");
                 call.registerOutParameter(resultCodeIndex, Types.BOOLEAN); // RESULT_CODE
@@ -259,7 +256,7 @@ public class Caller {
             if (outParamsTypes != null) {
                 log.debug("reading output parameters");
                 for (ParamType ignored : outParamsTypes) {
-                    object = paramMapper.map(Result.of(null, call, startOfOutParamCnt, -1));
+                    object = paramMapper.map(Result.of(null, call, outParamIndex, -1));
                 }
             }
 
@@ -277,10 +274,10 @@ public class Caller {
         } catch (CallException ex) {
             throw ex;
         } catch (Exception ex) {
-            log.error("[" + callableStmt + "]", ex.getMessage());
+            log.error("[" + callString + "]", ex.getMessage());
             throw new CallException(ex.getMessage(), ex);
         } finally {
-            logCall(startTime, callableStmt, inParams, outParamsTypes, result);
+            logCall(startTime, callString, inParams, outParamsTypes, result);
             if (backupConProps != null ) backupConProps.apply(con);
             Util.closeDBObjects(con, call, rs);
         }

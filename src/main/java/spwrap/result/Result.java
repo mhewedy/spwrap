@@ -37,7 +37,7 @@ import java.sql.*;
  */
 public abstract class Result<T> {
 
-    protected T wrappedObject;
+    T wrappedObject;
 
     protected Result(T wrappedObject) {
         this.wrappedObject = wrappedObject;
@@ -47,13 +47,13 @@ public abstract class Result<T> {
         return this.wrappedObject;
     }
 
-    public static <U> Result<?> of(ResultSet rs, CallableStatement cstmt, int outParamStartIndex, int rowIndex) {
+    public static <U> Result<?> of(ResultSet rs, CallableStatement cstmt, int outParamIndex, int rowIndex) {
         if (rs != null && cstmt != null) {
             throw new CallException("rs and cstmt both cannot be non-null");
         } else if (rs != null) {
             return new ResultSetWrapper(rs, rowIndex);
         } else if (cstmt != null) {
-            return new CallableStatementWrapper(cstmt, outParamStartIndex);
+            return new CallableStatementWrapper(cstmt, outParamIndex);
         } else {
             throw new CallException("rs and cstmt both cannot be null");
         }

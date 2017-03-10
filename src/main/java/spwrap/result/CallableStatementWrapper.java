@@ -8,17 +8,17 @@ import java.sql.*;
 
 final class CallableStatementWrapper extends Result<CallableStatement> {
 
-    private int outSIndex;
+    private int outParamIndex;
 
-    CallableStatementWrapper(CallableStatement cstmt, int outParamStartIndex) {
+    CallableStatementWrapper(CallableStatement cstmt, int outParamIndex) {
         super(cstmt);
-        this.outSIndex = outParamStartIndex;
+        this.outParamIndex = outParamIndex;
     }
 
     @Override
     public String getString(int columnIndex) {
         try {
-            return wrappedObject.getString(outSIndex + columnIndex);
+            return wrappedObject.getString(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -27,7 +27,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public boolean getBoolean(int columnIndex) {
         try {
-            return wrappedObject.getBoolean(outSIndex + columnIndex);
+            return wrappedObject.getBoolean(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -36,7 +36,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public byte getByte(int columnIndex) {
         try {
-            return wrappedObject.getByte(outSIndex + columnIndex);
+            return wrappedObject.getByte(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -45,7 +45,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public short getShort(int columnIndex) {
         try {
-            return wrappedObject.getShort(outSIndex + columnIndex);
+            return wrappedObject.getShort(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -54,7 +54,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public int getInt(int columnIndex) {
         try {
-            return wrappedObject.getInt(outSIndex + columnIndex);
+            return wrappedObject.getInt(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -63,7 +63,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public long getLong(int columnIndex) {
         try {
-            return wrappedObject.getLong(outSIndex + columnIndex);
+            return wrappedObject.getLong(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -72,7 +72,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public float getFloat(int columnIndex) {
         try {
-            return wrappedObject.getFloat(outSIndex + columnIndex);
+            return wrappedObject.getFloat(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -81,7 +81,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public double getDouble(int columnIndex) {
         try {
-            return wrappedObject.getDouble(outSIndex + columnIndex);
+            return wrappedObject.getDouble(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -90,7 +90,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public byte[] getBytes(int columnIndex) {
         try {
-            return wrappedObject.getBytes(outSIndex + columnIndex);
+            return wrappedObject.getBytes(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -99,7 +99,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public Date getDate(int columnIndex) {
         try {
-            return wrappedObject.getDate(outSIndex + columnIndex);
+            return wrappedObject.getDate(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -108,7 +108,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public Time getTime(int columnIndex) {
         try {
-            return wrappedObject.getTime(outSIndex + columnIndex);
+            return wrappedObject.getTime(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -117,7 +117,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public Timestamp getTimestamp(int columnIndex) {
         try {
-            return wrappedObject.getTimestamp(outSIndex + columnIndex);
+            return wrappedObject.getTimestamp(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -126,7 +126,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public Object getObject(int columnIndex) {
         try {
-            return wrappedObject.getObject(outSIndex + columnIndex);
+            return wrappedObject.getObject(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -135,7 +135,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public BigDecimal getBigDecimal(int columnIndex) {
         try {
-            return wrappedObject.getBigDecimal(outSIndex + columnIndex);
+            return wrappedObject.getBigDecimal(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -144,7 +144,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public Ref getRef(int columnIndex) {
         try {
-            return wrappedObject.getRef(outSIndex + columnIndex);
+            return wrappedObject.getRef(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -153,7 +153,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public Blob getBlob(int columnIndex) {
         try {
-            return wrappedObject.getBlob(outSIndex + columnIndex);
+            return wrappedObject.getBlob(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -162,7 +162,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public Clob getClob(int columnIndex) {
         try {
-            return wrappedObject.getClob(outSIndex + columnIndex);
+            return wrappedObject.getClob(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -171,7 +171,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public Array getArray(int columnIndex) {
         try {
-            return wrappedObject.getArray(outSIndex + columnIndex);
+            return wrappedObject.getArray(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -180,7 +180,7 @@ final class CallableStatementWrapper extends Result<CallableStatement> {
     @Override
     public URL getURL(int columnIndex) {
         try {
-            return wrappedObject.getURL(outSIndex + columnIndex);
+            return wrappedObject.getURL(outParamIndex + columnIndex);
         } catch (SQLException e) {
             throw new CallException(e);
         }

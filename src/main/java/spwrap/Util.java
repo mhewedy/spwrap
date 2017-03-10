@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class Util {
 
     private static Logger log = LoggerFactory.getLogger(Util.class);
-
+    private static final int NUM_OF_STATUS_FIELDS = 2;
 
     static String listToString(List<?> list) {
         StringBuilder ret = new StringBuilder();
@@ -28,7 +28,12 @@ public class Util {
         return ret.toString();
     }
 
-    static String createCallableString(String procName, int paramsCount) {
+    static String createCallableString(String procName, Config config, List<Caller.Param> inParams, List<Caller.ParamType> outParamsTypes) {
+        return createCallableString(procName, (config.useStatusFields() ? NUM_OF_STATUS_FIELDS : 0)
+                + (inParams != null ? inParams.size() : 0) + (outParamsTypes != null ? outParamsTypes.size() : 0));
+    }
+
+    private static String createCallableString(String procName, int paramsCount) {
         StringBuilder call = new StringBuilder();
 
         call.append("{call ").append(procName).append("(");
