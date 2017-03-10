@@ -44,7 +44,7 @@ public class ResultSetProps implements Props<Connection, CallableStatement> {
             CallableStatement call;
 
             if (!skip) {
-                log.debug("applying {} on input ResultSet", this);
+                log.debug("applying {} on input Connection", this);
 
                 if (holdability != ResultSetHoldability.DEFAULT) {
                     call = input.prepareCall((String) args[0], type.getValue(), concurrency.getValue());

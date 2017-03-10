@@ -28,7 +28,7 @@ public class StatementProps implements Props<CallableStatement, Void> {
 
     public Void apply(CallableStatement input, Object ... args) {
         if (!skip){
-            log.debug("applying {} on input ResultSet", this);
+            log.debug("applying {} on input CallableStatement", this);
             try {
                 input.setQueryTimeout(this.queryTimeout);
             } catch (SQLException e) {
