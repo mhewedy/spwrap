@@ -5,7 +5,6 @@ compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`) [Teste
 
 [![Build Status](https://travis-ci.org/mhewedy/spwrap.svg?branch=master)](https://travis-ci.org/mhewedy/spwrap)
 [![Coverage Status](https://codecov.io/github/mhewedy/spwrap/coverage.svg?branch=master)](https://codecov.io/github/mhewedy/spwrap?branch=master)
-[![Jitpack Status](https://jitpack.io/v/mhewedy/spwrap.svg)](https://jitpack.io/v/mhewedy/spwrap)
 
 ## Step 0: Create Stored Procedures:
 
@@ -135,15 +134,7 @@ Assert.assertEquals("Abdullah", customer.firstName());
 For full example and more, see Test cases and [wiki](https://github.com/mhewedy/spwrap/wiki).
 
 ## installation
- ```xml
-<repositories>
-	<repository>
-		<id>jitpack.io</id>
-		<url>https://jitpack.io</url>
-	</repository>
-</repositories>
-```
-And in the dependecies section add:
+Maven:
 ```xml
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
@@ -151,9 +142,10 @@ And in the dependecies section add:
 	<version>0.0.16</version>
 </dependency>
 ```
-
-[For other build tools](https://jitpack.io/v/mhewedy/spwrap) |
-[javadoc] (https://jitpack.io/com/github/mhewedy/spwrap/0.0.16/javadoc/)
+Gradle:
+```gradle
+compile 'com.github.mhewedy:spwrap:0.0.16'
+```
 
 ## Additional staff:
 
