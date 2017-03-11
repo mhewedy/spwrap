@@ -15,7 +15,7 @@ class ConnectionPropsTest extends Specification {
 
     def "test calling ConnectionProps.apply and throw exception when setReadOnly throws Exception" (){
         given:
-            def ConnectionProps props = new ConnectionProps(true, DEFAULT)
+            def props = new ConnectionProps(true, DEFAULT)
             def connectionMock = Mock(Connection)
         when:
             connectionMock.setReadOnly(_ as Boolean) >> {throw new SQLException()}

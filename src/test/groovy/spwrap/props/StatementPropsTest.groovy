@@ -13,7 +13,7 @@ class StatementPropsTest extends Specification {
 
     def "test calling StatementProps.apply and throw exception when setReadOnly throws Exception" (){
         given:
-            def StatementProps props = new StatementProps(10)
+            def props = new StatementProps(10)
             def stmtMock = Mock(CallableStatement)
         when:
             stmtMock.setQueryTimeout(_ as Integer) >> {throw new SQLException()}
@@ -24,7 +24,7 @@ class StatementPropsTest extends Specification {
 
     def "test calling creating StatementProps then call toString will print the proper property values" (){
         given:
-            def StatementProps props = new StatementProps(value)
+            def props = new StatementProps(value)
         when:
             def toString = props.toString()
         then:
