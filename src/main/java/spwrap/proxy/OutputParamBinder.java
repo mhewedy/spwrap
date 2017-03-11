@@ -70,7 +70,7 @@ class OutputParamBinder extends MapperBinder<OutputParam> {
         OutputParam outputParam = new OutputParam();
         try {
             TypedOutputParamMapper<?> instance = clazz.newInstance();
-            outputParam.outputParamMapper = clazz.newInstance();
+            outputParam.outputParamMapper = instance;
             outputParam.outParamTypes = getOutParamTypes(instance);
         } catch (Exception e) {
             throw new CallException("cannot create outParams Mapper", e);

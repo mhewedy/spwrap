@@ -255,9 +255,7 @@ public class Caller {
             U object = null;
             if (outParamsTypes != null) {
                 log.debug("reading output parameters");
-                for (ParamType ignored : outParamsTypes) {
-                    object = paramMapper.map(Result.of(null, call, outParamIndex, -1));
-                }
+                object = paramMapper.map(Result.of(null, call, outParamIndex, -1));
             }
 
             if (config.useStatusFields()) {
