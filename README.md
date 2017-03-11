@@ -1,7 +1,7 @@
 # spwrap
 Stored Procedure caller; simply execute stored procedure from java code.
 
-compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`) [Tested on jdk >= 1.6)
+compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`) [Tests runs on jdk `1.6`, `1.7` and `1.8`)
 
 [![Build Status](https://travis-ci.org/mhewedy/spwrap.svg?branch=master)](https://travis-ci.org/mhewedy/spwrap)
 [![Coverage Status](https://codecov.io/github/mhewedy/spwrap/coverage.svg?branch=master)](https://codecov.io/github/mhewedy/spwrap?branch=master)
