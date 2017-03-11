@@ -1,15 +1,13 @@
 language: java
 sudo: false
-
+script: "mvn --settings .travis/settings.xml -Dgpg.skip cobertura:cobertura"
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 before_install:
   - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --batch --import; fi
   - if [ ! -z "$GPG_OWNERTRUST" ]; then echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --batch --import-ownertrust; fi
-
-script: "mvn --settings .travis/settings.xml cobertura:cobertura -Dgpg.skip -Dmaven.javadoc.skip=true -B -V"
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-
+install:
+  - mvn --settings .travis/settings.xml clean install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 deploy:
   -
     provider: script
