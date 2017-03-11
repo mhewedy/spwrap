@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 class DbUtilsResultSetAutoMapper<T> extends ResultSetAutoMapper<T> {
 
-    private final BeanProcessor beanProcessor = new GenerousBeanProcessor();
+    private BeanProcessor beanProcessor = new GenerousBeanProcessor();
 
     DbUtilsResultSetAutoMapper(Class<?> type) {
         super(type);

@@ -34,7 +34,7 @@ class ConnectionPropsTest extends Specification {
             thrown(CallException)
     }
 
-    def "test calling ConnectionProps.from and on connection isReadOnly return #readOnlyValue" (){
+    def "test calling ConnectionProps.from and connection isReadOnly return #readOnlyValue" (){
         given:
             def connectionMock = Mock(Connection)
         when:
@@ -42,6 +42,18 @@ class ConnectionPropsTest extends Specification {
             ConnectionProps props = ConnectionProps.from(connectionMock)
         then:
             props.readOnly == readOnlyValue
+        where:
+            readOnlyValue << [true, false]
+    }
+
+    def "test calling ConnectionProps.from and connection isReadOnly return #readOnlyValue, check toString" (){
+        given:
+            def connectionMock = Mock(Connection)
+        when:
+            connectionMock.isReadOnly() >> {readOnlyValue}
+            ConnectionProps props = ConnectionProps.from(connectionMock)
+        then:
+            props.toString().contains("readOnly=" + readOnlyValue)
         where:
             readOnlyValue << [true, false]
     }

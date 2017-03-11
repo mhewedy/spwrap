@@ -1,8 +1,6 @@
 package spwrap.optional.automappers
 
 import spock.lang.Specification
-import spwrap.result.Result
-
 
 class ResultSetResultSetAutoMapperTest extends Specification {
 
