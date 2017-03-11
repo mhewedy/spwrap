@@ -6,12 +6,12 @@ after_success:
 #  - oraclejdk8
 #  - oraclejdk7
 #  - openjdk7
-#install:
-#  - mvn --settings .travis/settings.xml clean install -Dgpg.skip -B -V
-#  - mvn --settings .travis/settings.xml clean install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
-before_deploy:
+before_install:
   - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --batch --import; fi
   - if [ ! -z "$GPG_OWNERTRUST" ]; then echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --batch --import-ownertrust; fi
+install:
+  - mvn --settings .travis/settings.xml clean install -Dgpg.skip -B -V
+#  - mvn --settings .travis/settings.xml clean install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 deploy:
   -
     provider: script
