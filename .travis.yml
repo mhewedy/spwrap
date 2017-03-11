@@ -1,17 +1,15 @@
 language: java
 sudo: false
-script: "mvn --settings .travis/settings.xml cobertura:cobertura"
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-#jdk:
-#  - oraclejdk8
-#  - oraclejdk7
-#  - openjdk7
-before_install:
+
+before_script:
   - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --batch --import; fi
   - if [ ! -z "$GPG_OWNERTRUST" ]; then echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --batch --import-ownertrust; fi
-install:
-  - mvn --settings .travis/settings.xml clean install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+
+script: "mvn --settings .travis/settings.xml cobertura:cobertura -Dgpg.skip -Dmaven.javadoc.skip=true -B -V"
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 deploy:
   -
     provider: script
@@ -20,4 +18,3 @@ deploy:
     on:
       repo: mhewedy/spwrap
       branch: master
-#      jdk: oraclejdk8
