@@ -32,14 +32,14 @@ CREATE PROCEDURE get_customer(IN custId INT, OUT firstname VARCHAR(50), OUT last
 
 CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
    	BEGIN
-    	SELECT id, first_name firstname, last_name lastname FROM CUSTOMERS;
+    	SELECT id, first_name firstname, last_name lastname FROM customers;
      	SET code = 0;
   	END
 ;;
 
 CREATE PROCEDURE list_customers_with_date(OUT db_date DATE, OUT code SMALLINT, OUT msg VARCHAR(50))
    	BEGIN
-    	SELECT * FROM CUSTOMERS;
+    	SELECT * FROM customers;
      	SET db_date = CURRENT_DATE;
      	SET code = 0;
   	END
