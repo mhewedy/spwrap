@@ -139,7 +139,7 @@ Maven:
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>Get latest version from https://repo1.maven.org/maven2/com/github/mhewedy/spwrap/</version>
+	<version>Get latest version from http://search.maven.org/#search%7Cga%7C1%7Cspwrap</version>
 </dependency>
 ```
 [Javadoc](http://www.javadoc.io/doc/com.github.mhewedy/spwrap/)
