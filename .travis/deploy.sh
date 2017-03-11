@@ -7,4 +7,3 @@ else
 fi
 
 mvn clean clean deploy --settings .travis/settings.xml -DskipTests=true -B -U
-#mvn clean clean deploy --settings .travis/settings.xml -B -U
