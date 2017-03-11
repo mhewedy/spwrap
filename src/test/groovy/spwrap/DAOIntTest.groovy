@@ -560,4 +560,31 @@ class DAOIntTest extends Specification{
             testDB << [TestDB.MYSQL] // TestDB.HSQL ignores the fetchSize
     }
 
+    def "#testDB : test @Prop3" (){
+        when:
+            _setup(testDB)
+            customerDao.testProps3();
+        then:
+            def ex = thrown(CallException)
+            ex.message.contains('Statement')
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
+    }
+
+    def "#testDB : test @Props4" (){
+        when:
+            _setup(testDB)
+            customerDao.testProps4();
+        then:
+            def ex = thrown(CallException)
+            ex.message.contains('ResultSet')
+        cleanup:
+            _cleanup(testDB)
+        where:
+            testDB << [TestDB.HSQL, TestDB.MYSQL]
+    }
+
+
 }

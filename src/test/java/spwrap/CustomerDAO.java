@@ -110,10 +110,19 @@ public interface CustomerDAO {
     @StoredProc
     void testProps1();  // throws exception @Connection is already defined
 
+    @Props(statement = @Statement(queryTimeout = 10))
+    @Statement(queryTimeout = 10)
+    @StoredProc
+    void testProps3();  // throws exception @Statement is already defined
+
+    @Props(resultSet = @ResultSet(fetchSize = 100))
+    @ResultSet(fetchSize = 100)
+    @StoredProc
+    void testProps4();  // throws exception @Statement is already defined
+
     @Connection(transactionIsolation = READ_COMMITTED)
     @StoredProc("list_customers")
     List<Customer> testProps2();
-
 
     @ResultSet(maxRows = 3)
     @AutoMapper
