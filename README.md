@@ -134,14 +134,19 @@ Assert.assertEquals("Abdullah", customer.firstName());
 For full example and more, see Test cases and [wiki](https://github.com/mhewedy/spwrap/wiki).
 
 ## installation
+Gradle:
+```gradle
+compile group: 'com.github.mhewedy', name: 'spwrap', version: '{version number}'
+```
 Maven:
 ```xml
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>Get latest version from http://search.maven.org/#search%7Cga%7C1%7Cspwrap</version>
+	<version>{version number}</version>
 </dependency>
 ```
+[version number](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.mhewedy%22%20AND%20a%3A%22spwrap%22) | 
 [Javadoc](http://www.javadoc.io/doc/com.github.mhewedy/spwrap/)
 
 ## Additional staff:
