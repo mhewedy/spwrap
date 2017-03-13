@@ -13,7 +13,7 @@ CREATE PROCEDURE create_customer0
     @msg VARCHAR(50) OUTPUT
 AS
    	BEGIN
-    	INSERT INTO CUSTOMERS VALUES (@firstname, @lastname);
+    	INSERT INTO customers VALUES (@firstname, @lastname);
     	SET @code = 0;
 	END
 ;;
@@ -77,7 +77,7 @@ CREATE PROCEDURE list_tables
     @msg VARCHAR(50) OUTPUT
 AS
 	BEGIN
-  		SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES;
+  		SELECT name FROM sys.objects;
      	SET @code = 0;
    	END
 ;;
@@ -97,6 +97,6 @@ CREATE PROCEDURE get_first_table_name_no_resultfields
     @tableName VARCHAR(50) OUTPUT
 AS
   	BEGIN
-  		SELECT TOP 1 @tableName = TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES;
+  		SELECT TOP 1 @tableName = name FROM sys.objects;
    	END
 ;;

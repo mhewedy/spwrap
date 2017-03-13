@@ -1,12 +1,9 @@
 package spwrap
 
-import ch.vorburger.mariadb4j.DB
-import ch.vorburger.mariadb4j.DBConfigurationBuilder
-import testhelpers.TestDB
-import testhelpers.TestUtils
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
+import testhelpers.TestDB
+import testhelpers.TestUtils
 
 import static java.sql.Types.INTEGER
 import static java.sql.Types.VARCHAR
@@ -18,16 +15,7 @@ import static spwrap.Caller.params
 @Unroll
 class CallerIntTest extends Specification{
 
-    @Shared def mysqlDbRef;
-
     Caller caller
-
-    def setupSpec() {
-        def dbConfig = DBConfigurationBuilder.newBuilder()
-        dbConfig.setPort(3307)
-        mysqlDbRef = DB.newEmbeddedDB(dbConfig.build())
-        mysqlDbRef.start();
-    }
 
     def _setup(db){
         TestUtils.install(db)
@@ -36,10 +24,6 @@ class CallerIntTest extends Specification{
 
     def _cleanup(db){
         TestUtils.rollback(db)
-    }
-
-    def cleanupSpec() {
-        mysqlDbRef.stop()
     }
 
 	def "#testDB : create customer using the caller interface"(){
@@ -55,9 +39,10 @@ class CallerIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | expectedCustId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB           | expectedCustId
+            TestDB.HSQL      | 0
+            TestDB.MYSQL     | 1
+            TestDB.SQLServer | 1
 	}
 
 	def "#testDB : create customer using the caller interface and Persistable"(){
@@ -72,8 +57,9 @@ class CallerIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | expectedCustId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB           | expectedCustId
+            TestDB.HSQL      | 0
+            TestDB.MYSQL     | 1
+            TestDB.SQLServer | 1
 	}
 }

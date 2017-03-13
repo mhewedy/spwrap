@@ -1,14 +1,14 @@
 package testhelpers;
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import net.sourceforge.jtds.jdbcx.JtdsDataSource;
 
 import javax.sql.DataSource;
 
 class SQLServerInfo implements DBInfo {
 
     public DataSource dataSource() {
-        SQLServerDataSource dataSource = new SQLServerDataSource();
-        dataSource.setURL("jdbc:sqlserver://localhost:1433;DatabaseName=model");
+        JtdsDataSource dataSource = new JtdsDataSource();
+        dataSource.setServerName("localhost");
         dataSource.setUser("sa");
         dataSource.setPassword("yourStrong(!)Password");
         return dataSource;

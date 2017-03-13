@@ -58,7 +58,7 @@ public class CustomMappers {
         }
 
         public Customer map(Result<?> result) {
-            return new Customer(null, result.getString("firstname"), result.getString("lastname"));
+            return new Customer(null, result.getString(1), result.getString(2));
         }
     }
 

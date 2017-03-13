@@ -1,12 +1,9 @@
 package spwrap
 
-import ch.vorburger.mariadb4j.DB
-import ch.vorburger.mariadb4j.DBConfigurationBuilder
-import testhelpers.TestDB
-import testhelpers.TestUtils
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
+import testhelpers.TestDB
+import testhelpers.TestUtils
 
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -15,24 +12,11 @@ import java.util.concurrent.Executors
 @Unroll
 class DAOConcurrentIntTest extends Specification{
 
-    @Shared def mysqlDbRef;
-
 	CustomerDAO customerDao
-
-    def setupSpec() {
-        def dbConfig = DBConfigurationBuilder.newBuilder()
-        dbConfig.setPort(3307)
-        mysqlDbRef = DB.newEmbeddedDB(dbConfig.build())
-        mysqlDbRef.start();
-    }
 
     def _setup(db) {
         TestUtils.install(db)
         customerDao = new DAO.Builder(db.dbInfo.dataSource()).build().create(CustomerDAO.class)
-    }
-
-    def cleanupSpec() {
-        mysqlDbRef.stop()
     }
 
 	def _cleanup(db) {
@@ -82,9 +66,10 @@ class DAOConcurrentIntTest extends Specification{
             pool.shutdown()
             _cleanup(testDB)
         where:
-            testDB       | maxId
-            TestDB.HSQL  | 7
-            TestDB.MYSQL | 8
+            testDB           | maxId
+            TestDB.HSQL      | 7
+            TestDB.MYSQL     | 8
+            TestDB.SQLServer | 8
     }
 
     private static def getCallableForCreateCustomer(customerDao, firstName, lastName){

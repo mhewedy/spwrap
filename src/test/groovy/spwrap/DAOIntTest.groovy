@@ -1,14 +1,13 @@
 package spwrap
 
-import ch.vorburger.mariadb4j.DB
-import ch.vorburger.mariadb4j.DBConfigurationBuilder
+import spock.lang.Specification
+import spock.lang.Unroll
+import spwrap.proxy.DAOInvocationHandler
 import testhelpers.TestDB
 import testhelpers.TestUtils
-import spwrap.proxy.DAOInvocationHandler
 import uk.org.lidalia.slf4jtest.TestLoggerFactory
 
-import java.sql.*
-import spock.lang.*
+import java.sql.SQLException
 
 import static uk.org.lidalia.slf4jext.Level.WARN
 
@@ -16,24 +15,11 @@ import static uk.org.lidalia.slf4jext.Level.WARN
 @Unroll
 class DAOIntTest extends Specification{
 
-    @Shared def mysqlDbRef;
-
 	CustomerDAO customerDao
-
-    def setupSpec() {
-        def dbConfig = DBConfigurationBuilder.newBuilder()
-        dbConfig.setPort(3307)
-        mysqlDbRef = DB.newEmbeddedDB(dbConfig.build())
-        mysqlDbRef.start();
-    }
 
     def _setup(db) {
         TestUtils.install(db)
         customerDao = new DAO.Builder(db.dbInfo.dataSource()).build().create(CustomerDAO.class)
-    }
-
-    def cleanupSpec() {
-        mysqlDbRef.stop()
     }
 
 	def _cleanup(db) {
@@ -111,9 +97,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | custId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB              | custId
+            TestDB.HSQL         | 0
+            TestDB.MYSQL        | 1
+            TestDB.SQLServer    | 1
 	}
 	
 	
@@ -131,9 +118,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | custId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB              | custId
+            TestDB.HSQL         | 0
+            TestDB.MYSQL        | 1
+            TestDB.SQLServer    | 1
 	}
 	
 	
@@ -151,9 +139,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | custId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB              | custId
+            TestDB.HSQL         | 0
+            TestDB.MYSQL        | 1
+            TestDB.SQLServer    | 1
 	}
 	
 	
@@ -170,9 +159,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | custId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB              | custId
+            TestDB.HSQL         | 0
+            TestDB.MYSQL        | 1
+            TestDB.SQLServer    | 1
 	}
 	
 	def "#testDB : only 2 explicit Mappers are allowed"(){
@@ -188,9 +178,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | custId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB              | custId
+            TestDB.HSQL         | 0
+            TestDB.MYSQL        | 1
+            TestDB.SQLServer    | 1
 	}
 	
 	
@@ -207,9 +198,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | custId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB              | custId
+            TestDB.HSQL         | 0
+            TestDB.MYSQL        | 1
+            TestDB.SQLServer    | 1
 	}
 	
 	def "#testDB : using implicit ResultSet Mapper to map result set"(){
@@ -237,7 +229,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 	
 	def "#testDB : using explicit ResultSet Mapper to map result set"(){
@@ -265,7 +257,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 	
 	
@@ -296,7 +288,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 	
 	def "#testDB : StoredProc annotation will use method name as stored procedure name if no one is specified" (){
@@ -326,7 +318,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 	
 	def "#testDB : stored procedure will return error code from database" (){
@@ -340,7 +332,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 	
 	def "#testDB : choose to disable the feature of result code and message, only we care about business related parameters" (){
@@ -355,7 +347,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 		
 	}
 	
@@ -371,7 +363,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 	
 	def "#testDB : yet another test case for result set mapper" (){
@@ -384,7 +376,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 	
 	def "#testDB : you can use @Scalar with Output parameters only mapper" (){
@@ -396,7 +388,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 	
 	def "#testDB : when stored procedure have missing @Param annotations on the parameters, IllegalArgumentException will be thrown" (){
@@ -408,7 +400,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 
     def "#testDB : using Result.getXXX(String OutputParameterName)"(){
@@ -425,9 +417,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | custId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB              | custId
+            TestDB.HSQL         | 0
+            TestDB.MYSQL        | 1
+            TestDB.SQLServer    | 1
     }
 
     def "#testDB : using Result.getXXX(String InvalidOutputParameterName)"(){
@@ -444,15 +437,16 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | custId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB              | custId
+            TestDB.HSQL         | 0
+            TestDB.MYSQL        | 1
+            TestDB.SQLServer    | 1
     }
 
     def "#testDB : using @Scalar annotation to map single output parameter - connection using jdbc URL"(){
         given:
             TestUtils.install(testDB)
-            def customerDAOJdbc = new DAO.Builder(jdbcUrl, username, "").build().create(CustomerDAO)
+            def customerDAOJdbc = new DAO.Builder(jdbcUrl, username, password).build().create(CustomerDAO)
             def firstName = "Abdullah"
             def lastName = "Mohammad"
         when:
@@ -462,9 +456,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | jdbcUrl                              | username      | expectedCustId
-            TestDB.HSQL  | "jdbc:hsqldb:mem:customers"          | "sa"          | 0
-            TestDB.MYSQL | "jdbc:mysql://localhost:3307/test"   | "root"        | 1
+            testDB           | jdbcUrl                                | username    | password                 | expectedCustId
+            TestDB.HSQL      | "jdbc:hsqldb:mem:customers"            | "sa"        | ""                       | 0
+            TestDB.MYSQL     | "jdbc:mysql://localhost:3306/test"     | "root"      | ""                       | 1
+            TestDB.SQLServer | "jdbc:jtds:sqlserver://localhost:1433" | "sa"        | "yourStrong(!)Password"  | 1
     }
 
     def "test methodWithNoAnnotation"(){
@@ -508,7 +503,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
     }
 
     def "#testDB : using optional-automappers - yet another test case for result set mapper" (){
@@ -521,7 +516,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
     }
 
     def "#testDB : test @Props1" (){
@@ -534,7 +529,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
     }
 
     def "#testDB : test @Props2" (){
@@ -546,7 +541,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
     }
 
     def "#testDB : Fetch only 3 rows" (){
@@ -558,7 +553,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.MYSQL] // TestDB.HSQL ignores the fetchSize
+            testDB << [TestDB.MYSQL, TestDB.SQLServer] // TestDB.HSQL ignores the fetchSize
     }
 
     def "#testDB : test @Prop3" (){
@@ -571,7 +566,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
     }
 
     def "#testDB : test @Props4" (){
@@ -584,7 +579,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
     }
 
 

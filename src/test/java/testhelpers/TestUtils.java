@@ -17,6 +17,7 @@ public class TestUtils {
 	}
 
 	private static void executeScript(TestDB testDb, String scriptPath) {
+
 		Connection connection = null;
 		Statement stmt;
 		Scanner scanner = null;
