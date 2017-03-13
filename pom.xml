@@ -114,6 +114,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>6.1.0.jre7</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

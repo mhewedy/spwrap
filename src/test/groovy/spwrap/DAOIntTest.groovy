@@ -53,7 +53,7 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB << [TestDB.HSQL, TestDB.MYSQL]
+            testDB << [TestDB.HSQL, TestDB.MYSQL, TestDB.SQLServer]
 	}
 
 	def "#testDB : using @Scalar annotation to map single output parameter"(){
@@ -68,9 +68,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | expectedCustId
-            TestDB.HSQL  | 0
-            TestDB.MYSQL | 1
+            testDB           | expectedCustId
+            TestDB.HSQL      | 0
+            TestDB.MYSQL     | 1
+            TestDB.SQLServer | 1
 	}
 	
 	def "#testDB : using @Scalar annotation to map single output parameter - invoking the Stored Proc multiple times"(){
@@ -91,9 +92,10 @@ class DAOIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB       | expectedCustId0  | expectedCustId1 | expectedCustId2 | expectedCustId3
-            TestDB.HSQL  |      0           |       1         |      2          |       3
-            TestDB.MYSQL |      1           |       2         |      3          |       4
+            testDB           | expectedCustId0  | expectedCustId1 | expectedCustId2 | expectedCustId3
+            TestDB.HSQL      |      0           |       1         |      2          |       3
+            TestDB.MYSQL     |      1           |       2         |      3          |       4
+            TestDB.SQLServer |      1           |       2         |      3          |       4
 	}
 	
 	def "#testDB : using return type as a mapper for output parameters"(){

@@ -13,10 +13,10 @@ public class HSQLInfo implements DBInfo {
     }
 
     public String installScript(){
-        return "src/test/resources/hsql/install.sql";
+        return "src/test/resources/sqlscripts/hsql/install.sql";
     }
 
     public String rollbackScript(){
-        return "src/test/resources/hsql/rollback.sql";
+        return "src/test/resources/sqlscripts/hsql/rollback.sql";
     }
 }

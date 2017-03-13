@@ -14,10 +14,10 @@ public class MySQLInfo implements DBInfo {
     }
 
     public String installScript() {
-        return "src/test/resources/mysql/install.sql";
+        return "src/test/resources/sqlscripts/mysql/install.sql";
     }
 
     public String rollbackScript() {
-        return "src/test/resources/mysql/rollback.sql";
+        return "src/test/resources/sqlscripts/mysql/rollback.sql";
     }
 }
