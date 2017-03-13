@@ -1,23 +1,24 @@
-package spwrap;
+package testhelpers;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
 public class TestUtils {
 
-    static void install(TestDB testDb) {
+    public static void install(TestDB testDb) {
 		executeScript(testDb, testDb.dbInfo.installScript());
 	}
 
-	static void rollback(TestDB testDb) {
+    public static void rollback(TestDB testDb) {
 		executeScript(testDb, testDb.dbInfo.rollbackScript());
 	}
 
 	private static void executeScript(TestDB testDb, String scriptPath) {
 		Connection connection = null;
-		Statement stmt = null;
+		Statement stmt;
 		Scanner scanner = null;
 
 		try {
@@ -40,7 +41,11 @@ public class TestUtils {
 			if (scanner != null) {
 				scanner.close();
 			}
-			Util.closeDBObjects(connection, stmt, null);
-		}
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 	}
 }

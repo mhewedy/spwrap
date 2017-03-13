@@ -1,10 +1,10 @@
-package spwrap.db;
+package testhelpers;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 
 import javax.sql.DataSource;
 
-public class MySQLInfo implements DBInfo {
+class MySQLInfo implements DBInfo {
 
     public DataSource dataSource() {
         MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();

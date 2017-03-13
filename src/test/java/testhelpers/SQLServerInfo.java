@@ -1,10 +1,10 @@
-package spwrap.db;
+package testhelpers;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 
 import javax.sql.DataSource;
 
-public class SQLServerInfo implements DBInfo {
+class SQLServerInfo implements DBInfo {
 
     public DataSource dataSource() {
         SQLServerDataSource dataSource = new SQLServerDataSource();

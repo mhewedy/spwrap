@@ -2,14 +2,13 @@ package spwrap
 
 import ch.vorburger.mariadb4j.DB
 import ch.vorburger.mariadb4j.DBConfigurationBuilder
+import testhelpers.TestDB
+import testhelpers.TestUtils
 import spwrap.proxy.DAOInvocationHandler
 import uk.org.lidalia.slf4jtest.TestLoggerFactory
 
 import java.sql.*
 import spock.lang.*
-
-import java.util.concurrent.Callable
-import java.util.concurrent.Executors
 
 import static uk.org.lidalia.slf4jext.Level.WARN
 

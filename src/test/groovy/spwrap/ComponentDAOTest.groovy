@@ -2,6 +2,8 @@ package spwrap
 
 import ch.vorburger.mariadb4j.DB
 import ch.vorburger.mariadb4j.DBConfigurationBuilder
+import testhelpers.TestDB
+import testhelpers.TestUtils
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll

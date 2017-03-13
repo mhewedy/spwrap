@@ -1,8 +1,8 @@
-package spwrap.db;
+package testhelpers;
 
 import javax.sql.DataSource;
 
-public interface DBInfo {
+interface DBInfo {
 
     /**
      * fully configured dataSource

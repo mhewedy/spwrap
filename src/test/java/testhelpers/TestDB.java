@@ -1,9 +1,4 @@
-package spwrap;
-
-import spwrap.db.DBInfo;
-import spwrap.db.HSQLInfo;
-import spwrap.db.MySQLInfo;
-import spwrap.db.SQLServerInfo;
+package testhelpers;
 
 public enum TestDB {
     HSQL(new HSQLInfo()),

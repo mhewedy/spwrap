@@ -1,10 +1,10 @@
-package spwrap.db;
+package testhelpers;
 
 import org.hsqldb.jdbc.JDBCPool;
 
 import javax.sql.DataSource;
 
-public class HSQLInfo implements DBInfo {
+class HSQLInfo implements DBInfo {
 
     public DataSource dataSource(){
         JDBCPool jdbcPool = new JDBCPool();
