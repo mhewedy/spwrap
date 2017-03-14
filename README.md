@@ -2,7 +2,6 @@
 Stored Procedure caller; simply execute stored procedure from java code.
 
 Compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`) 
-*Travis-ci runs on jdk `1.6`, `1.7` and `1.8`*
 
 [![Build Status](https://travis-ci.org/mhewedy/spwrap.svg?branch=master)](https://travis-ci.org/mhewedy/spwrap)
 [![Coverage Status](https://codecov.io/github/mhewedy/spwrap/coverage.svg?branch=master)](https://codecov.io/github/mhewedy/spwrap?branch=master)
@@ -144,11 +143,9 @@ Maven:
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>{version number}</version>
+	<version>0.0.16</version>
 </dependency>
 ```
-[version number](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.mhewedy%22%20AND%20a%3A%22spwrap%22) | 
-[Javadoc](http://www.javadoc.io/doc/com.github.mhewedy/spwrap/)
 
 ## Additional staff:
 
@@ -170,13 +167,14 @@ Maven:
 	@StoredProc("list_customers_with_date")
 	Tuple<Customer, Date> listCustomersWithDate();
 ```
-##Limitations:
+## Limitations:
 * spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
 
 * spwrap doesn't support returning multi-result sets from the stored procedure.
 
 * When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters.
 
-* Tested on MySQL, SQL Server and HSQL (so far).
+## Database Support:
+Because `spwrap` is based on JDBC API, theoretically it should support any Database Management System with a JDBC Driver, *However* it is [tested](https://travis-ci.org/mhewedy/spwrap) on **HSQL**, **MySQL**, **SQL Server** and **Oracle** with jdk **1.6**, **1.7** and **1.8**.
 
 See [wiki page] (https://github.com/mhewedy/spwrap/wiki) for more info and test cases for more usage scenarios.
