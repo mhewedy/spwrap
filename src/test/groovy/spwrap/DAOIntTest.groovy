@@ -440,8 +440,7 @@ class DAOIntTest extends Specification{
             customerDao.createCustomer0(firstName, lastName)
             customerDao.getCustomer8(custId);
         then:
-            def e = thrown(CallException)
-            e.cause.class == SQLException
+            thrown(CallException)
         cleanup:
             _cleanup(testDB)
         where:
@@ -468,7 +467,7 @@ class DAOIntTest extends Specification{
             testDB    | jdbcUrl                                | username    | password                 | expectedCustId
             HSQL      | "jdbc:hsqldb:mem:customers"            | "sa"        | ""                       | 0
             MYSQL     | "jdbc:mysql://localhost:3307/test"     | "root"      | ""                       | 1
-            SQLServer | "jdbc:jtds:sqlserver://localhost:1434" | "sa"        | "yourStrong(!)Password"  | 1
+            SQLServer | "jdbc:sqlserver://localhost:1434"      | "sa"        | "yourStrong(!)Password"  | 1
             ORACLE    | "jdbc:oracle:thin:@localhost:1522/xe"  | "system"    | "oracle"                 | 1
     }
 

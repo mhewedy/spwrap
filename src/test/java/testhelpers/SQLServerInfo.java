@@ -1,13 +1,13 @@
 package testhelpers;
 
-import net.sourceforge.jtds.jdbcx.JtdsDataSource;
+import com.microsoft.sqlserver.jdbc.SQLServerConnectionPoolDataSource;
 
 import javax.sql.DataSource;
 
 class SQLServerInfo implements DBInfo {
 
     public DataSource dataSource() {
-        JtdsDataSource dataSource = new JtdsDataSource();
+        SQLServerConnectionPoolDataSource dataSource = new SQLServerConnectionPoolDataSource();
         dataSource.setServerName("localhost");
         dataSource.setUser("sa");
         dataSource.setPortNumber(1434);
