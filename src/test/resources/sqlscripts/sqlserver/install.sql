@@ -93,7 +93,7 @@ AS
 ;;
 
 /* Scalar RS */
-CREATE PROCEDURE get_first_table_name_no_resultfields
+CREATE PROCEDURE first_t_name_no_resultfields
     @tableName VARCHAR(50) OUTPUT
 AS
   	BEGIN

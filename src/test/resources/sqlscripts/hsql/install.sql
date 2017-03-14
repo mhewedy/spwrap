@@ -77,7 +77,7 @@ CREATE PROCEDURE error_sp(OUT code SMALLINT, OUT msg VARCHAR(50))
 
 
 /* Scalar RS */
-CREATE PROCEDURE get_first_table_name_no_resultfields(OUT tableName VARCHAR(50))
+CREATE PROCEDURE first_t_name_no_resultfields(OUT tableName VARCHAR(50))
 	READS SQL DATA
   	BEGIN ATOMIC
   		SELECT LIMIT 0 1 TABLE_NAME INTO tableName FROM INFORMATION_SCHEMA.SYSTEM_TABLES;

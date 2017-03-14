@@ -4,5 +4,5 @@
 
 docker run --name mysql \
     -e 'MYSQL_ALLOW_EMPTY_PASSWORD=true' -e 'MYSQL_DATABASE=test' \
-    -p 3306:3306 \
+    -p 3307:3306 \
     -d mysql:latest

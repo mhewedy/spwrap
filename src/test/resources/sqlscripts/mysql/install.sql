@@ -58,7 +58,7 @@ CREATE PROCEDURE error_sp(OUT code SMALLINT, OUT msg VARCHAR(50))
    	END
 ;;
 
-CREATE PROCEDURE get_first_table_name_no_resultfields(OUT tableName VARCHAR(50))
+CREATE PROCEDURE first_t_name_no_resultfields(OUT tableName VARCHAR(50))
   	BEGIN
   		SELECT TABLE_NAME INTO tableName FROM INFORMATION_SCHEMA.TABLES LIMIT 1;
    	END

@@ -10,6 +10,7 @@ class SQLServerInfo implements DBInfo {
         JtdsDataSource dataSource = new JtdsDataSource();
         dataSource.setServerName("localhost");
         dataSource.setUser("sa");
+        dataSource.setPortNumber(1434);
         dataSource.setPassword("yourStrong(!)Password");
         return dataSource;
     }

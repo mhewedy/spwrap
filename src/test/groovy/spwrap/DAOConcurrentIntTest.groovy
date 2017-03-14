@@ -8,6 +8,8 @@ import testhelpers.TestUtils
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
+import static testhelpers.TestDB.*
+
 // integration test
 @Unroll
 class DAOConcurrentIntTest extends Specification{
@@ -16,7 +18,7 @@ class DAOConcurrentIntTest extends Specification{
 
     def _setup(db) {
         TestUtils.install(db)
-        customerDao = new DAO.Builder(db.dbInfo.dataSource()).build().create(CustomerDAO.class)
+        customerDao = new DAO.Builder(db.ref.dataSource()).build().create(CustomerDAO.class)
     }
 
 	def _cleanup(db) {
@@ -66,10 +68,11 @@ class DAOConcurrentIntTest extends Specification{
             pool.shutdown()
             _cleanup(testDB)
         where:
-            testDB           | maxId
-            TestDB.HSQL      | 7
-            TestDB.MYSQL     | 8
-            TestDB.SQLServer | 8
+            testDB    | maxId
+            HSQL      | 7
+            MYSQL     | 8
+            SQLServer | 8
+            ORACLE    | 8
     }
 
     private static def getCallableForCreateCustomer(customerDao, firstName, lastName){

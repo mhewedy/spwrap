@@ -76,7 +76,7 @@ public interface CustomerDAO {
 	void callStoredProcWithError();
 	
 	@Scalar(VARCHAR)
-	@StoredProc("get_first_table_name_no_resultfields")
+	@StoredProc("first_t_name_no_resultfields")
 	String getFirstTableNameNoResultFields() ;
 	
 	@Mapper(TableNamesMapper.class)

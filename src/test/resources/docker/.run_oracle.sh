@@ -4,5 +4,5 @@
 
 docker run --name oracle \
     -e 'ORACLE_ALLOW_REMOTE=true' \
-    -p 1521:1521 \
+    -p 1522:1521 \
     -d wnameless/oracle-xe-11g

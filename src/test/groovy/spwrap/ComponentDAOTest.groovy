@@ -7,6 +7,8 @@ import spwrap.component.ComponentDAO
 import testhelpers.TestDB
 import testhelpers.TestUtils
 
+import static testhelpers.TestDB.*
+
 // integration test
 @Unroll
 class ComponentDAOTest extends Specification{
@@ -14,15 +16,15 @@ class ComponentDAOTest extends Specification{
     @Shared ComponentDAO componentDAO
 
     def setupSpec() {
-        TestUtils.install(TestDB.MYSQL)
-        componentDAO = new DAO.Builder(TestDB.MYSQL.dbInfo.dataSource())
+        TestUtils.install(MYSQL)
+        componentDAO = new DAO.Builder(MYSQL.ref.dataSource())
                 .config(new Config().useStatusFields(false))
                 .build()
                 .create(ComponentDAO.class)
     }
 
     def cleanupSpec() {
-        TestUtils.rollback(TestDB.MYSQL)
+        TestUtils.rollback(MYSQL)
     }
 
 	def "inserting many rows"(){

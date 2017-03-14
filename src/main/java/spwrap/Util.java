@@ -13,8 +13,52 @@ import org.slf4j.LoggerFactory;
 
 public class Util {
 
-    private static Logger log = LoggerFactory.getLogger(Util.class);
     private static final int NUM_OF_STATUS_FIELDS = 2;
+    private static Logger log = LoggerFactory.getLogger(Util.class);
+    // from java.sql.Types
+    private static Map<Integer, String> TYPES_STRING_MAP = new HashMap<Integer, String>();
+
+    static {
+        TYPES_STRING_MAP.put(-7, "BIT");
+        TYPES_STRING_MAP.put(-6, "TINYINT");
+        TYPES_STRING_MAP.put(5, "SMALLINT");
+        TYPES_STRING_MAP.put(4, "INTEGER");
+        TYPES_STRING_MAP.put(-5, "BIGINT");
+        TYPES_STRING_MAP.put(6, "FLOAT");
+        TYPES_STRING_MAP.put(7, "REAL");
+        TYPES_STRING_MAP.put(8, "DOUBLE");
+        TYPES_STRING_MAP.put(2, "NUMERIC");
+        TYPES_STRING_MAP.put(3, "DECIMAL");
+        TYPES_STRING_MAP.put(1, "CHAR");
+        TYPES_STRING_MAP.put(12, "VARCHAR");
+        TYPES_STRING_MAP.put(-1, "LONGVARCHAR");
+        TYPES_STRING_MAP.put(91, "DATE");
+        TYPES_STRING_MAP.put(92, "TIME");
+        TYPES_STRING_MAP.put(93, "TIMESTAMP");
+        TYPES_STRING_MAP.put(-2, "BINARY");
+        TYPES_STRING_MAP.put(-3, "VARBINARY");
+        TYPES_STRING_MAP.put(-4, "LONGVARBINARY");
+        TYPES_STRING_MAP.put(0, "NULL");
+        TYPES_STRING_MAP.put(1111, "OTHER");
+        TYPES_STRING_MAP.put(2000, "JAVA_OBJECT");
+        TYPES_STRING_MAP.put(2001, "DISTINCT");
+        TYPES_STRING_MAP.put(2002, "STRUCT ");
+        TYPES_STRING_MAP.put(2003, "ARRAY");
+        TYPES_STRING_MAP.put(2004, "BLOB");
+        TYPES_STRING_MAP.put(2005, "CLOB ");
+        TYPES_STRING_MAP.put(2006, "REF");
+        TYPES_STRING_MAP.put(70, "DATALINK");
+        TYPES_STRING_MAP.put(16, "BOOLEAN");
+        TYPES_STRING_MAP.put(-8, "ROWID");
+        TYPES_STRING_MAP.put(-15, "NCHAR");
+        TYPES_STRING_MAP.put(-9, "NVARCHAR");
+        TYPES_STRING_MAP.put(-16, "LONGNVARCHAR");
+        TYPES_STRING_MAP.put(2011, "NCLOB");
+        TYPES_STRING_MAP.put(2009, "SQLXML");
+        TYPES_STRING_MAP.put(2012, "REF_CURSOR");
+        TYPES_STRING_MAP.put(2013, "TIME_WITH_TIMEZONE");
+        TYPES_STRING_MAP.put(2014, "TIMESTAMP_WITH_TIMEZONE");
+    }
 
     static String listToString(List<?> list) {
         StringBuilder ret = new StringBuilder();
@@ -28,12 +72,15 @@ public class Util {
         return ret.toString();
     }
 
-    static String createCallableString(String procName, Config config, List<Caller.Param> inParams, List<Caller.ParamType> outParamsTypes) {
-        return createCallableString(procName, (config.useStatusFields() ? NUM_OF_STATUS_FIELDS : 0)
-                + (inParams != null ? inParams.size() : 0) + (outParamsTypes != null ? outParamsTypes.size() : 0));
+    public static int length(List<?> list) {
+        return list == null ? 0 : list.size();
     }
 
-    private static String createCallableString(String procName, int paramsCount) {
+    public static int getParamsCount(Config config, List<Caller.Param> inParams, List<Caller.ParamType> outParamsTypes) {
+        return (config.useStatusFields() ? NUM_OF_STATUS_FIELDS : 0) + length(inParams) + length(outParamsTypes);
+    }
+
+    public static String createCallableString(String procName, int paramsCount) {
         StringBuilder call = new StringBuilder();
 
         call.append("{call ").append(procName).append("(");
@@ -86,60 +133,13 @@ public class Util {
         try {
             Class.forName(className);
             return true;
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
             return false;
         }
     }
 
-
     // this method should be used in logging only to print the type name instead of its integer value
     static String getAsString(int sqlType) {
         return TYPES_STRING_MAP.get(sqlType);
-    }
-
-    // from java.sql.Types
-    private static Map<Integer, String> TYPES_STRING_MAP = new HashMap<Integer, String>();
-
-    static {
-        TYPES_STRING_MAP.put(-7, "BIT");
-        TYPES_STRING_MAP.put(-6, "TINYINT");
-        TYPES_STRING_MAP.put(5, "SMALLINT");
-        TYPES_STRING_MAP.put(4, "INTEGER");
-        TYPES_STRING_MAP.put(-5, "BIGINT");
-        TYPES_STRING_MAP.put(6, "FLOAT");
-        TYPES_STRING_MAP.put(7, "REAL");
-        TYPES_STRING_MAP.put(8, "DOUBLE");
-        TYPES_STRING_MAP.put(2, "NUMERIC");
-        TYPES_STRING_MAP.put(3, "DECIMAL");
-        TYPES_STRING_MAP.put(1, "CHAR");
-        TYPES_STRING_MAP.put(12, "VARCHAR");
-        TYPES_STRING_MAP.put(-1, "LONGVARCHAR");
-        TYPES_STRING_MAP.put(91, "DATE");
-        TYPES_STRING_MAP.put(92, "TIME");
-        TYPES_STRING_MAP.put(93, "TIMESTAMP");
-        TYPES_STRING_MAP.put(-2, "BINARY");
-        TYPES_STRING_MAP.put(-3, "VARBINARY");
-        TYPES_STRING_MAP.put(-4, "LONGVARBINARY");
-        TYPES_STRING_MAP.put(0, "NULL");
-        TYPES_STRING_MAP.put(1111, "OTHER");
-        TYPES_STRING_MAP.put(2000, "JAVA_OBJECT");
-        TYPES_STRING_MAP.put(2001, "DISTINCT");
-        TYPES_STRING_MAP.put(2002, "STRUCT ");
-        TYPES_STRING_MAP.put(2003, "ARRAY");
-        TYPES_STRING_MAP.put(2004, "BLOB");
-        TYPES_STRING_MAP.put(2005, "CLOB ");
-        TYPES_STRING_MAP.put(2006, "REF");
-        TYPES_STRING_MAP.put(70, "DATALINK");
-        TYPES_STRING_MAP.put(16, "BOOLEAN");
-        TYPES_STRING_MAP.put(-8, "ROWID");
-        TYPES_STRING_MAP.put(-15, "NCHAR");
-        TYPES_STRING_MAP.put(-9, "NVARCHAR");
-        TYPES_STRING_MAP.put(-16, "LONGNVARCHAR");
-        TYPES_STRING_MAP.put(2011, "NCLOB");
-        TYPES_STRING_MAP.put(2009, "SQLXML");
-        TYPES_STRING_MAP.put(2012, "REF_CURSOR");
-        TYPES_STRING_MAP.put(2013, "TIME_WITH_TIMEZONE");
-        TYPES_STRING_MAP.put(2014, "TIMESTAMP_WITH_TIMEZONE");
     }
 }

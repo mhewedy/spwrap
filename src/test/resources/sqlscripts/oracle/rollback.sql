@@ -1,11 +1,3 @@
-DROP PROCEDURE list_components
-;;
-
-DROP PROCEDURE fill_component
-;;
-
-DROP TABLE component
-;;
 
 DROP PROCEDURE create_customer0
 ;;
@@ -39,5 +31,8 @@ DROP PROCEDURE error_sp
 DROP PROCEDURE first_t_name_no_resultfields
 ;;
 
-DROP TABLE customers
+DROP SEQUENCE customers_seq
+;;
+
+DROP TABLE customers 
 ;;

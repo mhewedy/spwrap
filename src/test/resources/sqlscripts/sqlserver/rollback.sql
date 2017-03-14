@@ -28,7 +28,7 @@ DROP PROCEDURE error_sp
 
 
 /* Scalar RS */
-DROP PROCEDURE get_first_table_name_no_resultfields
+DROP PROCEDURE first_t_name_no_resultfields
 ;;
 
 DROP TABLE customers

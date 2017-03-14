@@ -9,11 +9,11 @@ import java.util.Scanner;
 public class TestUtils {
 
     public static void install(TestDB testDb) {
-		executeScript(testDb, testDb.dbInfo.installScript());
+		executeScript(testDb, testDb.ref.installScript());
 	}
 
     public static void rollback(TestDB testDb) {
-		executeScript(testDb, testDb.dbInfo.rollbackScript());
+		executeScript(testDb, testDb.ref.rollbackScript());
 	}
 
 	private static void executeScript(TestDB testDb, String scriptPath) {
@@ -23,7 +23,7 @@ public class TestUtils {
 		Scanner scanner = null;
 
 		try {
-			connection = testDb.dbInfo.dataSource().getConnection();
+			connection = testDb.ref.dataSource().getConnection();
 			stmt = connection.createStatement();
 
 			scanner = new Scanner(new File(scriptPath));
@@ -32,12 +32,16 @@ public class TestUtils {
 			String[] split = content.split(";;");
 
 			for (String sql : split) {
-				// System.out.println(sql);
-				stmt.execute(sql.trim());
+//				 System.out.println(sql);
+                try {
+                    stmt.execute(sql.trim());
+                }catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
 			}
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+            throw new RuntimeException(e);
 		} finally {
 			if (scanner != null) {
 				scanner.close();
@@ -45,7 +49,7 @@ public class TestUtils {
             try {
                 if (connection != null) connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
             }
         }
 	}

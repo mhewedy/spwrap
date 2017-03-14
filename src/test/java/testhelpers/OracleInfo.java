@@ -1,16 +1,23 @@
 package testhelpers;
 
+import oracle.jdbc.pool.OracleDataSource;
+
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 class OracleInfo implements DBInfo {
 
     public DataSource dataSource() {
-//        SQLServerConnectionPoolDataSource dataSource = new SQLServerConnectionPoolDataSource();
-//        dataSource.setURL("jdbc:oracle:thin:@localhost:1521/xe");
-//        dataSource.setUser("system");
-//        dataSource.setPassword("oracle");
-//        return dataSource;
-        return null;
+        OracleDataSource dataSource;
+        try {
+            dataSource = new OracleDataSource();
+            dataSource.setURL("jdbc:oracle:thin:@127.0.0.1:1522/xe");
+            dataSource.setUser("system");
+            dataSource.setPassword("oracle");
+            return dataSource;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String installScript() {

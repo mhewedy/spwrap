@@ -10,6 +10,7 @@ import static java.sql.Types.VARCHAR
 import static spwrap.Caller.Param.of
 import static spwrap.Caller.paramTypes
 import static spwrap.Caller.params
+import static testhelpers.TestDB.*
 
 // integration test
 @Unroll
@@ -19,7 +20,7 @@ class CallerIntTest extends Specification{
 
     def _setup(db){
         TestUtils.install(db)
-        caller = new Caller(db.dbInfo.dataSource())
+        caller = new Caller(db.ref.dataSource())
     }
 
     def _cleanup(db){
@@ -39,10 +40,11 @@ class CallerIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB           | expectedCustId
-            TestDB.HSQL      | 0
-            TestDB.MYSQL     | 1
-            TestDB.SQLServer | 1
+            testDB    | expectedCustId
+            HSQL      | 0
+            MYSQL     | 1
+            SQLServer | 1
+            ORACLE    | 1
 	}
 
 	def "#testDB : create customer using the caller interface and Persistable"(){
@@ -57,9 +59,10 @@ class CallerIntTest extends Specification{
         cleanup:
             _cleanup(testDB)
         where:
-            testDB           | expectedCustId
-            TestDB.HSQL      | 0
-            TestDB.MYSQL     | 1
-            TestDB.SQLServer | 1
+            testDB    | expectedCustId
+            HSQL      | 0
+            MYSQL     | 1
+            SQLServer | 1
+            ORACLE    | 1
 	}
 }

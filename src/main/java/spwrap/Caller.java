@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static spwrap.Util.length;
+
 /**
  * <p>
  * Execute Stored Procedures. <p> Read the wiki and github at http://github.com/mhewedy/spwrap README for more
@@ -29,7 +31,8 @@ public class Caller {
 
     private static Logger log = LoggerFactory.getLogger(Caller.class);
 
-    private static final int JDBC_PARAM_OFFSIT = 1; // JDBC starts at index 1
+    public static final int PARAM_OFFSET = 1;
+    public static final int INVALID_INDEX = -1;
 
     private Config config = new Config();
 
@@ -179,90 +182,99 @@ public class Caller {
         return call(procName, inParams, outParamsTypes, paramMapper, null).object();
     }
 
-
-    public final <T, U> Tuple<T, U> call(String procName
-            , List<Param> inParams
-            , List<ParamType> outParamsTypes
-            , OutputParamMapper<U> paramMapper
-            , ResultSetMapper<T> rsMapper
-            , ConnectionProps connectionProps
-            , StatementProps statementProps
-            , ResultSetProps resultSetProps) {
+    public final <T, U> Tuple<T, U> call(String procName,
+                                         List<Param> inParams,
+                                         List<ParamType> outParamsTypes,
+                                         OutputParamMapper<U> paramMapper,
+                                         ResultSetMapper<T> rsMapper,
+                                         ConnectionProps connectionProps,
+                                         StatementProps statementProps,
+                                         ResultSetProps resultSetProps) {
 
         final long startTime = System.currentTimeMillis();
 
-        Connection con = null;
-        CallableStatement call = null;
-        ResultSet rs = null;
+        Connection connection = null;
+        CallableStatement statement = null;
+        ResultSet resultSet = null;
+
         Tuple<T, U> result = null;
-        ConnectionProps backupConProps = null;
+        ConnectionProps connectionPropsBkup = null;
+        String callString = null;
 
-        final String callString = Util.createCallableString(procName, config, inParams, outParamsTypes);
         try {
-
             if (dataSource != null) {
-                con = dataSource.getConnection();
+                connection = dataSource.getConnection();
             } else if (jdbcUrl != null) {
-                con = DriverManager.getConnection(jdbcUrl, username, password);
+                connection = DriverManager.getConnection(jdbcUrl, username, password);
             } else {
                 throw new CallException("both dataSource and jdbcUrl are nulls");
             }
+            Database database = GenericDatabase.from(connection);
 
-            backupConProps = ConnectionProps.from(con);
-            connectionProps.apply(con);
-            call = resultSetProps.apply(con, callString);
-            statementProps.apply(call);
+            callString = database.getCallString(procName, config, inParams, outParamsTypes, rsMapper);
 
-            int outParamIndex = inParams != null ? inParams.size() : 0;
-            int resultCodeIndex = (inParams != null ? inParams.size() : 0) + (outParamsTypes != null ? outParamsTypes.size() : 0) + JDBC_PARAM_OFFSIT;
+            // ----- Applying JDBC Object Props
+            connectionPropsBkup = ConnectionProps.from(connection);
+            connectionProps.apply(connection);
+            statement = resultSetProps.apply(connection, callString);
+            statementProps.apply(statement);
+
+            // ------- calc some indexes
+
+            int outParamIndex = length(inParams);
+            int statusParamsIndex = database.getStatusParamsIndex(config, inParams, outParamsTypes, rsMapper);
+            int resultSetParamIndex = database.getResultSetParamIndex(statusParamsIndex, rsMapper);
+
+            // ------ Setting input parameters
 
             if (inParams != null) {
                 log.debug("setting input parameters");
                 for (int i = 0; i < inParams.size(); i++) {
-                    int jdbcParamId = i + JDBC_PARAM_OFFSIT;
-                    call.setObject(jdbcParamId, inParams.get(i).value, inParams.get(i).sqlType);
+                    statement.setObject(i + PARAM_OFFSET, inParams.get(i).value, inParams.get(i).sqlType);
                 }
             }
+
+            // ------ Register output parameters
 
             if (outParamsTypes != null) {
                 log.debug("registering output parameters");
                 for (int i = 0; i < outParamsTypes.size(); i++) {
-                    call.registerOutParameter(i + outParamIndex + JDBC_PARAM_OFFSIT,
-                            outParamsTypes.get(i).sqlType);
+                    statement.registerOutParameter(i + PARAM_OFFSET + outParamIndex, outParamsTypes.get(i).sqlType);
                 }
+            }
+
+            if (resultSetParamIndex != INVALID_INDEX){
+                database.registerResultSet(statement, resultSetParamIndex);
             }
 
             if (config.useStatusFields()) {
                 log.debug("registering status parameters");
-                call.registerOutParameter(resultCodeIndex, Types.BOOLEAN); // RESULT_CODE
-                call.registerOutParameter(resultCodeIndex + 1, Types.VARCHAR); // RESULT_MSG
+                statement.registerOutParameter(statusParamsIndex, Types.SMALLINT); // RESULT_CODE
+                statement.registerOutParameter(statusParamsIndex + 1, Types.VARCHAR); // RESULT_MSG
             }
 
-            Database database = GenericDatabase.from(con);
-            boolean hasResult = database.executeCall(call);
+            // -------- Getting result set
 
             List<T> list = null;
-            if (hasResult && rsMapper != null) {
-                list = new ArrayList<T>();
-                log.debug("reading result set");
-                rs = call.getResultSet();
-                int rowIndex = 0;
-                while (rs.next()) {
-                    list.add(rsMapper.map(Result.of(rs, null, -1, rowIndex++)));
-                }
+            boolean hasResult = database.executeCall(statement);
+            if (hasResult || resultSetParamIndex != INVALID_INDEX) {
+                resultSet = database.getResultSet(statement, resultSetParamIndex);
+                list = mapResultSet(resultSet, rsMapper);
             }
+
+            // --------- Read output parameters
 
             U object = null;
             if (outParamsTypes != null) {
                 log.debug("reading output parameters");
-                object = paramMapper.map(Result.of(null, call, outParamIndex, -1));
+                object = paramMapper.map(Result.of(null, statement, outParamIndex, INVALID_INDEX));
             }
 
             if (config.useStatusFields()) {
                 log.debug("reading status parameters");
-                short resultCode = call.getShort(resultCodeIndex);
+                short resultCode = statement.getShort(statusParamsIndex);
                 if (resultCode != config.successCode()) {
-                    String resultMsg = call.getString(resultCodeIndex + 1);
+                    String resultMsg = statement.getString(statusParamsIndex + 1);
                     throw new CallException(resultCode, resultMsg);
                 }
             }
@@ -276,21 +288,38 @@ public class Caller {
             throw new CallException(ex.getMessage(), ex);
         } finally {
             logCall(startTime, callString, inParams, outParamsTypes, result);
-            if (backupConProps != null ) backupConProps.apply(con);
-            Util.closeDBObjects(con, call, rs);
+            if (connectionPropsBkup != null ){
+                log.debug("setting the connection props back from the backed-up Props object");
+                connectionPropsBkup.apply(connection);
+            }
+            Util.closeDBObjects(connection, statement, resultSet);
         }
         return result;
     }
 
-    private <T, U> void logCall(long startTime, String callableStmt, List<Param> inParams, List<ParamType> outParamsTypes, Tuple<T, U> result) {
+    private <T, U> void logCall(long startTime, String callableStmt, List<Param> inParams,
+                                List<ParamType> outParamsTypes, Tuple<T, U> result) {
         if (log.isDebugEnabled()) {
-            log.debug("\n>call sp: [{}] \n>\tIN Params: {}, \n>\tOUT Params Types: {}\n>\tResult: {}; \n>>\ttook: {} ms", callableStmt,
-                    inParams != null ? Arrays.toString(inParams.toArray()) : "null",
+            log.debug("\n>call sp: [{}] \n>\tIN Params: {}, \n>\tOUT Params Types: {}\n>\tResult: {}; \n>>\ttook: {} ms",
+                    callableStmt, inParams != null ? Arrays.toString(inParams.toArray()) : "null",
                     outParamsTypes != null ? Arrays.toString(outParamsTypes.toArray()) : "null", result,
                     (System.currentTimeMillis() - startTime));
         } else {
             log.info(">call sp: [{}] took: {} ms", callableStmt, (System.currentTimeMillis() - startTime));
         }
+    }
+
+    private <T> List<T> mapResultSet(ResultSet resultSet, ResultSetMapper<T> resultSetMapper) throws SQLException {
+        List<T> list = null;
+        if (resultSetMapper != null) {
+            list = new ArrayList<T>();
+            log.debug("reading result set");
+            int rowIndex = 0;
+            while (resultSet.next()) {
+                list.add(resultSetMapper.map(Result.of(resultSet, null, INVALID_INDEX, rowIndex++)));
+            }
+        }
+        return list;
     }
 
     // -------------- Classes and factory functions for dealing with Caller
