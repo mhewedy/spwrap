@@ -136,7 +136,7 @@ For full example and more, see Test cases and [wiki](https://github.com/mhewedy/
 ## installation
 Gradle:
 ```gradle
-compile group: 'com.github.mhewedy', name: 'spwrap', version: '{version number}'
+compile group: 'com.github.mhewedy', name: 'spwrap', version: '0.0.16'
 ```
 Maven:
 ```xml
