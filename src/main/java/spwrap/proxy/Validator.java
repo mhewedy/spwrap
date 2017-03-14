@@ -12,14 +12,18 @@ import java.lang.reflect.Method;
 class Validator {
 
     static void preValidate(Method method) {
-        Mapper mapperAnnot = method.getAnnotation(Mapper.class);
-        AutoMapper resultSetAutoMapperAnnot = method.getAnnotation(AutoMapper.class);
+        final int maxMapperAnnotCountAllowed = 1;
 
-        if (mapperAnnot != null && resultSetAutoMapperAnnot != null && method.getAnnotation(Scalar.class) != null) {
+        int annotCount = 0;
+        annotCount += method.isAnnotationPresent(Mapper.class) ? 1 : 0;
+        annotCount += method.isAnnotationPresent(AutoMapper.class) ? 1 : 0;
+        annotCount += method.isAnnotationPresent(Scalar.class) ? 1 : 0;
+
+        if (annotCount > maxMapperAnnotCountAllowed) {
             throw new CallException("Only one of @Scalar, @Mapper or @ResultSetAutoMapper could be provided!");
         }
 
-        preValidate(mapperAnnot);
+        preValidate(method.getAnnotation(Mapper.class));
     }
 
     static void postValidate(Method method, MetaData metadata) {
