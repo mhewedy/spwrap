@@ -136,14 +136,14 @@ For full example and more, see Test cases and [wiki](https://github.com/mhewedy/
 ## installation
 Gradle:
 ```gradle
-compile group: 'com.github.mhewedy', name: 'spwrap', version: '0.0.16'
+compile group: 'com.github.mhewedy', name: 'spwrap', version: '0.0.17'
 ```
 Maven:
 ```xml
 <dependency>
 	<groupId>com.github.mhewedy</groupId>
 	<artifactId>spwrap</artifactId>
-	<version>0.0.16</version>
+	<version>0.0.17</version>
 </dependency>
 ```
 
