@@ -61,7 +61,9 @@ class ResultSetMapperBinder extends MapperBinder<ResultSetMapper<?>> {
     }
 
     ResultSetMapper<?> fromAutoMapper(Method method) {
-        return ResultSetAutoMapper.newInstance(getReturnType(method));
+        ResultSetAutoMapper autoMapper = ResultSetAutoMapper.newInstance(getReturnType(method));
+        log.debug("using auto-mapper: {}", autoMapper);
+        return autoMapper;
     }
 
     private ResultSetMapper<?> newInstance(Class<?> clazz) {
