@@ -31,7 +31,7 @@ class DbUtilsResultSetAutoMapper<T> extends ResultSetAutoMapper<T> {
                 // (cannot reuse the object as it calls rs.next())
                 return (T) rs.getObject(1);
             }else {
-                return (T) beanProcessor.toBean(rs, getType());
+                return beanProcessor.toBean(rs, getType());
             }
 
         } catch (SQLException e) {

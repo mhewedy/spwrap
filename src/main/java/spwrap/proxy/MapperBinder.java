@@ -11,7 +11,7 @@ abstract class MapperBinder<T> implements Binder<T> {
 
         T outputParam = null;
         if (method.isAnnotationPresent(Mapper.class)){
-            outputParam = fromAnnotation(method);;
+            outputParam = fromAnnotation(method);
         }
 
         if (outputParam == null) {

@@ -6,9 +6,6 @@ import spwrap.CallException;
 
 import java.sql.CallableStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
-
-import static spwrap.annotations.Props.FetchDirection;
 
 public class StatementProps implements Props<CallableStatement, Void> {
 
