@@ -157,7 +157,7 @@ List<Customer> listCustomers();
 Tuple<Customer, Date> listCustomersWithDate();
 ```
 ## Limitations:
-* spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
+* spwrap doesn't support INOUT parameters.
 
 * spwrap doesn't support returning multi-result sets from the stored procedure.
 
