@@ -22,6 +22,13 @@ public class DAOInvocationHandler implements InvocationHandler {
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
+        if (method.getName().equals("equals")) {
+            return proxy.equals(args[0]);
+        }
+        else if (method.getName().equals("hashCode")) {
+            return System.identityHashCode(proxy);
+        }
+
         MetaData metadata = getMetaData(method, args);
 
         if (metadata != null) {
