@@ -1,7 +1,6 @@
 # spwrap
-Stored Procedure caller; simply execute stored procedure from java code.
-
-Compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`) 
+Stored Procedure caller; simply execute stored procedure from java code.    
+*Compatible with `jdk` >= `1.5`, with only single dependency (`slf4j-api`)*
 
 [![Build Status](https://travis-ci.org/mhewedy/spwrap.svg?branch=master)](https://travis-ci.org/mhewedy/spwrap)
 [![Coverage Status](https://codecov.io/github/mhewedy/spwrap/coverage.svg?branch=master)](https://codecov.io/github/mhewedy/spwrap?branch=master)
@@ -12,33 +11,28 @@ Suppose you have 3 Stored Procedures to save customer to database, get customer 
 
 For example here's SP code using HSQL:
 ```sql
-/* IN */
 CREATE PROCEDURE create_customer(firstname VARCHAR(50), lastname VARCHAR(50), OUT custId INT, 
-		OUT code SMALLINT, OUT msg VARCHAR(50))
-   	MODIFIES SQL DATA DYNAMIC RESULT SETS 1
-   	BEGIN ATOMIC
-    	INSERT INTO CUSTOMERS VALUES (DEFAULT, firstname, lastname);
-    	SET custId = IDENTITY();
-    	SET code = 0 -- success;
-	END
-
-/* IN, OUT */
+        OUT code SMALLINT, OUT msg VARCHAR(50))
+    MODIFIES SQL DATA DYNAMIC RESULT SETS 1
+    BEGIN ATOMIC
+        INSERT INTO CUSTOMERS VALUES (DEFAULT, firstname, lastname);
+        SET custId = IDENTITY();
+        SET code = 0 -- success;
+    END
 CREATE PROCEDURE get_customer(IN custId INT, OUT firstname VARCHAR(50), OUT lastname VARCHAR(50), 
-		OUT code SMALLINT, OUT msg VARCHAR(50)) 
-	READS SQL DATA
-	BEGIN ATOMIC
-   		SELECT first_name, last_name INTO firstname, lastname FROM customers WHERE id = custId;
-   		SET code = 0 -- success;
-	END
-
-/* RS */
+        OUT code SMALLINT, OUT msg VARCHAR(50)) 
+    READS SQL DATA
+    BEGIN ATOMIC
+        SELECT first_name, last_name INTO firstname, lastname FROM customers WHERE id = custId;
+        SET code = 0 -- success;
+    END
 CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
-   	READS SQL DATA DYNAMIC RESULT SETS 1
-   	BEGIN ATOMIC
-    	DECLARE result CURSOR FOR SELECT id, first_name firstname, last_name lastname FROM CUSTOMERS;
-     	OPEN result;
-     	SET code = 0 -- success;
-  	END
+    READS SQL DATA DYNAMIC RESULT SETS 1
+    BEGIN ATOMIC
+        DECLARE result CURSOR FOR SELECT id, first_name firstname, last_name lastname FROM CUSTOMERS;
+        OPEN result;
+        SET code = 0 -- success;
+    END
 ```
 >**NOTE**: Every Stored Procedure by default need to have 2 additional Output Parameters at the end of its parameter list. One of type `SMALLINT` and the other of type `VARCHAR` for result code and message respectively, where result code `0` means success. You can override the `0` value or remove this default behviour at all, [see the configuration wiki page](https://github.com/mhewedy/spwrap/wiki/Configurations).
 
@@ -46,14 +40,14 @@ CREATE PROCEDURE list_customers(OUT code SMALLINT, OUT msg VARCHAR(50))
 ```java
 public interface CustomerDAO {
 
-	@StoredProc("create_customer")
-	void createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
+    @StoredProc("create_customer")
+    void createCustomer(@Param(VARCHAR) String firstName, @Param(VARCHAR) String lastName);
 
-	@StoredProc("get_customer")
-	Customer getCustomer(@Param(INTEGER) Integer id);	
+    @StoredProc("get_customer")
+    Customer getCustomer(@Param(INTEGER) Integer id);	
 	
-	@StoredProc("list_customers")
-	List<Customer> listCustomers();
+    @StoredProc("list_customers")
+    List<Customer> listCustomers();
 }
 ```
 
@@ -94,16 +88,13 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 		return lastName;
 	}
 	
+	 //You can acess result set columns/output parameters by name as well
 	@Override
 	public Customer map(Result<?> result) {
-		if (result.isResultSet()) {// for ResultSetMapper
+		if (result.isResultSet()) {
 			return new Customer(result.getInt(1), result.getString(2), result.getString(3));
-			//or access by result set column label/name
-            // return new Customer(result.getInt("id"), result.getString("firstname"), result.getString("lastname"));
-		} else { // for TypedOutputParamMapper
+		} else {
 			return new Customer(null, result.getString(1), result.getString(2));
-			//or access by output parameter name
-			// return new Customer(null, result.getString("firstname"), result.getString("lastname"));
 		}
 	}
 
@@ -114,7 +105,7 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 	}
 }
 ```
-[Read more about Mappers in the wiki](https://github.com/mhewedy/spwrap/wiki/Mappers)
+See more examples on [spwrap-examples](https://github.com/mhewedy/spwrap-examples) github project and read more about [Mappers](https://github.com/mhewedy/spwrap/wiki/Mappers) in the wiki.
 
 >**NOTE**: If your stored procedure returns a single **output parameter** with no result set, then you can use the `@Scalar` annotation and you will not need to provide a Mapper class yourself, the mapping will done for you. [see wiki page about scalars for more](https://github.com/mhewedy/spwrap/wiki/Scalar)
 
@@ -124,15 +115,14 @@ public class Customer implements TypedOutputParamMapper<Customer>, ResultSetMapp
 
 Now you can start using the interface to call the stored procedures:
 ```java
+DataSource dataSource = ...
 DAO dao = new DAO.Builder(dataSource).build();
 CustomerDAO customerDao = dao.create(CustomerDAO.class);
 
 customerDao.createCustomer("Abdullah", "Muhammad");
-Customer customer = customerDao.getCustomer1(0);
+Customer customer = customerDao.getCustomer1(1);
 Assert.assertEquals("Abdullah", customer.firstName());
 ```
-For full example and more, see Test cases and [wiki](https://github.com/mhewedy/spwrap/wiki).
-
 ## installation
 Gradle:
 ```gradle
@@ -141,12 +131,11 @@ compile group: 'com.github.mhewedy', name: 'spwrap', version: '0.0.17'
 Maven:
 ```xml
 <dependency>
-	<groupId>com.github.mhewedy</groupId>
-	<artifactId>spwrap</artifactId>
-	<version>0.0.17</version>
+    <groupId>com.github.mhewedy</groupId>
+    <artifactId>spwrap</artifactId>
+    <version>0.0.17</version>
 </dependency>
 ```
-
 ## Additional staff:
 
 * If you don't supply the stored procedure name to `@StoredProc`, it will use the method name by default.
@@ -155,26 +144,26 @@ Maven:
 
 * If you don't want to tie your Domain Object with `spwrap` as of step 3 above, you can have another class to implement the Mapper interfaces (`TypedOutputParamMapper` and `ResultSetMapper`) and pass it to the annotaion `@Mapper` like:
 ```java
-	@Mapper(CustomResultSetMapper.class)
-	@StoredProc("list_customers")
-	List<Customer> listCustomers();
+@Mapper(CustomResultSetMapper.class)
+@StoredProc("list_customers")
+List<Customer> listCustomers();
 ```
 * `@Mapper` annotation overrides the mapping specified by the return type object, i.e. `spwrap` extract Mapping infromation from the return type class, and then override it with the classes set by `@Mapper` annotation if found.
 
-* Your Stored procedure can return output parameter as well as 1 Result set in one call, to achieve this use `Tuple` return type:
+* Your Stored procedure can return output parameter as well as *One* Result set in one call, to achieve this use `Tuple` return type:
 ```java
-	@Mapper({MyResultSetMapper.class, MyOutputParameterMapper.class})
-	@StoredProc("list_customers_with_date")
-	Tuple<Customer, Date> listCustomersWithDate();
+@Mapper({MyResultSetMapper.class, MyOutputParameterMapper.class})
+@StoredProc("list_customers_with_date")
+Tuple<Customer, Date> listCustomersWithDate();
 ```
 ## Limitations:
-* spwrap doesn't support INOUT parameters (yet!) (I don't need them so I didn't implement it, If you need it, [just open an issue for it](https://github.com/mhewedy/spwrap/issues/new))
+* spwrap doesn't support INOUT parameters.
 
 * spwrap doesn't support returning multi-result sets from the stored procedure.
 
 * When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters.
 
 ## Database Support:
-Because `spwrap` is based on JDBC API, theoretically it should support any Database Management System with a JDBC Driver, *However* it is [tested](https://travis-ci.org/mhewedy/spwrap) on **HSQL**, **MySQL**, **SQL Server** and **Oracle** with jdk **1.6**, **1.7** and **1.8**.
+Because `spwrap` is based on JDBC API, theoretically it should support any Database Management System with a JDBC Driver, *However* it is [tested](https://travis-ci.org/mhewedy/spwrap) on **HSQL**, **MySQL**, **SQL Server** and **Oracle** with jdk **1.6**, **1.7** and **1.8**. (Planned DB: `Postgresql`, `Sybase`, `DB2`)
 
-See [wiki page] (https://github.com/mhewedy/spwrap/wiki) for more info and test cases for more usage scenarios.
+See [wiki page](https://github.com/mhewedy/spwrap/wiki) for more info and test cases/[spwrap-examples](https://github.com/mhewedy/spwrap-examples) for more usage scenarios.
