@@ -126,14 +126,14 @@ Assert.assertEquals("Abdullah", customer.firstName());
 ## installation
 Gradle:
 ```gradle
-compile group: 'com.github.mhewedy', name: 'spwrap', version: '0.0.17'
+compile group: 'com.github.mhewedy', name: 'spwrap', version: '0.0.18'
 ```
 Maven:
 ```xml
 <dependency>
     <groupId>com.github.mhewedy</groupId>
     <artifactId>spwrap</artifactId>
-    <version>0.0.17</version>
+    <version>0.0.18</version>
 </dependency>
 ```
 ## Additional staff:

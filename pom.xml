@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mhewedy</groupId>
     <artifactId>spwrap</artifactId>
-    <version>0.0.17</version>
+    <version>0.0.18</version>
 
     <name>spwrap</name>
     <description>Simple Stored Procedure call wrapper</description>
