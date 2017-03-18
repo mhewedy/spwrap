@@ -85,3 +85,18 @@ CREATE PROCEDURE list_components()
         SELECT field0, field1, field2, field3, field4, field5, field6, field7, field8, field9 FROM component;
     END
 ;;
+
+CREATE TABLE supplier (id INT AUTO_INCREMENT PRIMARY KEY,
+	first_name VARCHAR(20) NOT NULL)
+;;
+
+CREATE PROCEDURE create_supplier(IN firstname VARCHAR(50))
+ BEGIN
+    INSERT INTO supplier VALUES (DEFAULT, firstname);
+ END
+;;
+CREATE PROCEDURE get_supplier_count(OUT supplier_count INTEGER)
+ BEGIN
+    select count(*) into supplier_count from supplier;
+ END
+;;

@@ -2,7 +2,7 @@ package testhelpers;
 
 import javax.sql.DataSource;
 
-interface DBInfo {
+public interface DBInfo {
 
     /**
      * fully configured dataSource

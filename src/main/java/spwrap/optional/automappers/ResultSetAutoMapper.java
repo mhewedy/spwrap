@@ -6,8 +6,8 @@ import spwrap.mappers.ResultSetMapper;
 
 public abstract class ResultSetAutoMapper<T> implements ResultSetMapper<T> {
 
-    private static final boolean FOUND_SPRING_JDBC = Util.isPresent("org.springframework.jdbc.core.BeanPropertyRowMapper");
-    private static final boolean FOUND_COMMONS_DBUTILS = Util.isPresent("org.apache.commons.dbutils.BeanProcessor");
+    private static final boolean FOUND_SPRING_JDBC = Util.isClassPresent("org.springframework.jdbc.core.BeanPropertyRowMapper");
+    private static final boolean FOUND_COMMONS_DBUTILS = Util.isClassPresent("org.apache.commons.dbutils.BeanProcessor");
 
     private Class<?> type;
 

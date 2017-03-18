@@ -1,3 +1,9 @@
+drop table supplier
+;;
+drop procedure create_supplier
+;;
+drop procedure get_supplier_count
+;;
 DROP PROCEDURE list_components
 ;;
 

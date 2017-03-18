@@ -201,14 +201,10 @@ public class Caller {
         ConnectionProps connectionPropsBkup = null;
         String callString = null;
 
+        ConnectionManager connectionManager = ConnectionManager.newInstance();
+
         try {
-            if (dataSource != null) {
-                connection = dataSource.getConnection();
-            } else if (jdbcUrl != null) {
-                connection = DriverManager.getConnection(jdbcUrl, username, password);
-            } else {
-                throw new CallException("both dataSource and jdbcUrl are nulls");
-            }
+            connection = connectionManager.getConnection(dataSource, jdbcUrl, username, password);
             Database database = GenericDatabase.from(connection);
 
             callString = database.getCallString(procName, config, inParams, outParamsTypes, rsMapper);
@@ -288,11 +284,12 @@ public class Caller {
             throw new CallException(ex.getMessage(), ex);
         } finally {
             logCall(startTime, callString, inParams, outParamsTypes, result);
-            if (connectionPropsBkup != null ){
+            if (connectionPropsBkup != null && connection != null){
                 log.debug("setting the connection props back from the backed-up Props object");
                 connectionPropsBkup.apply(connection);
             }
-            Util.closeDBObjects(connection, statement, resultSet);
+            Util.closeDBObjects(null, statement, resultSet);
+            connectionManager.closeConnection(connection, dataSource);
         }
         return result;
     }

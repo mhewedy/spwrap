@@ -129,7 +129,7 @@ public class Util {
         }
     }
 
-    public static boolean isPresent(String className) {
+    public static boolean isClassPresent(String className) {
         try {
             Class.forName(className);
             return true;
