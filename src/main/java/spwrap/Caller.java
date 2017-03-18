@@ -201,7 +201,7 @@ public class Caller {
         ConnectionProps connectionPropsBkup = null;
         String callString = null;
 
-        ConnectionManager connectionManager = ConnectionManager.newInstance();
+        ConnectionManager connectionManager = ConnectionManager.instance();
 
         try {
             connection = connectionManager.getConnection(dataSource, jdbcUrl, username, password);

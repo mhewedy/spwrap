@@ -4,6 +4,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext
 import org.springframework.dao.DataIntegrityViolationException
 import spock.lang.Specification
 import spock.lang.Unroll
+import uk.org.lidalia.slf4jtest.TestLoggerFactory
 
 import javax.sql.DataSource
 
@@ -16,7 +17,7 @@ import static testhelpers.TestUtils.rollback
 class SpringTransactionsIntTest extends Specification{
 
     SpringTransactionsService service
-    def supplierDAO
+    SupplierDAO supplierDAO
 
     def setupSpringBeans(String springConfigXml){
         install(MYSQL)
@@ -64,6 +65,20 @@ class SpringTransactionsIntTest extends Specification{
         then:
             thrown(CallException)
             supplierDAO.getSupplierCount() == 0
+        cleanup:
+            rollback(MYSQL)
+    }
+
+    def "using @Transactional on method and DataSourceUtils not found on cp; will NOT rollback the effect of the stored proc from the database"(){
+        given:
+            setupSpringBeans("config/spring-transactions-int-test.xml")
+        when:
+            ConnectionManager.INSTANCE = ConnectionManager.DEFAULT_CONNECTION_MANAGER
+            service.setSupplierDAO(supplierDAO)
+            service.insert2SuppliersTheJdbcTemplateFails()
+        then:
+            thrown(DataIntegrityViolationException)
+            supplierDAO.getSupplierCount() == 1
         cleanup:
             rollback(MYSQL)
     }
