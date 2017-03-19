@@ -2,8 +2,8 @@ language: java
 sudo: required
 
 jdk:
-  - oraclejdk8
-  - oraclejdk7
+#  - oraclejdk8
+#  - oraclejdk7
   - openjdk6
 
 services:
@@ -30,4 +30,4 @@ deploy:
     on:
       repo: mhewedy/spwrap
       branch: master
-      jdk: oraclejdk8
+      jdk: openjdk6
