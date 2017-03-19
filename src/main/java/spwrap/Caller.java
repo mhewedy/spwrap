@@ -200,6 +200,7 @@ public class Caller {
         Tuple<T, U> result = null;
         ConnectionProps connectionPropsBkup = null;
         String callString = null;
+        Boolean connChanged = false;
 
         ConnectionManager connectionManager = ConnectionManager.instance();
 
@@ -211,7 +212,7 @@ public class Caller {
 
             // ----- Applying JDBC Object Props
             connectionPropsBkup = ConnectionProps.from(connection);
-            connectionProps.apply(connection);
+            connChanged = connectionProps.apply(connection);
             statement = resultSetProps.apply(connection, callString);
             statementProps.apply(statement);
 
@@ -284,7 +285,7 @@ public class Caller {
             throw new CallException(ex.getMessage(), ex);
         } finally {
             logCall(startTime, callString, inParams, outParamsTypes, result);
-            if (connectionPropsBkup != null && connection != null){
+            if (connection != null && connectionPropsBkup != null && connChanged){
                 log.debug("setting the connection props back from the backed-up Props object");
                 connectionPropsBkup.apply(connection);
             }

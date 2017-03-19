@@ -128,14 +128,14 @@ Assert.assertEquals("Abdullah", customer.firstName());
 ## installation
 Gradle:
 ```gradle
-compile group: 'com.github.mhewedy', name: 'spwrap', version: '0.0.18'
+compile group: 'com.github.mhewedy', name: 'spwrap', version: '0.0.19'
 ```
 Maven:
 ```xml
 <dependency>
     <groupId>com.github.mhewedy</groupId>
     <artifactId>spwrap</artifactId>
-    <version>0.0.18</version>
+    <version>0.0.19</version>
 </dependency>
 ```
 ## Additional staff:
@@ -166,6 +166,6 @@ Tuple<Customer, Date> listCustomersWithDate();
 * When the Stored procedure have input and output parameters, input parameters should come first and then the output parameters.
 
 ## Database Support:
-Because `spwrap` is based on JDBC API, theoretically it should support any Database Management System with a JDBC Driver, *However* it is [tested](https://travis-ci.org/mhewedy/spwrap) on **HSQL**, **MySQL**, **SQL Server** and **Oracle** with jdk **1.6**, **1.7** and **1.8**. (Plan to test againest: `Postgresql`, `Sybase`, `DB2`)
+Because `spwrap` is based on JDBC API, theoretically it should support any Database Management System with a JDBC Driver, *However* it is [tested](https://travis-ci.org/mhewedy/spwrap) on **HSQL**, **MySQL**, **SQL Server** and **Oracle** with jdk **1.6**~~, **1.7** and **1.8**~~ (1.7 and 1.8 are remove to reduce build time). (Plan to test againest: `Postgresql`, `Sybase`, `DB2`)
 
 See [wiki page](https://github.com/mhewedy/spwrap/wiki) for more info and test cases/[spwrap-examples](https://github.com/mhewedy/spwrap-examples) for more usage scenarios.
