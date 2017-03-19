@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 import static spwrap.annotations.Props.TransactionIsolation;
 
-public class ConnectionProps implements Props<Connection, Void> {
+public class ConnectionProps implements Props<Connection, Boolean> {
 
     private static Logger log = LoggerFactory.getLogger(ConnectionProps.class);
 
@@ -27,7 +27,7 @@ public class ConnectionProps implements Props<Connection, Void> {
         this.transactionIsolation = transactionIsolation;
     }
 
-    public Void apply(Connection input, Object ... args) {
+    public Boolean apply(Connection input, Object ... args) {
         if (!skip){
             log.debug("applying {} on input Connection", this);
             try {
@@ -38,8 +38,9 @@ public class ConnectionProps implements Props<Connection, Void> {
             } catch (SQLException e) {
                 throw new CallException(e);
             }
+            return true;
         }
-        return null;
+        return false;
     }
 
     public static ConnectionProps from(Connection connection) {
