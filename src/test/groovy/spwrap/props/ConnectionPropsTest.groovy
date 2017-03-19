@@ -7,7 +7,7 @@ import spwrap.CallException
 import java.sql.Connection
 import java.sql.SQLException
 
-import static spwrap.annotations.Props.TransactionIsolation.*
+import static spwrap.annotations.Props.Isolation.*
 
 @Unroll
 class ConnectionPropsTest extends Specification {

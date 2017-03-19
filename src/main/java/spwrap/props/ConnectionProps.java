@@ -7,7 +7,7 @@ import spwrap.CallException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static spwrap.annotations.Props.TransactionIsolation;
+import static spwrap.annotations.Props.Isolation;
 
 public class ConnectionProps implements Props<Connection, Boolean> {
 
@@ -16,15 +16,15 @@ public class ConnectionProps implements Props<Connection, Boolean> {
     private boolean skip = false;
 
     private boolean readOnly;
-    private TransactionIsolation transactionIsolation;
+    private Isolation isolation;
 
     public ConnectionProps() {
         skip = true;
     }
 
-    public ConnectionProps(boolean readOnly, TransactionIsolation transactionIsolation) {
+    public ConnectionProps(boolean readOnly, Isolation isolation) {
         this.readOnly = readOnly;
-        this.transactionIsolation = transactionIsolation;
+        this.isolation = isolation;
     }
 
     public Boolean apply(Connection input, Object ... args) {
@@ -32,8 +32,8 @@ public class ConnectionProps implements Props<Connection, Boolean> {
             log.debug("applying {} on input Connection", this);
             try {
                 input.setReadOnly(this.readOnly);
-                if (this.transactionIsolation != TransactionIsolation.DEFAULT){
-                    input.setTransactionIsolation(this.transactionIsolation.getValue());
+                if (this.isolation != Isolation.DEFAULT){
+                    input.setTransactionIsolation(this.isolation.getValue());
                 }
             } catch (SQLException e) {
                 throw new CallException(e);
@@ -45,7 +45,7 @@ public class ConnectionProps implements Props<Connection, Boolean> {
 
     public static ConnectionProps from(Connection connection) {
         try {
-            return new ConnectionProps(connection.isReadOnly(), TransactionIsolation.of(connection.getTransactionIsolation()));
+            return new ConnectionProps(connection.isReadOnly(), Isolation.of(connection.getTransactionIsolation()));
         } catch (SQLException e) {
             throw new CallException(e);
         }
@@ -56,7 +56,7 @@ public class ConnectionProps implements Props<Connection, Boolean> {
         return "ConnectionProps{" +
                 "skip=" + skip +
                 ", readOnly=" + readOnly +
-                ", transactionIsolation=" + transactionIsolation +
+                ", isolation=" + isolation +
                 '}';
     }
 }

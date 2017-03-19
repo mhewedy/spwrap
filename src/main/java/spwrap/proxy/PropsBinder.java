@@ -56,7 +56,7 @@ class PropsBinder implements Binder<PropsWrapper> {
     }
 
     private ConnectionProps bind(spwrap.annotations.Props.Connection annot) {
-        return new ConnectionProps(annot.readOnly(), annot.transactionIsolation());
+        return new ConnectionProps(annot.readOnly(), annot.isolation());
     }
 
     private StatementProps bind(spwrap.annotations.Props.Statement annot) {

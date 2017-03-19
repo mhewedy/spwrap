@@ -37,7 +37,7 @@ public @interface Props {
         }
     }
 
-    enum TransactionIsolation {
+    enum Isolation {
         DEFAULT(-1),    // implementation dependent
         NONE(java.sql.Connection.TRANSACTION_NONE),
         READ_UNCOMMITTED(java.sql.Connection.TRANSACTION_READ_UNCOMMITTED),
@@ -47,11 +47,11 @@ public @interface Props {
 
         int value;
 
-        TransactionIsolation(int value) {
+        Isolation(int value) {
             this.value = value;
         }
 
-        public static TransactionIsolation of(int txIsolation) {
+        public static Isolation of(int txIsolation) {
             switch (txIsolation) {
                 case -1:
                     return DEFAULT;
@@ -66,7 +66,7 @@ public @interface Props {
                 case java.sql.Connection.TRANSACTION_SERIALIZABLE:
                     return SERIALIZABLE;
                 default:
-                    throw new IllegalArgumentException("TransactionIsolation, " + txIsolation);
+                    throw new IllegalArgumentException("Isolation, " + txIsolation);
             }
         }
 
@@ -129,7 +129,7 @@ public @interface Props {
     @interface Connection {
         boolean readOnly() default false;
 
-        TransactionIsolation transactionIsolation() default TransactionIsolation.DEFAULT;
+        Isolation isolation() default Isolation.DEFAULT;
     }
 
     @Retention(RUNTIME)

@@ -14,7 +14,7 @@ import static java.sql.Types.INTEGER;
 import static java.sql.Types.VARCHAR;
 import static spwrap.annotations.Props.*;
 import static spwrap.annotations.Props.Connection;
-import static spwrap.annotations.Props.TransactionIsolation.READ_COMMITTED;
+import static spwrap.annotations.Props.Isolation.READ_COMMITTED;
 
 public interface CustomerDAO {
 
@@ -120,7 +120,7 @@ public interface CustomerDAO {
     @StoredProc
     void testProps4();  // throws exception @Statement is already defined
 
-    @Connection(transactionIsolation = READ_COMMITTED)
+    @Connection(isolation = READ_COMMITTED)
     @StoredProc("list_customers")
     List<Customer> testProps2();
 
