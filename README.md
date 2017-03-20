@@ -125,7 +125,7 @@ customerDao.createCustomer("Abdullah", "Muhammad");
 Customer customer = customerDao.getCustomer1(1);
 Assert.assertEquals("Abdullah", customer.firstName());
 ```
-## installation
+## Installation
 Gradle:
 ```gradle
 compile group: 'com.github.mhewedy', name: 'spwrap', version: '0.0.20'
