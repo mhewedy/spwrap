@@ -4,7 +4,7 @@ pipeline {
     stage('build') {
       steps {
         node(label: 'master') {
-          mvn -Dmaven.test.failure.ignore clean package
+          mvn clean package
         }
       }
     }
