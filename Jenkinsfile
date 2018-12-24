@@ -4,8 +4,7 @@ pipeline {
     stage('build') {
       steps {
         node(label: 'master') {
-          sh '''mvn clean package
-'''
+          sh 'gradlew build'
         }
 
       }
