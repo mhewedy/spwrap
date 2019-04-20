@@ -27,12 +27,12 @@ class ComponentDAOTest extends Specification{
         TestUtils.rollback(MYSQL)
     }
 
-	def "inserting many rows"(){
-		when:
+    def "inserting many rows"(){
+        when:
             componentDAO.fillComponent()
-		then:
-			noExceptionThrown()
-	}
+        then:
+            noExceptionThrown()
+    }
 
     def "retrieve many rows" (){
         when:

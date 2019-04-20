@@ -14,16 +14,16 @@ import static testhelpers.TestDB.*
 @Unroll
 class DAOConcurrentIntTest extends Specification{
 
-	CustomerDAO customerDao
+    CustomerDAO customerDao
 
     def _setup(db) {
         TestUtils.install(db)
         customerDao = new DAO.Builder(db.ref.dataSource()).build().create(CustomerDAO.class)
     }
 
-	def _cleanup(db) {
-		TestUtils.rollback(db)
-	}
+    def _cleanup(db) {
+        TestUtils.rollback(db)
+    }
 
     def "#testDB : Multithreading: multipe calls from different threads doesn't intersect \
                 and returned objects are unique per each thread "(){

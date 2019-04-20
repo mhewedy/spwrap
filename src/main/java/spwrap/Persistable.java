@@ -13,15 +13,15 @@ import spwrap.Caller.Param;
  * example:
  * <pre>
  * {@code
- * 	public class Customer implements Persistable {
+ *     public class Customer implements Persistable {
  *
- * 		private Integer id;
- * 		private String firstName, lastName;
+ *         private Integer id;
+ *         private String firstName, lastName;
  *
- * 		public List<Caller.Param> toInputParams() {
- * 			return Arrays.asList(of(firstName, VARCHAR), of(lastName, VARCHAR));
- * 		}
- * 	}
+ *         public List<Caller.Param> toInputParams() {
+ *             return Arrays.asList(of(firstName, VARCHAR), of(lastName, VARCHAR));
+ *         }
+ *     }
  * }
  * </pre>
  * then the caller API can be used like this:

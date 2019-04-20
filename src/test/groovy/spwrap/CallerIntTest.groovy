@@ -27,16 +27,16 @@ class CallerIntTest extends Specification{
         TestUtils.rollback(db)
     }
 
-	def "#testDB : create customer using the caller interface"(){
-		setup:
+    def "#testDB : create customer using the caller interface"(){
+        setup:
             _setup(testDB)
-			def firstName = "Abdullah"
-			def lastName = "Mohammad"
-		when:
-			def custId = caller.call("create_customer", params(of(firstName, VARCHAR), of(lastName, VARCHAR)),
-				paramTypes(INTEGER), {it.getInt(1)});
-		then:
-			custId == expectedCustId
+            def firstName = "Abdullah"
+            def lastName = "Mohammad"
+        when:
+            def custId = caller.call("create_customer", params(of(firstName, VARCHAR), of(lastName, VARCHAR)),
+                paramTypes(INTEGER), {it.getInt(1)});
+        then:
+            custId == expectedCustId
         cleanup:
             _cleanup(testDB)
         where:
@@ -45,17 +45,17 @@ class CallerIntTest extends Specification{
             MYSQL     | 1
             SQLServer | 1
             ORACLE    | 1
-	}
+    }
 
-	def "#testDB : create customer using the caller interface and Persistable"(){
-		given:
+    def "#testDB : create customer using the caller interface and Persistable"(){
+        given:
             _setup(testDB)
-		    def customer  = new Customer2("Abdullah", "Mohammad")
-		when:
-		    def custId = caller.call("create_customer", customer.toInputParams(), paramTypes(INTEGER), {it.getInt(1)});
+            def customer  = new Customer2("Abdullah", "Mohammad")
+        when:
+            def custId = caller.call("create_customer", customer.toInputParams(), paramTypes(INTEGER), {it.getInt(1)});
 
-		then:
-		    custId == expectedCustId
+        then:
+            custId == expectedCustId
         cleanup:
             _cleanup(testDB)
         where:
@@ -64,5 +64,5 @@ class CallerIntTest extends Specification{
             MYSQL     | 1
             SQLServer | 1
             ORACLE    | 1
-	}
+    }
 }

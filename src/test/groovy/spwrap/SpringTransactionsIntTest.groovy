@@ -29,19 +29,19 @@ class SpringTransactionsIntTest extends Specification{
                 .build()
                 .create(SupplierDAO.class)
     }
-	
-	def "using @Transactional on method will rollback the effect of the stored proc from the database"(){
-		given:
+
+    def "using @Transactional on method will rollback the effect of the stored proc from the database"(){
+        given:
             setupSpringBeans("config/spring-transactions-int-test.xml")
         when:
             service.setSupplierDAO(supplierDAO)
             service.insert2SuppliersTheJdbcTemplateFails()
-		then:
+        then:
             thrown(DataIntegrityViolationException)
-			supplierDAO.getSupplierCount() == 0
+            supplierDAO.getSupplierCount() == 0
         cleanup:
             rollback(MYSQL)
-	}
+    }
 
     def "using @Transactional on method (while not enabling spring annotation-driven transactions) will NOT rollback the effect of the stored proc from the database"(){
         given:
